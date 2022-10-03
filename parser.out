@@ -1,0 +1,2776 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID SEMICOLON programA programB main
+Rule 2     programA -> vars
+Rule 3     programA -> empty
+Rule 4     programB -> funcion programB
+Rule 5     programB -> empty
+Rule 6     vars -> VAR varsA
+Rule 7     varsA -> varsB SEMICOLON varsF
+Rule 8     varsB -> FILE ID varsE
+Rule 9     varsB -> tipoSimple ID varsC
+Rule 10    varsC -> LEFTBRACKET CTI RIGHTBRACKET varsD
+Rule 11    varsC -> empty
+Rule 12    varsD -> LEFTBRACKET CTI RIGHTBRACKET
+Rule 13    varsD -> empty
+Rule 14    varsE -> COMMA ID varsE
+Rule 15    varsE -> empty
+Rule 16    varsF -> varsA
+Rule 17    varsF -> empty
+Rule 18    funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+Rule 19    funcionA -> tipoSimple
+Rule 20    funcionA -> VOID
+Rule 21    funcionB -> params
+Rule 22    funcionB -> empty
+Rule 23    funcionC -> vars
+Rule 24    funcionC -> empty
+Rule 25    main -> MAINSTART bloque
+Rule 26    tipoSimple -> INT
+Rule 27    tipoSimple -> FLOAT
+Rule 28    params -> tipoSimple ID paramsA
+Rule 29    paramsA -> COMMA tipoSimple ID paramsA
+Rule 30    paramsA -> empty
+Rule 31    bloque -> LEFTCURLY bloqueA RIGHTCURLY
+Rule 32    bloqueA -> estatuto bloqueA
+Rule 33    bloqueA -> empty
+Rule 34    estatuto -> asignacion
+Rule 35    estatuto -> llamada
+Rule 36    estatuto -> read
+Rule 37    estatuto -> escritura
+Rule 38    estatuto -> condicion
+Rule 39    estatuto -> ciclo
+Rule 40    asignacion -> variable ASSIGNOP exp
+Rule 41    llamada -> ID LEFTPAR exp llamadaA RIGHTPAR
+Rule 42    llamadaA -> COMMA exp llamadaA
+Rule 43    llamadaA -> empty
+Rule 44    read -> READ ID
+Rule 45    escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR
+Rule 46    escrituraA -> exp
+Rule 47    escrituraA -> CTSTRING
+Rule 48    escrituraB -> COMMA escrituraA escrituraB
+Rule 49    escrituraB -> empty
+Rule 50    condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA
+Rule 51    condicionA -> ELSE bloque
+Rule 52    condicionA -> empty
+Rule 53    ciclo -> FROM exp TO exp DO bloque
+Rule 54    variable -> ID variableA
+Rule 55    variableA -> LEFTBRACKET exp RIGHTBRACKET variableB
+Rule 56    variableA -> empty
+Rule 57    variableB -> LEFTBRACKET exp RIGHTBRACKET
+Rule 58    variableB -> empty
+Rule 59    exp -> exp1 expA
+Rule 60    expA -> OROP exp1 expA
+Rule 61    expA -> empty
+Rule 62    exp1 -> exp2 exp1A
+Rule 63    exp1A -> ANDOP exp2 exp1A
+Rule 64    exp1A -> empty
+Rule 65    exp2 -> exp3 exp2A
+Rule 66    exp2A -> exp2B exp3
+Rule 67    exp2A -> empty
+Rule 68    exp2B -> LESSTHANOP
+Rule 69    exp2B -> GREATERTHANOP
+Rule 70    exp2B -> DIFFERENTOP
+Rule 71    exp2B -> EQUALOP
+Rule 72    exp3 -> termino exp3A
+Rule 73    exp3A -> exp3B termino exp3A
+Rule 74    exp3A -> empty
+Rule 75    exp3B -> SUMOP
+Rule 76    exp3B -> SUBOP
+Rule 77    termino -> factor terminoA
+Rule 78    terminoA -> terminoB factor terminoA
+Rule 79    terminoA -> empty
+Rule 80    terminoB -> MULOP
+Rule 81    terminoB -> DIVOP
+Rule 82    factor -> LEFTPAR exp RIGHTPAR
+Rule 83    factor -> CTI
+Rule 84    factor -> CTF
+Rule 85    factor -> variable
+Rule 86    factor -> llamada
+Rule 87    empty -> <empty>
+
+Terminals, with rules where they appear
+
+ANDOP                : 63
+ASSIGNOP             : 40
+COMMA                : 14 29 42 48
+CTF                  : 84
+CTI                  : 10 12 83
+CTSTRING             : 47
+DIFFERENTOP          : 70
+DIVOP                : 81
+DO                   : 53
+ELSE                 : 51
+EQUALOP              : 71
+FILE                 : 8
+FLOAT                : 27
+FROM                 : 53
+FUNC                 : 18
+GREATERTHANOP        : 69
+ID                   : 1 8 9 14 18 28 29 41 44 54
+IF                   : 50
+INT                  : 26
+LEFTBRACKET          : 10 12 55 57
+LEFTCURLY            : 31
+LEFTPAR              : 18 41 45 50 82
+LESSTHANOP           : 68
+MAINSTART            : 25
+MULOP                : 80
+OROP                 : 60
+PROGRAM              : 1
+READ                 : 44
+RIGHTBRACKET         : 10 12 55 57
+RIGHTCURLY           : 31
+RIGHTPAR             : 18 41 45 50 82
+SEMICOLON            : 1 7 18
+SUBOP                : 76
+SUMOP                : 75
+TO                   : 53
+VAR                  : 6
+VOID                 : 20
+WRITE                : 45
+error                : 
+
+Nonterminals, with rules where they appear
+
+asignacion           : 34
+bloque               : 18 25 50 51 53
+bloqueA              : 31 32
+ciclo                : 39
+condicion            : 38
+condicionA           : 50
+empty                : 3 5 11 13 15 17 22 24 30 33 43 49 52 56 58 61 64 67 74 79
+escritura            : 37
+escrituraA           : 45 48
+escrituraB           : 45 48
+estatuto             : 32
+exp                  : 40 41 42 46 50 53 53 55 57 82
+exp1                 : 59 60
+exp1A                : 62 63
+exp2                 : 62 63
+exp2A                : 65
+exp2B                : 66
+exp3                 : 65 66
+exp3A                : 72 73
+exp3B                : 73
+expA                 : 59 60
+factor               : 77 78
+funcion              : 4
+funcionA             : 18
+funcionB             : 18
+funcionC             : 18
+llamada              : 35 86
+llamadaA             : 41 42
+main                 : 1
+params               : 21
+paramsA              : 28 29
+program              : 0
+programA             : 1
+programB             : 1 4
+read                 : 36
+termino              : 72 73
+terminoA             : 77 78
+terminoB             : 78
+tipoSimple           : 9 19 28 29
+variable             : 40 85
+variableA            : 54
+variableB            : 55
+vars                 : 2 23
+varsA                : 6 16
+varsB                : 7
+varsC                : 9
+varsD                : 10
+varsE                : 8 14
+varsF                : 7
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID SEMICOLON programA programB main
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID SEMICOLON programA programB main
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . SEMICOLON programA programB main
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID SEMICOLON . programA programB main
+    (2) programA -> . vars
+    (3) programA -> . empty
+    (6) vars -> . VAR varsA
+    (87) empty -> .
+
+    VAR             shift and go to state 8
+    FUNC            reduce using rule 87 (empty -> .)
+    MAINSTART       reduce using rule 87 (empty -> .)
+
+    programA                       shift and go to state 5
+    vars                           shift and go to state 6
+    empty                          shift and go to state 7
+
+state 5
+
+    (1) program -> PROGRAM ID SEMICOLON programA . programB main
+    (4) programB -> . funcion programB
+    (5) programB -> . empty
+    (18) funcion -> . FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+    (87) empty -> .
+
+    FUNC            shift and go to state 12
+    MAINSTART       reduce using rule 87 (empty -> .)
+
+    programB                       shift and go to state 9
+    funcion                        shift and go to state 10
+    empty                          shift and go to state 11
+
+state 6
+
+    (2) programA -> vars .
+
+    FUNC            reduce using rule 2 (programA -> vars .)
+    MAINSTART       reduce using rule 2 (programA -> vars .)
+
+
+state 7
+
+    (3) programA -> empty .
+
+    FUNC            reduce using rule 3 (programA -> empty .)
+    MAINSTART       reduce using rule 3 (programA -> empty .)
+
+
+state 8
+
+    (6) vars -> VAR . varsA
+    (7) varsA -> . varsB SEMICOLON varsF
+    (8) varsB -> . FILE ID varsE
+    (9) varsB -> . tipoSimple ID varsC
+    (26) tipoSimple -> . INT
+    (27) tipoSimple -> . FLOAT
+
+    FILE            shift and go to state 15
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+
+    varsA                          shift and go to state 13
+    varsB                          shift and go to state 14
+    tipoSimple                     shift and go to state 16
+
+state 9
+
+    (1) program -> PROGRAM ID SEMICOLON programA programB . main
+    (25) main -> . MAINSTART bloque
+
+    MAINSTART       shift and go to state 20
+
+    main                           shift and go to state 19
+
+state 10
+
+    (4) programB -> funcion . programB
+    (4) programB -> . funcion programB
+    (5) programB -> . empty
+    (18) funcion -> . FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+    (87) empty -> .
+
+    FUNC            shift and go to state 12
+    MAINSTART       reduce using rule 87 (empty -> .)
+
+    funcion                        shift and go to state 10
+    programB                       shift and go to state 21
+    empty                          shift and go to state 11
+
+state 11
+
+    (5) programB -> empty .
+
+    MAINSTART       reduce using rule 5 (programB -> empty .)
+
+
+state 12
+
+    (18) funcion -> FUNC . funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+    (19) funcionA -> . tipoSimple
+    (20) funcionA -> . VOID
+    (26) tipoSimple -> . INT
+    (27) tipoSimple -> . FLOAT
+
+    VOID            shift and go to state 24
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+
+    funcionA                       shift and go to state 22
+    tipoSimple                     shift and go to state 23
+
+state 13
+
+    (6) vars -> VAR varsA .
+
+    FUNC            reduce using rule 6 (vars -> VAR varsA .)
+    MAINSTART       reduce using rule 6 (vars -> VAR varsA .)
+    LEFTCURLY       reduce using rule 6 (vars -> VAR varsA .)
+
+
+state 14
+
+    (7) varsA -> varsB . SEMICOLON varsF
+
+    SEMICOLON       shift and go to state 25
+
+
+state 15
+
+    (8) varsB -> FILE . ID varsE
+
+    ID              shift and go to state 26
+
+
+state 16
+
+    (9) varsB -> tipoSimple . ID varsC
+
+    ID              shift and go to state 27
+
+
+state 17
+
+    (26) tipoSimple -> INT .
+
+    ID              reduce using rule 26 (tipoSimple -> INT .)
+
+
+state 18
+
+    (27) tipoSimple -> FLOAT .
+
+    ID              reduce using rule 27 (tipoSimple -> FLOAT .)
+
+
+state 19
+
+    (1) program -> PROGRAM ID SEMICOLON programA programB main .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON programA programB main .)
+
+
+state 20
+
+    (25) main -> MAINSTART . bloque
+    (31) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 29
+
+    bloque                         shift and go to state 28
+
+state 21
+
+    (4) programB -> funcion programB .
+
+    MAINSTART       reduce using rule 4 (programB -> funcion programB .)
+
+
+state 22
+
+    (18) funcion -> FUNC funcionA . ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+
+    ID              shift and go to state 30
+
+
+state 23
+
+    (19) funcionA -> tipoSimple .
+
+    ID              reduce using rule 19 (funcionA -> tipoSimple .)
+
+
+state 24
+
+    (20) funcionA -> VOID .
+
+    ID              reduce using rule 20 (funcionA -> VOID .)
+
+
+state 25
+
+    (7) varsA -> varsB SEMICOLON . varsF
+    (16) varsF -> . varsA
+    (17) varsF -> . empty
+    (7) varsA -> . varsB SEMICOLON varsF
+    (87) empty -> .
+    (8) varsB -> . FILE ID varsE
+    (9) varsB -> . tipoSimple ID varsC
+    (26) tipoSimple -> . INT
+    (27) tipoSimple -> . FLOAT
+
+    FUNC            reduce using rule 87 (empty -> .)
+    MAINSTART       reduce using rule 87 (empty -> .)
+    LEFTCURLY       reduce using rule 87 (empty -> .)
+    FILE            shift and go to state 15
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+
+    varsB                          shift and go to state 14
+    varsF                          shift and go to state 31
+    varsA                          shift and go to state 32
+    empty                          shift and go to state 33
+    tipoSimple                     shift and go to state 16
+
+state 26
+
+    (8) varsB -> FILE ID . varsE
+    (14) varsE -> . COMMA ID varsE
+    (15) varsE -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 35
+    SEMICOLON       reduce using rule 87 (empty -> .)
+
+    varsE                          shift and go to state 34
+    empty                          shift and go to state 36
+
+state 27
+
+    (9) varsB -> tipoSimple ID . varsC
+    (10) varsC -> . LEFTBRACKET CTI RIGHTBRACKET varsD
+    (11) varsC -> . empty
+    (87) empty -> .
+
+    LEFTBRACKET     shift and go to state 38
+    SEMICOLON       reduce using rule 87 (empty -> .)
+
+    varsC                          shift and go to state 37
+    empty                          shift and go to state 39
+
+state 28
+
+    (25) main -> MAINSTART bloque .
+
+    $end            reduce using rule 25 (main -> MAINSTART bloque .)
+
+
+state 29
+
+    (31) bloque -> LEFTCURLY . bloqueA RIGHTCURLY
+    (32) bloqueA -> . estatuto bloqueA
+    (33) bloqueA -> . empty
+    (34) estatuto -> . asignacion
+    (35) estatuto -> . llamada
+    (36) estatuto -> . read
+    (37) estatuto -> . escritura
+    (38) estatuto -> . condicion
+    (39) estatuto -> . ciclo
+    (87) empty -> .
+    (40) asignacion -> . variable ASSIGNOP exp
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+    (44) read -> . READ ID
+    (45) escritura -> . WRITE LEFTPAR escrituraA escrituraB RIGHTPAR
+    (50) condicion -> . IF LEFTPAR exp RIGHTPAR bloque condicionA
+    (53) ciclo -> . FROM exp TO exp DO bloque
+    (54) variable -> . ID variableA
+
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    ID              shift and go to state 50
+    READ            shift and go to state 51
+    WRITE           shift and go to state 52
+    IF              shift and go to state 53
+    FROM            shift and go to state 54
+
+    bloqueA                        shift and go to state 40
+    estatuto                       shift and go to state 41
+    empty                          shift and go to state 42
+    asignacion                     shift and go to state 43
+    llamada                        shift and go to state 44
+    read                           shift and go to state 45
+    escritura                      shift and go to state 46
+    condicion                      shift and go to state 47
+    ciclo                          shift and go to state 48
+    variable                       shift and go to state 49
+
+state 30
+
+    (18) funcion -> FUNC funcionA ID . LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque
+
+    LEFTPAR         shift and go to state 55
+
+
+state 31
+
+    (7) varsA -> varsB SEMICOLON varsF .
+
+    FUNC            reduce using rule 7 (varsA -> varsB SEMICOLON varsF .)
+    MAINSTART       reduce using rule 7 (varsA -> varsB SEMICOLON varsF .)
+    LEFTCURLY       reduce using rule 7 (varsA -> varsB SEMICOLON varsF .)
+
+
+state 32
+
+    (16) varsF -> varsA .
+
+    FUNC            reduce using rule 16 (varsF -> varsA .)
+    MAINSTART       reduce using rule 16 (varsF -> varsA .)
+    LEFTCURLY       reduce using rule 16 (varsF -> varsA .)
+
+
+state 33
+
+    (17) varsF -> empty .
+
+    FUNC            reduce using rule 17 (varsF -> empty .)
+    MAINSTART       reduce using rule 17 (varsF -> empty .)
+    LEFTCURLY       reduce using rule 17 (varsF -> empty .)
+
+
+state 34
+
+    (8) varsB -> FILE ID varsE .
+
+    SEMICOLON       reduce using rule 8 (varsB -> FILE ID varsE .)
+
+
+state 35
+
+    (14) varsE -> COMMA . ID varsE
+
+    ID              shift and go to state 56
+
+
+state 36
+
+    (15) varsE -> empty .
+
+    SEMICOLON       reduce using rule 15 (varsE -> empty .)
+
+
+state 37
+
+    (9) varsB -> tipoSimple ID varsC .
+
+    SEMICOLON       reduce using rule 9 (varsB -> tipoSimple ID varsC .)
+
+
+state 38
+
+    (10) varsC -> LEFTBRACKET . CTI RIGHTBRACKET varsD
+
+    CTI             shift and go to state 57
+
+
+state 39
+
+    (11) varsC -> empty .
+
+    SEMICOLON       reduce using rule 11 (varsC -> empty .)
+
+
+state 40
+
+    (31) bloque -> LEFTCURLY bloqueA . RIGHTCURLY
+
+    RIGHTCURLY      shift and go to state 58
+
+
+state 41
+
+    (32) bloqueA -> estatuto . bloqueA
+    (32) bloqueA -> . estatuto bloqueA
+    (33) bloqueA -> . empty
+    (34) estatuto -> . asignacion
+    (35) estatuto -> . llamada
+    (36) estatuto -> . read
+    (37) estatuto -> . escritura
+    (38) estatuto -> . condicion
+    (39) estatuto -> . ciclo
+    (87) empty -> .
+    (40) asignacion -> . variable ASSIGNOP exp
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+    (44) read -> . READ ID
+    (45) escritura -> . WRITE LEFTPAR escrituraA escrituraB RIGHTPAR
+    (50) condicion -> . IF LEFTPAR exp RIGHTPAR bloque condicionA
+    (53) ciclo -> . FROM exp TO exp DO bloque
+    (54) variable -> . ID variableA
+
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    ID              shift and go to state 50
+    READ            shift and go to state 51
+    WRITE           shift and go to state 52
+    IF              shift and go to state 53
+    FROM            shift and go to state 54
+
+    estatuto                       shift and go to state 41
+    bloqueA                        shift and go to state 59
+    empty                          shift and go to state 42
+    asignacion                     shift and go to state 43
+    llamada                        shift and go to state 44
+    read                           shift and go to state 45
+    escritura                      shift and go to state 46
+    condicion                      shift and go to state 47
+    ciclo                          shift and go to state 48
+    variable                       shift and go to state 49
+
+state 42
+
+    (33) bloqueA -> empty .
+
+    RIGHTCURLY      reduce using rule 33 (bloqueA -> empty .)
+
+
+state 43
+
+    (34) estatuto -> asignacion .
+
+    ID              reduce using rule 34 (estatuto -> asignacion .)
+    READ            reduce using rule 34 (estatuto -> asignacion .)
+    WRITE           reduce using rule 34 (estatuto -> asignacion .)
+    IF              reduce using rule 34 (estatuto -> asignacion .)
+    FROM            reduce using rule 34 (estatuto -> asignacion .)
+    RIGHTCURLY      reduce using rule 34 (estatuto -> asignacion .)
+
+
+state 44
+
+    (35) estatuto -> llamada .
+
+    ID              reduce using rule 35 (estatuto -> llamada .)
+    READ            reduce using rule 35 (estatuto -> llamada .)
+    WRITE           reduce using rule 35 (estatuto -> llamada .)
+    IF              reduce using rule 35 (estatuto -> llamada .)
+    FROM            reduce using rule 35 (estatuto -> llamada .)
+    RIGHTCURLY      reduce using rule 35 (estatuto -> llamada .)
+
+
+state 45
+
+    (36) estatuto -> read .
+
+    ID              reduce using rule 36 (estatuto -> read .)
+    READ            reduce using rule 36 (estatuto -> read .)
+    WRITE           reduce using rule 36 (estatuto -> read .)
+    IF              reduce using rule 36 (estatuto -> read .)
+    FROM            reduce using rule 36 (estatuto -> read .)
+    RIGHTCURLY      reduce using rule 36 (estatuto -> read .)
+
+
+state 46
+
+    (37) estatuto -> escritura .
+
+    ID              reduce using rule 37 (estatuto -> escritura .)
+    READ            reduce using rule 37 (estatuto -> escritura .)
+    WRITE           reduce using rule 37 (estatuto -> escritura .)
+    IF              reduce using rule 37 (estatuto -> escritura .)
+    FROM            reduce using rule 37 (estatuto -> escritura .)
+    RIGHTCURLY      reduce using rule 37 (estatuto -> escritura .)
+
+
+state 47
+
+    (38) estatuto -> condicion .
+
+    ID              reduce using rule 38 (estatuto -> condicion .)
+    READ            reduce using rule 38 (estatuto -> condicion .)
+    WRITE           reduce using rule 38 (estatuto -> condicion .)
+    IF              reduce using rule 38 (estatuto -> condicion .)
+    FROM            reduce using rule 38 (estatuto -> condicion .)
+    RIGHTCURLY      reduce using rule 38 (estatuto -> condicion .)
+
+
+state 48
+
+    (39) estatuto -> ciclo .
+
+    ID              reduce using rule 39 (estatuto -> ciclo .)
+    READ            reduce using rule 39 (estatuto -> ciclo .)
+    WRITE           reduce using rule 39 (estatuto -> ciclo .)
+    IF              reduce using rule 39 (estatuto -> ciclo .)
+    FROM            reduce using rule 39 (estatuto -> ciclo .)
+    RIGHTCURLY      reduce using rule 39 (estatuto -> ciclo .)
+
+
+state 49
+
+    (40) asignacion -> variable . ASSIGNOP exp
+
+    ASSIGNOP        shift and go to state 60
+
+
+state 50
+
+    (41) llamada -> ID . LEFTPAR exp llamadaA RIGHTPAR
+    (54) variable -> ID . variableA
+    (55) variableA -> . LEFTBRACKET exp RIGHTBRACKET variableB
+    (56) variableA -> . empty
+    (87) empty -> .
+
+    LEFTPAR         shift and go to state 61
+    LEFTBRACKET     shift and go to state 63
+    ASSIGNOP        reduce using rule 87 (empty -> .)
+
+    variableA                      shift and go to state 62
+    empty                          shift and go to state 64
+
+state 51
+
+    (44) read -> READ . ID
+
+    ID              shift and go to state 65
+
+
+state 52
+
+    (45) escritura -> WRITE . LEFTPAR escrituraA escrituraB RIGHTPAR
+
+    LEFTPAR         shift and go to state 66
+
+
+state 53
+
+    (50) condicion -> IF . LEFTPAR exp RIGHTPAR bloque condicionA
+
+    LEFTPAR         shift and go to state 67
+
+
+state 54
+
+    (53) ciclo -> FROM . exp TO exp DO bloque
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 68
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 55
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR . funcionB RIGHTPAR SEMICOLON funcionC bloque
+    (21) funcionB -> . params
+    (22) funcionB -> . empty
+    (28) params -> . tipoSimple ID paramsA
+    (87) empty -> .
+    (26) tipoSimple -> . INT
+    (27) tipoSimple -> . FLOAT
+
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+
+    funcionB                       shift and go to state 80
+    params                         shift and go to state 81
+    empty                          shift and go to state 82
+    tipoSimple                     shift and go to state 83
+
+state 56
+
+    (14) varsE -> COMMA ID . varsE
+    (14) varsE -> . COMMA ID varsE
+    (15) varsE -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 35
+    SEMICOLON       reduce using rule 87 (empty -> .)
+
+    varsE                          shift and go to state 84
+    empty                          shift and go to state 36
+
+state 57
+
+    (10) varsC -> LEFTBRACKET CTI . RIGHTBRACKET varsD
+
+    RIGHTBRACKET    shift and go to state 85
+
+
+state 58
+
+    (31) bloque -> LEFTCURLY bloqueA RIGHTCURLY .
+
+    $end            reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    ELSE            reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    ID              reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    READ            reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    WRITE           reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    IF              reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    FROM            reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    RIGHTCURLY      reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    FUNC            reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+    MAINSTART       reduce using rule 31 (bloque -> LEFTCURLY bloqueA RIGHTCURLY .)
+
+
+state 59
+
+    (32) bloqueA -> estatuto bloqueA .
+
+    RIGHTCURLY      reduce using rule 32 (bloqueA -> estatuto bloqueA .)
+
+
+state 60
+
+    (40) asignacion -> variable ASSIGNOP . exp
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    variable                       shift and go to state 77
+    exp                            shift and go to state 86
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    llamada                        shift and go to state 78
+
+state 61
+
+    (41) llamada -> ID LEFTPAR . exp llamadaA RIGHTPAR
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 87
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 62
+
+    (54) variable -> ID variableA .
+
+    ASSIGNOP        reduce using rule 54 (variable -> ID variableA .)
+    MULOP           reduce using rule 54 (variable -> ID variableA .)
+    DIVOP           reduce using rule 54 (variable -> ID variableA .)
+    SUMOP           reduce using rule 54 (variable -> ID variableA .)
+    SUBOP           reduce using rule 54 (variable -> ID variableA .)
+    LESSTHANOP      reduce using rule 54 (variable -> ID variableA .)
+    GREATERTHANOP   reduce using rule 54 (variable -> ID variableA .)
+    DIFFERENTOP     reduce using rule 54 (variable -> ID variableA .)
+    EQUALOP         reduce using rule 54 (variable -> ID variableA .)
+    ANDOP           reduce using rule 54 (variable -> ID variableA .)
+    OROP            reduce using rule 54 (variable -> ID variableA .)
+    TO              reduce using rule 54 (variable -> ID variableA .)
+    ID              reduce using rule 54 (variable -> ID variableA .)
+    READ            reduce using rule 54 (variable -> ID variableA .)
+    WRITE           reduce using rule 54 (variable -> ID variableA .)
+    IF              reduce using rule 54 (variable -> ID variableA .)
+    FROM            reduce using rule 54 (variable -> ID variableA .)
+    RIGHTCURLY      reduce using rule 54 (variable -> ID variableA .)
+    COMMA           reduce using rule 54 (variable -> ID variableA .)
+    RIGHTPAR        reduce using rule 54 (variable -> ID variableA .)
+    RIGHTBRACKET    reduce using rule 54 (variable -> ID variableA .)
+    DO              reduce using rule 54 (variable -> ID variableA .)
+
+
+state 63
+
+    (55) variableA -> LEFTBRACKET . exp RIGHTBRACKET variableB
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 88
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 64
+
+    (56) variableA -> empty .
+
+    ASSIGNOP        reduce using rule 56 (variableA -> empty .)
+    MULOP           reduce using rule 56 (variableA -> empty .)
+    DIVOP           reduce using rule 56 (variableA -> empty .)
+    SUMOP           reduce using rule 56 (variableA -> empty .)
+    SUBOP           reduce using rule 56 (variableA -> empty .)
+    LESSTHANOP      reduce using rule 56 (variableA -> empty .)
+    GREATERTHANOP   reduce using rule 56 (variableA -> empty .)
+    DIFFERENTOP     reduce using rule 56 (variableA -> empty .)
+    EQUALOP         reduce using rule 56 (variableA -> empty .)
+    ANDOP           reduce using rule 56 (variableA -> empty .)
+    OROP            reduce using rule 56 (variableA -> empty .)
+    TO              reduce using rule 56 (variableA -> empty .)
+    ID              reduce using rule 56 (variableA -> empty .)
+    READ            reduce using rule 56 (variableA -> empty .)
+    WRITE           reduce using rule 56 (variableA -> empty .)
+    IF              reduce using rule 56 (variableA -> empty .)
+    FROM            reduce using rule 56 (variableA -> empty .)
+    RIGHTCURLY      reduce using rule 56 (variableA -> empty .)
+    COMMA           reduce using rule 56 (variableA -> empty .)
+    RIGHTPAR        reduce using rule 56 (variableA -> empty .)
+    RIGHTBRACKET    reduce using rule 56 (variableA -> empty .)
+    DO              reduce using rule 56 (variableA -> empty .)
+
+
+state 65
+
+    (44) read -> READ ID .
+
+    ID              reduce using rule 44 (read -> READ ID .)
+    READ            reduce using rule 44 (read -> READ ID .)
+    WRITE           reduce using rule 44 (read -> READ ID .)
+    IF              reduce using rule 44 (read -> READ ID .)
+    FROM            reduce using rule 44 (read -> READ ID .)
+    RIGHTCURLY      reduce using rule 44 (read -> READ ID .)
+
+
+state 66
+
+    (45) escritura -> WRITE LEFTPAR . escrituraA escrituraB RIGHTPAR
+    (46) escrituraA -> . exp
+    (47) escrituraA -> . CTSTRING
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    CTSTRING        shift and go to state 91
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    escrituraA                     shift and go to state 89
+    exp                            shift and go to state 90
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 67
+
+    (50) condicion -> IF LEFTPAR . exp RIGHTPAR bloque condicionA
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 92
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 68
+
+    (53) ciclo -> FROM exp . TO exp DO bloque
+
+    TO              shift and go to state 93
+
+
+state 69
+
+    (59) exp -> exp1 . expA
+    (60) expA -> . OROP exp1 expA
+    (61) expA -> . empty
+    (87) empty -> .
+
+    OROP            shift and go to state 95
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    expA                           shift and go to state 94
+    empty                          shift and go to state 96
+
+state 70
+
+    (62) exp1 -> exp2 . exp1A
+    (63) exp1A -> . ANDOP exp2 exp1A
+    (64) exp1A -> . empty
+    (87) empty -> .
+
+    ANDOP           shift and go to state 98
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    exp1A                          shift and go to state 97
+    empty                          shift and go to state 99
+
+state 71
+
+    (65) exp2 -> exp3 . exp2A
+    (66) exp2A -> . exp2B exp3
+    (67) exp2A -> . empty
+    (68) exp2B -> . LESSTHANOP
+    (69) exp2B -> . GREATERTHANOP
+    (70) exp2B -> . DIFFERENTOP
+    (71) exp2B -> . EQUALOP
+    (87) empty -> .
+
+    LESSTHANOP      shift and go to state 103
+    GREATERTHANOP   shift and go to state 104
+    DIFFERENTOP     shift and go to state 105
+    EQUALOP         shift and go to state 106
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    exp2A                          shift and go to state 100
+    exp2B                          shift and go to state 101
+    empty                          shift and go to state 102
+
+state 72
+
+    (72) exp3 -> termino . exp3A
+    (73) exp3A -> . exp3B termino exp3A
+    (74) exp3A -> . empty
+    (75) exp3B -> . SUMOP
+    (76) exp3B -> . SUBOP
+    (87) empty -> .
+
+    SUMOP           shift and go to state 110
+    SUBOP           shift and go to state 111
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    exp3A                          shift and go to state 107
+    exp3B                          shift and go to state 108
+    empty                          shift and go to state 109
+
+state 73
+
+    (77) termino -> factor . terminoA
+    (78) terminoA -> . terminoB factor terminoA
+    (79) terminoA -> . empty
+    (80) terminoB -> . MULOP
+    (81) terminoB -> . DIVOP
+    (87) empty -> .
+
+    MULOP           shift and go to state 115
+    DIVOP           shift and go to state 116
+    SUMOP           reduce using rule 87 (empty -> .)
+    SUBOP           reduce using rule 87 (empty -> .)
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    terminoA                       shift and go to state 112
+    terminoB                       shift and go to state 113
+    empty                          shift and go to state 114
+
+state 74
+
+    (82) factor -> LEFTPAR . exp RIGHTPAR
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 117
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 75
+
+    (83) factor -> CTI .
+
+    MULOP           reduce using rule 83 (factor -> CTI .)
+    DIVOP           reduce using rule 83 (factor -> CTI .)
+    SUMOP           reduce using rule 83 (factor -> CTI .)
+    SUBOP           reduce using rule 83 (factor -> CTI .)
+    LESSTHANOP      reduce using rule 83 (factor -> CTI .)
+    GREATERTHANOP   reduce using rule 83 (factor -> CTI .)
+    DIFFERENTOP     reduce using rule 83 (factor -> CTI .)
+    EQUALOP         reduce using rule 83 (factor -> CTI .)
+    ANDOP           reduce using rule 83 (factor -> CTI .)
+    OROP            reduce using rule 83 (factor -> CTI .)
+    TO              reduce using rule 83 (factor -> CTI .)
+    ID              reduce using rule 83 (factor -> CTI .)
+    READ            reduce using rule 83 (factor -> CTI .)
+    WRITE           reduce using rule 83 (factor -> CTI .)
+    IF              reduce using rule 83 (factor -> CTI .)
+    FROM            reduce using rule 83 (factor -> CTI .)
+    RIGHTCURLY      reduce using rule 83 (factor -> CTI .)
+    COMMA           reduce using rule 83 (factor -> CTI .)
+    RIGHTPAR        reduce using rule 83 (factor -> CTI .)
+    RIGHTBRACKET    reduce using rule 83 (factor -> CTI .)
+    DO              reduce using rule 83 (factor -> CTI .)
+
+
+state 76
+
+    (84) factor -> CTF .
+
+    MULOP           reduce using rule 84 (factor -> CTF .)
+    DIVOP           reduce using rule 84 (factor -> CTF .)
+    SUMOP           reduce using rule 84 (factor -> CTF .)
+    SUBOP           reduce using rule 84 (factor -> CTF .)
+    LESSTHANOP      reduce using rule 84 (factor -> CTF .)
+    GREATERTHANOP   reduce using rule 84 (factor -> CTF .)
+    DIFFERENTOP     reduce using rule 84 (factor -> CTF .)
+    EQUALOP         reduce using rule 84 (factor -> CTF .)
+    ANDOP           reduce using rule 84 (factor -> CTF .)
+    OROP            reduce using rule 84 (factor -> CTF .)
+    TO              reduce using rule 84 (factor -> CTF .)
+    ID              reduce using rule 84 (factor -> CTF .)
+    READ            reduce using rule 84 (factor -> CTF .)
+    WRITE           reduce using rule 84 (factor -> CTF .)
+    IF              reduce using rule 84 (factor -> CTF .)
+    FROM            reduce using rule 84 (factor -> CTF .)
+    RIGHTCURLY      reduce using rule 84 (factor -> CTF .)
+    COMMA           reduce using rule 84 (factor -> CTF .)
+    RIGHTPAR        reduce using rule 84 (factor -> CTF .)
+    RIGHTBRACKET    reduce using rule 84 (factor -> CTF .)
+    DO              reduce using rule 84 (factor -> CTF .)
+
+
+state 77
+
+    (85) factor -> variable .
+
+    MULOP           reduce using rule 85 (factor -> variable .)
+    DIVOP           reduce using rule 85 (factor -> variable .)
+    SUMOP           reduce using rule 85 (factor -> variable .)
+    SUBOP           reduce using rule 85 (factor -> variable .)
+    LESSTHANOP      reduce using rule 85 (factor -> variable .)
+    GREATERTHANOP   reduce using rule 85 (factor -> variable .)
+    DIFFERENTOP     reduce using rule 85 (factor -> variable .)
+    EQUALOP         reduce using rule 85 (factor -> variable .)
+    ANDOP           reduce using rule 85 (factor -> variable .)
+    OROP            reduce using rule 85 (factor -> variable .)
+    TO              reduce using rule 85 (factor -> variable .)
+    ID              reduce using rule 85 (factor -> variable .)
+    READ            reduce using rule 85 (factor -> variable .)
+    WRITE           reduce using rule 85 (factor -> variable .)
+    IF              reduce using rule 85 (factor -> variable .)
+    FROM            reduce using rule 85 (factor -> variable .)
+    RIGHTCURLY      reduce using rule 85 (factor -> variable .)
+    COMMA           reduce using rule 85 (factor -> variable .)
+    RIGHTPAR        reduce using rule 85 (factor -> variable .)
+    RIGHTBRACKET    reduce using rule 85 (factor -> variable .)
+    DO              reduce using rule 85 (factor -> variable .)
+
+
+state 78
+
+    (86) factor -> llamada .
+
+    MULOP           reduce using rule 86 (factor -> llamada .)
+    DIVOP           reduce using rule 86 (factor -> llamada .)
+    SUMOP           reduce using rule 86 (factor -> llamada .)
+    SUBOP           reduce using rule 86 (factor -> llamada .)
+    LESSTHANOP      reduce using rule 86 (factor -> llamada .)
+    GREATERTHANOP   reduce using rule 86 (factor -> llamada .)
+    DIFFERENTOP     reduce using rule 86 (factor -> llamada .)
+    EQUALOP         reduce using rule 86 (factor -> llamada .)
+    ANDOP           reduce using rule 86 (factor -> llamada .)
+    OROP            reduce using rule 86 (factor -> llamada .)
+    TO              reduce using rule 86 (factor -> llamada .)
+    ID              reduce using rule 86 (factor -> llamada .)
+    READ            reduce using rule 86 (factor -> llamada .)
+    WRITE           reduce using rule 86 (factor -> llamada .)
+    IF              reduce using rule 86 (factor -> llamada .)
+    FROM            reduce using rule 86 (factor -> llamada .)
+    RIGHTCURLY      reduce using rule 86 (factor -> llamada .)
+    COMMA           reduce using rule 86 (factor -> llamada .)
+    RIGHTPAR        reduce using rule 86 (factor -> llamada .)
+    RIGHTBRACKET    reduce using rule 86 (factor -> llamada .)
+    DO              reduce using rule 86 (factor -> llamada .)
+
+
+state 79
+
+    (54) variable -> ID . variableA
+    (41) llamada -> ID . LEFTPAR exp llamadaA RIGHTPAR
+    (55) variableA -> . LEFTBRACKET exp RIGHTBRACKET variableB
+    (56) variableA -> . empty
+    (87) empty -> .
+
+    LEFTPAR         shift and go to state 61
+    LEFTBRACKET     shift and go to state 63
+    MULOP           reduce using rule 87 (empty -> .)
+    DIVOP           reduce using rule 87 (empty -> .)
+    SUMOP           reduce using rule 87 (empty -> .)
+    SUBOP           reduce using rule 87 (empty -> .)
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    variableA                      shift and go to state 62
+    empty                          shift and go to state 64
+
+state 80
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR funcionB . RIGHTPAR SEMICOLON funcionC bloque
+
+    RIGHTPAR        shift and go to state 118
+
+
+state 81
+
+    (21) funcionB -> params .
+
+    RIGHTPAR        reduce using rule 21 (funcionB -> params .)
+
+
+state 82
+
+    (22) funcionB -> empty .
+
+    RIGHTPAR        reduce using rule 22 (funcionB -> empty .)
+
+
+state 83
+
+    (28) params -> tipoSimple . ID paramsA
+
+    ID              shift and go to state 119
+
+
+state 84
+
+    (14) varsE -> COMMA ID varsE .
+
+    SEMICOLON       reduce using rule 14 (varsE -> COMMA ID varsE .)
+
+
+state 85
+
+    (10) varsC -> LEFTBRACKET CTI RIGHTBRACKET . varsD
+    (12) varsD -> . LEFTBRACKET CTI RIGHTBRACKET
+    (13) varsD -> . empty
+    (87) empty -> .
+
+    LEFTBRACKET     shift and go to state 120
+    SEMICOLON       reduce using rule 87 (empty -> .)
+
+    varsD                          shift and go to state 121
+    empty                          shift and go to state 122
+
+state 86
+
+    (40) asignacion -> variable ASSIGNOP exp .
+
+    ID              reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+    READ            reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+    WRITE           reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+    IF              reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+    FROM            reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+    RIGHTCURLY      reduce using rule 40 (asignacion -> variable ASSIGNOP exp .)
+
+
+state 87
+
+    (41) llamada -> ID LEFTPAR exp . llamadaA RIGHTPAR
+    (42) llamadaA -> . COMMA exp llamadaA
+    (43) llamadaA -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 124
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    llamadaA                       shift and go to state 123
+    empty                          shift and go to state 125
+
+state 88
+
+    (55) variableA -> LEFTBRACKET exp . RIGHTBRACKET variableB
+
+    RIGHTBRACKET    shift and go to state 126
+
+
+state 89
+
+    (45) escritura -> WRITE LEFTPAR escrituraA . escrituraB RIGHTPAR
+    (48) escrituraB -> . COMMA escrituraA escrituraB
+    (49) escrituraB -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 128
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    escrituraB                     shift and go to state 127
+    empty                          shift and go to state 129
+
+state 90
+
+    (46) escrituraA -> exp .
+
+    COMMA           reduce using rule 46 (escrituraA -> exp .)
+    RIGHTPAR        reduce using rule 46 (escrituraA -> exp .)
+
+
+state 91
+
+    (47) escrituraA -> CTSTRING .
+
+    COMMA           reduce using rule 47 (escrituraA -> CTSTRING .)
+    RIGHTPAR        reduce using rule 47 (escrituraA -> CTSTRING .)
+
+
+state 92
+
+    (50) condicion -> IF LEFTPAR exp . RIGHTPAR bloque condicionA
+
+    RIGHTPAR        shift and go to state 130
+
+
+state 93
+
+    (53) ciclo -> FROM exp TO . exp DO bloque
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 131
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 94
+
+    (59) exp -> exp1 expA .
+
+    TO              reduce using rule 59 (exp -> exp1 expA .)
+    ID              reduce using rule 59 (exp -> exp1 expA .)
+    READ            reduce using rule 59 (exp -> exp1 expA .)
+    WRITE           reduce using rule 59 (exp -> exp1 expA .)
+    IF              reduce using rule 59 (exp -> exp1 expA .)
+    FROM            reduce using rule 59 (exp -> exp1 expA .)
+    RIGHTCURLY      reduce using rule 59 (exp -> exp1 expA .)
+    COMMA           reduce using rule 59 (exp -> exp1 expA .)
+    RIGHTPAR        reduce using rule 59 (exp -> exp1 expA .)
+    RIGHTBRACKET    reduce using rule 59 (exp -> exp1 expA .)
+    DO              reduce using rule 59 (exp -> exp1 expA .)
+
+
+state 95
+
+    (60) expA -> OROP . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp1                           shift and go to state 132
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 96
+
+    (61) expA -> empty .
+
+    TO              reduce using rule 61 (expA -> empty .)
+    ID              reduce using rule 61 (expA -> empty .)
+    READ            reduce using rule 61 (expA -> empty .)
+    WRITE           reduce using rule 61 (expA -> empty .)
+    IF              reduce using rule 61 (expA -> empty .)
+    FROM            reduce using rule 61 (expA -> empty .)
+    RIGHTCURLY      reduce using rule 61 (expA -> empty .)
+    COMMA           reduce using rule 61 (expA -> empty .)
+    RIGHTPAR        reduce using rule 61 (expA -> empty .)
+    RIGHTBRACKET    reduce using rule 61 (expA -> empty .)
+    DO              reduce using rule 61 (expA -> empty .)
+
+
+state 97
+
+    (62) exp1 -> exp2 exp1A .
+
+    OROP            reduce using rule 62 (exp1 -> exp2 exp1A .)
+    TO              reduce using rule 62 (exp1 -> exp2 exp1A .)
+    ID              reduce using rule 62 (exp1 -> exp2 exp1A .)
+    READ            reduce using rule 62 (exp1 -> exp2 exp1A .)
+    WRITE           reduce using rule 62 (exp1 -> exp2 exp1A .)
+    IF              reduce using rule 62 (exp1 -> exp2 exp1A .)
+    FROM            reduce using rule 62 (exp1 -> exp2 exp1A .)
+    RIGHTCURLY      reduce using rule 62 (exp1 -> exp2 exp1A .)
+    COMMA           reduce using rule 62 (exp1 -> exp2 exp1A .)
+    RIGHTPAR        reduce using rule 62 (exp1 -> exp2 exp1A .)
+    RIGHTBRACKET    reduce using rule 62 (exp1 -> exp2 exp1A .)
+    DO              reduce using rule 62 (exp1 -> exp2 exp1A .)
+
+
+state 98
+
+    (63) exp1A -> ANDOP . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp2                           shift and go to state 133
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 99
+
+    (64) exp1A -> empty .
+
+    OROP            reduce using rule 64 (exp1A -> empty .)
+    TO              reduce using rule 64 (exp1A -> empty .)
+    ID              reduce using rule 64 (exp1A -> empty .)
+    READ            reduce using rule 64 (exp1A -> empty .)
+    WRITE           reduce using rule 64 (exp1A -> empty .)
+    IF              reduce using rule 64 (exp1A -> empty .)
+    FROM            reduce using rule 64 (exp1A -> empty .)
+    RIGHTCURLY      reduce using rule 64 (exp1A -> empty .)
+    COMMA           reduce using rule 64 (exp1A -> empty .)
+    RIGHTPAR        reduce using rule 64 (exp1A -> empty .)
+    RIGHTBRACKET    reduce using rule 64 (exp1A -> empty .)
+    DO              reduce using rule 64 (exp1A -> empty .)
+
+
+state 100
+
+    (65) exp2 -> exp3 exp2A .
+
+    ANDOP           reduce using rule 65 (exp2 -> exp3 exp2A .)
+    OROP            reduce using rule 65 (exp2 -> exp3 exp2A .)
+    TO              reduce using rule 65 (exp2 -> exp3 exp2A .)
+    ID              reduce using rule 65 (exp2 -> exp3 exp2A .)
+    READ            reduce using rule 65 (exp2 -> exp3 exp2A .)
+    WRITE           reduce using rule 65 (exp2 -> exp3 exp2A .)
+    IF              reduce using rule 65 (exp2 -> exp3 exp2A .)
+    FROM            reduce using rule 65 (exp2 -> exp3 exp2A .)
+    RIGHTCURLY      reduce using rule 65 (exp2 -> exp3 exp2A .)
+    COMMA           reduce using rule 65 (exp2 -> exp3 exp2A .)
+    RIGHTPAR        reduce using rule 65 (exp2 -> exp3 exp2A .)
+    RIGHTBRACKET    reduce using rule 65 (exp2 -> exp3 exp2A .)
+    DO              reduce using rule 65 (exp2 -> exp3 exp2A .)
+
+
+state 101
+
+    (66) exp2A -> exp2B . exp3
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp3                           shift and go to state 134
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 102
+
+    (67) exp2A -> empty .
+
+    ANDOP           reduce using rule 67 (exp2A -> empty .)
+    OROP            reduce using rule 67 (exp2A -> empty .)
+    TO              reduce using rule 67 (exp2A -> empty .)
+    ID              reduce using rule 67 (exp2A -> empty .)
+    READ            reduce using rule 67 (exp2A -> empty .)
+    WRITE           reduce using rule 67 (exp2A -> empty .)
+    IF              reduce using rule 67 (exp2A -> empty .)
+    FROM            reduce using rule 67 (exp2A -> empty .)
+    RIGHTCURLY      reduce using rule 67 (exp2A -> empty .)
+    COMMA           reduce using rule 67 (exp2A -> empty .)
+    RIGHTPAR        reduce using rule 67 (exp2A -> empty .)
+    RIGHTBRACKET    reduce using rule 67 (exp2A -> empty .)
+    DO              reduce using rule 67 (exp2A -> empty .)
+
+
+state 103
+
+    (68) exp2B -> LESSTHANOP .
+
+    LEFTPAR         reduce using rule 68 (exp2B -> LESSTHANOP .)
+    CTI             reduce using rule 68 (exp2B -> LESSTHANOP .)
+    CTF             reduce using rule 68 (exp2B -> LESSTHANOP .)
+    ID              reduce using rule 68 (exp2B -> LESSTHANOP .)
+
+
+state 104
+
+    (69) exp2B -> GREATERTHANOP .
+
+    LEFTPAR         reduce using rule 69 (exp2B -> GREATERTHANOP .)
+    CTI             reduce using rule 69 (exp2B -> GREATERTHANOP .)
+    CTF             reduce using rule 69 (exp2B -> GREATERTHANOP .)
+    ID              reduce using rule 69 (exp2B -> GREATERTHANOP .)
+
+
+state 105
+
+    (70) exp2B -> DIFFERENTOP .
+
+    LEFTPAR         reduce using rule 70 (exp2B -> DIFFERENTOP .)
+    CTI             reduce using rule 70 (exp2B -> DIFFERENTOP .)
+    CTF             reduce using rule 70 (exp2B -> DIFFERENTOP .)
+    ID              reduce using rule 70 (exp2B -> DIFFERENTOP .)
+
+
+state 106
+
+    (71) exp2B -> EQUALOP .
+
+    LEFTPAR         reduce using rule 71 (exp2B -> EQUALOP .)
+    CTI             reduce using rule 71 (exp2B -> EQUALOP .)
+    CTF             reduce using rule 71 (exp2B -> EQUALOP .)
+    ID              reduce using rule 71 (exp2B -> EQUALOP .)
+
+
+state 107
+
+    (72) exp3 -> termino exp3A .
+
+    LESSTHANOP      reduce using rule 72 (exp3 -> termino exp3A .)
+    GREATERTHANOP   reduce using rule 72 (exp3 -> termino exp3A .)
+    DIFFERENTOP     reduce using rule 72 (exp3 -> termino exp3A .)
+    EQUALOP         reduce using rule 72 (exp3 -> termino exp3A .)
+    ANDOP           reduce using rule 72 (exp3 -> termino exp3A .)
+    OROP            reduce using rule 72 (exp3 -> termino exp3A .)
+    TO              reduce using rule 72 (exp3 -> termino exp3A .)
+    ID              reduce using rule 72 (exp3 -> termino exp3A .)
+    READ            reduce using rule 72 (exp3 -> termino exp3A .)
+    WRITE           reduce using rule 72 (exp3 -> termino exp3A .)
+    IF              reduce using rule 72 (exp3 -> termino exp3A .)
+    FROM            reduce using rule 72 (exp3 -> termino exp3A .)
+    RIGHTCURLY      reduce using rule 72 (exp3 -> termino exp3A .)
+    COMMA           reduce using rule 72 (exp3 -> termino exp3A .)
+    RIGHTPAR        reduce using rule 72 (exp3 -> termino exp3A .)
+    RIGHTBRACKET    reduce using rule 72 (exp3 -> termino exp3A .)
+    DO              reduce using rule 72 (exp3 -> termino exp3A .)
+
+
+state 108
+
+    (73) exp3A -> exp3B . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    termino                        shift and go to state 135
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 109
+
+    (74) exp3A -> empty .
+
+    LESSTHANOP      reduce using rule 74 (exp3A -> empty .)
+    GREATERTHANOP   reduce using rule 74 (exp3A -> empty .)
+    DIFFERENTOP     reduce using rule 74 (exp3A -> empty .)
+    EQUALOP         reduce using rule 74 (exp3A -> empty .)
+    ANDOP           reduce using rule 74 (exp3A -> empty .)
+    OROP            reduce using rule 74 (exp3A -> empty .)
+    TO              reduce using rule 74 (exp3A -> empty .)
+    ID              reduce using rule 74 (exp3A -> empty .)
+    READ            reduce using rule 74 (exp3A -> empty .)
+    WRITE           reduce using rule 74 (exp3A -> empty .)
+    IF              reduce using rule 74 (exp3A -> empty .)
+    FROM            reduce using rule 74 (exp3A -> empty .)
+    RIGHTCURLY      reduce using rule 74 (exp3A -> empty .)
+    COMMA           reduce using rule 74 (exp3A -> empty .)
+    RIGHTPAR        reduce using rule 74 (exp3A -> empty .)
+    RIGHTBRACKET    reduce using rule 74 (exp3A -> empty .)
+    DO              reduce using rule 74 (exp3A -> empty .)
+
+
+state 110
+
+    (75) exp3B -> SUMOP .
+
+    LEFTPAR         reduce using rule 75 (exp3B -> SUMOP .)
+    CTI             reduce using rule 75 (exp3B -> SUMOP .)
+    CTF             reduce using rule 75 (exp3B -> SUMOP .)
+    ID              reduce using rule 75 (exp3B -> SUMOP .)
+
+
+state 111
+
+    (76) exp3B -> SUBOP .
+
+    LEFTPAR         reduce using rule 76 (exp3B -> SUBOP .)
+    CTI             reduce using rule 76 (exp3B -> SUBOP .)
+    CTF             reduce using rule 76 (exp3B -> SUBOP .)
+    ID              reduce using rule 76 (exp3B -> SUBOP .)
+
+
+state 112
+
+    (77) termino -> factor terminoA .
+
+    SUMOP           reduce using rule 77 (termino -> factor terminoA .)
+    SUBOP           reduce using rule 77 (termino -> factor terminoA .)
+    LESSTHANOP      reduce using rule 77 (termino -> factor terminoA .)
+    GREATERTHANOP   reduce using rule 77 (termino -> factor terminoA .)
+    DIFFERENTOP     reduce using rule 77 (termino -> factor terminoA .)
+    EQUALOP         reduce using rule 77 (termino -> factor terminoA .)
+    ANDOP           reduce using rule 77 (termino -> factor terminoA .)
+    OROP            reduce using rule 77 (termino -> factor terminoA .)
+    TO              reduce using rule 77 (termino -> factor terminoA .)
+    ID              reduce using rule 77 (termino -> factor terminoA .)
+    READ            reduce using rule 77 (termino -> factor terminoA .)
+    WRITE           reduce using rule 77 (termino -> factor terminoA .)
+    IF              reduce using rule 77 (termino -> factor terminoA .)
+    FROM            reduce using rule 77 (termino -> factor terminoA .)
+    RIGHTCURLY      reduce using rule 77 (termino -> factor terminoA .)
+    COMMA           reduce using rule 77 (termino -> factor terminoA .)
+    RIGHTPAR        reduce using rule 77 (termino -> factor terminoA .)
+    RIGHTBRACKET    reduce using rule 77 (termino -> factor terminoA .)
+    DO              reduce using rule 77 (termino -> factor terminoA .)
+
+
+state 113
+
+    (78) terminoA -> terminoB . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    factor                         shift and go to state 136
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 114
+
+    (79) terminoA -> empty .
+
+    SUMOP           reduce using rule 79 (terminoA -> empty .)
+    SUBOP           reduce using rule 79 (terminoA -> empty .)
+    LESSTHANOP      reduce using rule 79 (terminoA -> empty .)
+    GREATERTHANOP   reduce using rule 79 (terminoA -> empty .)
+    DIFFERENTOP     reduce using rule 79 (terminoA -> empty .)
+    EQUALOP         reduce using rule 79 (terminoA -> empty .)
+    ANDOP           reduce using rule 79 (terminoA -> empty .)
+    OROP            reduce using rule 79 (terminoA -> empty .)
+    TO              reduce using rule 79 (terminoA -> empty .)
+    ID              reduce using rule 79 (terminoA -> empty .)
+    READ            reduce using rule 79 (terminoA -> empty .)
+    WRITE           reduce using rule 79 (terminoA -> empty .)
+    IF              reduce using rule 79 (terminoA -> empty .)
+    FROM            reduce using rule 79 (terminoA -> empty .)
+    RIGHTCURLY      reduce using rule 79 (terminoA -> empty .)
+    COMMA           reduce using rule 79 (terminoA -> empty .)
+    RIGHTPAR        reduce using rule 79 (terminoA -> empty .)
+    RIGHTBRACKET    reduce using rule 79 (terminoA -> empty .)
+    DO              reduce using rule 79 (terminoA -> empty .)
+
+
+state 115
+
+    (80) terminoB -> MULOP .
+
+    LEFTPAR         reduce using rule 80 (terminoB -> MULOP .)
+    CTI             reduce using rule 80 (terminoB -> MULOP .)
+    CTF             reduce using rule 80 (terminoB -> MULOP .)
+    ID              reduce using rule 80 (terminoB -> MULOP .)
+
+
+state 116
+
+    (81) terminoB -> DIVOP .
+
+    LEFTPAR         reduce using rule 81 (terminoB -> DIVOP .)
+    CTI             reduce using rule 81 (terminoB -> DIVOP .)
+    CTF             reduce using rule 81 (terminoB -> DIVOP .)
+    ID              reduce using rule 81 (terminoB -> DIVOP .)
+
+
+state 117
+
+    (82) factor -> LEFTPAR exp . RIGHTPAR
+
+    RIGHTPAR        shift and go to state 137
+
+
+state 118
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR . SEMICOLON funcionC bloque
+
+    SEMICOLON       shift and go to state 138
+
+
+state 119
+
+    (28) params -> tipoSimple ID . paramsA
+    (29) paramsA -> . COMMA tipoSimple ID paramsA
+    (30) paramsA -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 140
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    paramsA                        shift and go to state 139
+    empty                          shift and go to state 141
+
+state 120
+
+    (12) varsD -> LEFTBRACKET . CTI RIGHTBRACKET
+
+    CTI             shift and go to state 142
+
+
+state 121
+
+    (10) varsC -> LEFTBRACKET CTI RIGHTBRACKET varsD .
+
+    SEMICOLON       reduce using rule 10 (varsC -> LEFTBRACKET CTI RIGHTBRACKET varsD .)
+
+
+state 122
+
+    (13) varsD -> empty .
+
+    SEMICOLON       reduce using rule 13 (varsD -> empty .)
+
+
+state 123
+
+    (41) llamada -> ID LEFTPAR exp llamadaA . RIGHTPAR
+
+    RIGHTPAR        shift and go to state 143
+
+
+state 124
+
+    (42) llamadaA -> COMMA . exp llamadaA
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 144
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 125
+
+    (43) llamadaA -> empty .
+
+    RIGHTPAR        reduce using rule 43 (llamadaA -> empty .)
+
+
+state 126
+
+    (55) variableA -> LEFTBRACKET exp RIGHTBRACKET . variableB
+    (57) variableB -> . LEFTBRACKET exp RIGHTBRACKET
+    (58) variableB -> . empty
+    (87) empty -> .
+
+    LEFTBRACKET     shift and go to state 145
+    ASSIGNOP        reduce using rule 87 (empty -> .)
+    MULOP           reduce using rule 87 (empty -> .)
+    DIVOP           reduce using rule 87 (empty -> .)
+    SUMOP           reduce using rule 87 (empty -> .)
+    SUBOP           reduce using rule 87 (empty -> .)
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    variableB                      shift and go to state 146
+    empty                          shift and go to state 147
+
+state 127
+
+    (45) escritura -> WRITE LEFTPAR escrituraA escrituraB . RIGHTPAR
+
+    RIGHTPAR        shift and go to state 148
+
+
+state 128
+
+    (48) escrituraB -> COMMA . escrituraA escrituraB
+    (46) escrituraA -> . exp
+    (47) escrituraA -> . CTSTRING
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    CTSTRING        shift and go to state 91
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    escrituraA                     shift and go to state 149
+    exp                            shift and go to state 90
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 129
+
+    (49) escrituraB -> empty .
+
+    RIGHTPAR        reduce using rule 49 (escrituraB -> empty .)
+
+
+state 130
+
+    (50) condicion -> IF LEFTPAR exp RIGHTPAR . bloque condicionA
+    (31) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 29
+
+    bloque                         shift and go to state 150
+
+state 131
+
+    (53) ciclo -> FROM exp TO exp . DO bloque
+
+    DO              shift and go to state 151
+
+
+state 132
+
+    (60) expA -> OROP exp1 . expA
+    (60) expA -> . OROP exp1 expA
+    (61) expA -> . empty
+    (87) empty -> .
+
+    OROP            shift and go to state 95
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    expA                           shift and go to state 152
+    empty                          shift and go to state 96
+
+state 133
+
+    (63) exp1A -> ANDOP exp2 . exp1A
+    (63) exp1A -> . ANDOP exp2 exp1A
+    (64) exp1A -> . empty
+    (87) empty -> .
+
+    ANDOP           shift and go to state 98
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    exp1A                          shift and go to state 153
+    empty                          shift and go to state 99
+
+state 134
+
+    (66) exp2A -> exp2B exp3 .
+
+    ANDOP           reduce using rule 66 (exp2A -> exp2B exp3 .)
+    OROP            reduce using rule 66 (exp2A -> exp2B exp3 .)
+    TO              reduce using rule 66 (exp2A -> exp2B exp3 .)
+    ID              reduce using rule 66 (exp2A -> exp2B exp3 .)
+    READ            reduce using rule 66 (exp2A -> exp2B exp3 .)
+    WRITE           reduce using rule 66 (exp2A -> exp2B exp3 .)
+    IF              reduce using rule 66 (exp2A -> exp2B exp3 .)
+    FROM            reduce using rule 66 (exp2A -> exp2B exp3 .)
+    RIGHTCURLY      reduce using rule 66 (exp2A -> exp2B exp3 .)
+    COMMA           reduce using rule 66 (exp2A -> exp2B exp3 .)
+    RIGHTPAR        reduce using rule 66 (exp2A -> exp2B exp3 .)
+    RIGHTBRACKET    reduce using rule 66 (exp2A -> exp2B exp3 .)
+    DO              reduce using rule 66 (exp2A -> exp2B exp3 .)
+
+
+state 135
+
+    (73) exp3A -> exp3B termino . exp3A
+    (73) exp3A -> . exp3B termino exp3A
+    (74) exp3A -> . empty
+    (75) exp3B -> . SUMOP
+    (76) exp3B -> . SUBOP
+    (87) empty -> .
+
+    SUMOP           shift and go to state 110
+    SUBOP           shift and go to state 111
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    exp3B                          shift and go to state 108
+    exp3A                          shift and go to state 154
+    empty                          shift and go to state 109
+
+state 136
+
+    (78) terminoA -> terminoB factor . terminoA
+    (78) terminoA -> . terminoB factor terminoA
+    (79) terminoA -> . empty
+    (80) terminoB -> . MULOP
+    (81) terminoB -> . DIVOP
+    (87) empty -> .
+
+    MULOP           shift and go to state 115
+    DIVOP           shift and go to state 116
+    SUMOP           reduce using rule 87 (empty -> .)
+    SUBOP           reduce using rule 87 (empty -> .)
+    LESSTHANOP      reduce using rule 87 (empty -> .)
+    GREATERTHANOP   reduce using rule 87 (empty -> .)
+    DIFFERENTOP     reduce using rule 87 (empty -> .)
+    EQUALOP         reduce using rule 87 (empty -> .)
+    ANDOP           reduce using rule 87 (empty -> .)
+    OROP            reduce using rule 87 (empty -> .)
+    TO              reduce using rule 87 (empty -> .)
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+    COMMA           reduce using rule 87 (empty -> .)
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+    RIGHTBRACKET    reduce using rule 87 (empty -> .)
+    DO              reduce using rule 87 (empty -> .)
+
+    terminoB                       shift and go to state 113
+    terminoA                       shift and go to state 155
+    empty                          shift and go to state 114
+
+state 137
+
+    (82) factor -> LEFTPAR exp RIGHTPAR .
+
+    MULOP           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    DIVOP           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    SUMOP           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    SUBOP           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    LESSTHANOP      reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    GREATERTHANOP   reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    DIFFERENTOP     reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    EQUALOP         reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    ANDOP           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    OROP            reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    TO              reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    ID              reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    READ            reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    WRITE           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    IF              reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    FROM            reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    RIGHTCURLY      reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    COMMA           reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    RIGHTPAR        reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    RIGHTBRACKET    reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+    DO              reduce using rule 82 (factor -> LEFTPAR exp RIGHTPAR .)
+
+
+state 138
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON . funcionC bloque
+    (23) funcionC -> . vars
+    (24) funcionC -> . empty
+    (6) vars -> . VAR varsA
+    (87) empty -> .
+
+    VAR             shift and go to state 8
+    LEFTCURLY       reduce using rule 87 (empty -> .)
+
+    funcionC                       shift and go to state 156
+    vars                           shift and go to state 157
+    empty                          shift and go to state 158
+
+state 139
+
+    (28) params -> tipoSimple ID paramsA .
+
+    RIGHTPAR        reduce using rule 28 (params -> tipoSimple ID paramsA .)
+
+
+state 140
+
+    (29) paramsA -> COMMA . tipoSimple ID paramsA
+    (26) tipoSimple -> . INT
+    (27) tipoSimple -> . FLOAT
+
+    INT             shift and go to state 17
+    FLOAT           shift and go to state 18
+
+    tipoSimple                     shift and go to state 159
+
+state 141
+
+    (30) paramsA -> empty .
+
+    RIGHTPAR        reduce using rule 30 (paramsA -> empty .)
+
+
+state 142
+
+    (12) varsD -> LEFTBRACKET CTI . RIGHTBRACKET
+
+    RIGHTBRACKET    shift and go to state 160
+
+
+state 143
+
+    (41) llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .
+
+    ID              reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    READ            reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    WRITE           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    IF              reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    FROM            reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    RIGHTCURLY      reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    MULOP           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    DIVOP           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    SUMOP           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    SUBOP           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    LESSTHANOP      reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    GREATERTHANOP   reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    DIFFERENTOP     reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    EQUALOP         reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    ANDOP           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    OROP            reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    TO              reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    COMMA           reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    RIGHTPAR        reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    RIGHTBRACKET    reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+    DO              reduce using rule 41 (llamada -> ID LEFTPAR exp llamadaA RIGHTPAR .)
+
+
+state 144
+
+    (42) llamadaA -> COMMA exp . llamadaA
+    (42) llamadaA -> . COMMA exp llamadaA
+    (43) llamadaA -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 124
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    llamadaA                       shift and go to state 161
+    empty                          shift and go to state 125
+
+state 145
+
+    (57) variableB -> LEFTBRACKET . exp RIGHTBRACKET
+    (59) exp -> . exp1 expA
+    (62) exp1 -> . exp2 exp1A
+    (65) exp2 -> . exp3 exp2A
+    (72) exp3 -> . termino exp3A
+    (77) termino -> . factor terminoA
+    (82) factor -> . LEFTPAR exp RIGHTPAR
+    (83) factor -> . CTI
+    (84) factor -> . CTF
+    (85) factor -> . variable
+    (86) factor -> . llamada
+    (54) variable -> . ID variableA
+    (41) llamada -> . ID LEFTPAR exp llamadaA RIGHTPAR
+
+    LEFTPAR         shift and go to state 74
+    CTI             shift and go to state 75
+    CTF             shift and go to state 76
+    ID              shift and go to state 79
+
+    exp                            shift and go to state 162
+    exp1                           shift and go to state 69
+    exp2                           shift and go to state 70
+    exp3                           shift and go to state 71
+    termino                        shift and go to state 72
+    factor                         shift and go to state 73
+    variable                       shift and go to state 77
+    llamada                        shift and go to state 78
+
+state 146
+
+    (55) variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .
+
+    ASSIGNOP        reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    MULOP           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    DIVOP           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    SUMOP           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    SUBOP           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    LESSTHANOP      reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    GREATERTHANOP   reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    DIFFERENTOP     reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    EQUALOP         reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    ANDOP           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    OROP            reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    TO              reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    ID              reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    READ            reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    WRITE           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    IF              reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    FROM            reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    RIGHTCURLY      reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    COMMA           reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    RIGHTPAR        reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    RIGHTBRACKET    reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+    DO              reduce using rule 55 (variableA -> LEFTBRACKET exp RIGHTBRACKET variableB .)
+
+
+state 147
+
+    (58) variableB -> empty .
+
+    ASSIGNOP        reduce using rule 58 (variableB -> empty .)
+    MULOP           reduce using rule 58 (variableB -> empty .)
+    DIVOP           reduce using rule 58 (variableB -> empty .)
+    SUMOP           reduce using rule 58 (variableB -> empty .)
+    SUBOP           reduce using rule 58 (variableB -> empty .)
+    LESSTHANOP      reduce using rule 58 (variableB -> empty .)
+    GREATERTHANOP   reduce using rule 58 (variableB -> empty .)
+    DIFFERENTOP     reduce using rule 58 (variableB -> empty .)
+    EQUALOP         reduce using rule 58 (variableB -> empty .)
+    ANDOP           reduce using rule 58 (variableB -> empty .)
+    OROP            reduce using rule 58 (variableB -> empty .)
+    TO              reduce using rule 58 (variableB -> empty .)
+    ID              reduce using rule 58 (variableB -> empty .)
+    READ            reduce using rule 58 (variableB -> empty .)
+    WRITE           reduce using rule 58 (variableB -> empty .)
+    IF              reduce using rule 58 (variableB -> empty .)
+    FROM            reduce using rule 58 (variableB -> empty .)
+    RIGHTCURLY      reduce using rule 58 (variableB -> empty .)
+    COMMA           reduce using rule 58 (variableB -> empty .)
+    RIGHTPAR        reduce using rule 58 (variableB -> empty .)
+    RIGHTBRACKET    reduce using rule 58 (variableB -> empty .)
+    DO              reduce using rule 58 (variableB -> empty .)
+
+
+state 148
+
+    (45) escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .
+
+    ID              reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+    READ            reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+    WRITE           reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+    IF              reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+    FROM            reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+    RIGHTCURLY      reduce using rule 45 (escritura -> WRITE LEFTPAR escrituraA escrituraB RIGHTPAR .)
+
+
+state 149
+
+    (48) escrituraB -> COMMA escrituraA . escrituraB
+    (48) escrituraB -> . COMMA escrituraA escrituraB
+    (49) escrituraB -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 128
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    escrituraB                     shift and go to state 163
+    empty                          shift and go to state 129
+
+state 150
+
+    (50) condicion -> IF LEFTPAR exp RIGHTPAR bloque . condicionA
+    (51) condicionA -> . ELSE bloque
+    (52) condicionA -> . empty
+    (87) empty -> .
+
+    ELSE            shift and go to state 165
+    ID              reduce using rule 87 (empty -> .)
+    READ            reduce using rule 87 (empty -> .)
+    WRITE           reduce using rule 87 (empty -> .)
+    IF              reduce using rule 87 (empty -> .)
+    FROM            reduce using rule 87 (empty -> .)
+    RIGHTCURLY      reduce using rule 87 (empty -> .)
+
+    condicionA                     shift and go to state 164
+    empty                          shift and go to state 166
+
+state 151
+
+    (53) ciclo -> FROM exp TO exp DO . bloque
+    (31) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 29
+
+    bloque                         shift and go to state 167
+
+state 152
+
+    (60) expA -> OROP exp1 expA .
+
+    TO              reduce using rule 60 (expA -> OROP exp1 expA .)
+    ID              reduce using rule 60 (expA -> OROP exp1 expA .)
+    READ            reduce using rule 60 (expA -> OROP exp1 expA .)
+    WRITE           reduce using rule 60 (expA -> OROP exp1 expA .)
+    IF              reduce using rule 60 (expA -> OROP exp1 expA .)
+    FROM            reduce using rule 60 (expA -> OROP exp1 expA .)
+    RIGHTCURLY      reduce using rule 60 (expA -> OROP exp1 expA .)
+    COMMA           reduce using rule 60 (expA -> OROP exp1 expA .)
+    RIGHTPAR        reduce using rule 60 (expA -> OROP exp1 expA .)
+    RIGHTBRACKET    reduce using rule 60 (expA -> OROP exp1 expA .)
+    DO              reduce using rule 60 (expA -> OROP exp1 expA .)
+
+
+state 153
+
+    (63) exp1A -> ANDOP exp2 exp1A .
+
+    OROP            reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    TO              reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    ID              reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    READ            reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    WRITE           reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    IF              reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    FROM            reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    RIGHTCURLY      reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    COMMA           reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    RIGHTPAR        reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    RIGHTBRACKET    reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+    DO              reduce using rule 63 (exp1A -> ANDOP exp2 exp1A .)
+
+
+state 154
+
+    (73) exp3A -> exp3B termino exp3A .
+
+    LESSTHANOP      reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    GREATERTHANOP   reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    DIFFERENTOP     reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    EQUALOP         reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    ANDOP           reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    OROP            reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    TO              reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    ID              reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    READ            reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    WRITE           reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    IF              reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    FROM            reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    RIGHTCURLY      reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    COMMA           reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    RIGHTPAR        reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    RIGHTBRACKET    reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+    DO              reduce using rule 73 (exp3A -> exp3B termino exp3A .)
+
+
+state 155
+
+    (78) terminoA -> terminoB factor terminoA .
+
+    SUMOP           reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    SUBOP           reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    LESSTHANOP      reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    GREATERTHANOP   reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    DIFFERENTOP     reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    EQUALOP         reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    ANDOP           reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    OROP            reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    TO              reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    ID              reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    READ            reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    WRITE           reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    IF              reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    FROM            reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    RIGHTCURLY      reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    COMMA           reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    RIGHTPAR        reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    RIGHTBRACKET    reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+    DO              reduce using rule 78 (terminoA -> terminoB factor terminoA .)
+
+
+state 156
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC . bloque
+    (31) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 29
+
+    bloque                         shift and go to state 168
+
+state 157
+
+    (23) funcionC -> vars .
+
+    LEFTCURLY       reduce using rule 23 (funcionC -> vars .)
+
+
+state 158
+
+    (24) funcionC -> empty .
+
+    LEFTCURLY       reduce using rule 24 (funcionC -> empty .)
+
+
+state 159
+
+    (29) paramsA -> COMMA tipoSimple . ID paramsA
+
+    ID              shift and go to state 169
+
+
+state 160
+
+    (12) varsD -> LEFTBRACKET CTI RIGHTBRACKET .
+
+    SEMICOLON       reduce using rule 12 (varsD -> LEFTBRACKET CTI RIGHTBRACKET .)
+
+
+state 161
+
+    (42) llamadaA -> COMMA exp llamadaA .
+
+    RIGHTPAR        reduce using rule 42 (llamadaA -> COMMA exp llamadaA .)
+
+
+state 162
+
+    (57) variableB -> LEFTBRACKET exp . RIGHTBRACKET
+
+    RIGHTBRACKET    shift and go to state 170
+
+
+state 163
+
+    (48) escrituraB -> COMMA escrituraA escrituraB .
+
+    RIGHTPAR        reduce using rule 48 (escrituraB -> COMMA escrituraA escrituraB .)
+
+
+state 164
+
+    (50) condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .
+
+    ID              reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+    READ            reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+    WRITE           reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+    IF              reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+    FROM            reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+    RIGHTCURLY      reduce using rule 50 (condicion -> IF LEFTPAR exp RIGHTPAR bloque condicionA .)
+
+
+state 165
+
+    (51) condicionA -> ELSE . bloque
+    (31) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
+
+    LEFTCURLY       shift and go to state 29
+
+    bloque                         shift and go to state 171
+
+state 166
+
+    (52) condicionA -> empty .
+
+    ID              reduce using rule 52 (condicionA -> empty .)
+    READ            reduce using rule 52 (condicionA -> empty .)
+    WRITE           reduce using rule 52 (condicionA -> empty .)
+    IF              reduce using rule 52 (condicionA -> empty .)
+    FROM            reduce using rule 52 (condicionA -> empty .)
+    RIGHTCURLY      reduce using rule 52 (condicionA -> empty .)
+
+
+state 167
+
+    (53) ciclo -> FROM exp TO exp DO bloque .
+
+    ID              reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+    READ            reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+    WRITE           reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+    IF              reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+    FROM            reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+    RIGHTCURLY      reduce using rule 53 (ciclo -> FROM exp TO exp DO bloque .)
+
+
+state 168
+
+    (18) funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque .
+
+    FUNC            reduce using rule 18 (funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque .)
+    MAINSTART       reduce using rule 18 (funcion -> FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque .)
+
+
+state 169
+
+    (29) paramsA -> COMMA tipoSimple ID . paramsA
+    (29) paramsA -> . COMMA tipoSimple ID paramsA
+    (30) paramsA -> . empty
+    (87) empty -> .
+
+    COMMA           shift and go to state 140
+    RIGHTPAR        reduce using rule 87 (empty -> .)
+
+    paramsA                        shift and go to state 172
+    empty                          shift and go to state 141
+
+state 170
+
+    (57) variableB -> LEFTBRACKET exp RIGHTBRACKET .
+
+    ASSIGNOP        reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    MULOP           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    DIVOP           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    SUMOP           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    SUBOP           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    LESSTHANOP      reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    GREATERTHANOP   reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    DIFFERENTOP     reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    EQUALOP         reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    ANDOP           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    OROP            reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    TO              reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    ID              reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    READ            reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    WRITE           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    IF              reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    FROM            reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    RIGHTCURLY      reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    COMMA           reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    RIGHTPAR        reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    RIGHTBRACKET    reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+    DO              reduce using rule 57 (variableB -> LEFTBRACKET exp RIGHTBRACKET .)
+
+
+state 171
+
+    (51) condicionA -> ELSE bloque .
+
+    ID              reduce using rule 51 (condicionA -> ELSE bloque .)
+    READ            reduce using rule 51 (condicionA -> ELSE bloque .)
+    WRITE           reduce using rule 51 (condicionA -> ELSE bloque .)
+    IF              reduce using rule 51 (condicionA -> ELSE bloque .)
+    FROM            reduce using rule 51 (condicionA -> ELSE bloque .)
+    RIGHTCURLY      reduce using rule 51 (condicionA -> ELSE bloque .)
+
+
+state 172
+
+    (29) paramsA -> COMMA tipoSimple ID paramsA .
+
+    RIGHTPAR        reduce using rule 29 (paramsA -> COMMA tipoSimple ID paramsA .)
+
