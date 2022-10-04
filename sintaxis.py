@@ -1,13 +1,32 @@
 import ply.yacc as yacc
 
-from Avance1_Lexico import tokens
+from lexico import tokens
 
 def p_program(p):
-    '''program : PROGRAM ID SEMICOLON programA programB main'''
+    '''program : PROGRAM programNP1 ID programNP2 SEMICOLON programA programB main'''
     p[0] = 1
 
+# Neuralgic point (NP) in which we create the procedure directory (PD)
+def p_programNP1(p):
+    '''programNP1 :'''
+    global pd 
+    pd = {}
+
+# NP in which we add the program ID to the PD and assign the type 'void' to it
+# We also set current_func_name to the program ID in order to be
+# able to link the global variable table (if there is one) to it
+# We also save the program name to a variable so we can easily
+# access the global variable table (VT) later
+def p_programNP2(p):
+    '''programNP2 :'''
+    pd[p[-1]] = {'type': 'void'}
+    global current_func_name
+    current_func_name = p[-1]
+    global program_name
+    program_name = p[-1]
+
 def p_programA(p):
-    '''programA : vars 
+    '''programA : vars
                     | empty'''
 
 def p_programB(p):
@@ -15,33 +34,108 @@ def p_programB(p):
                     | empty'''
 
 def p_vars(p):
-    '''vars : VAR varsA'''
+    '''vars : varsNP1 VAR varsA varsNP7'''
+
+# NP in which we link the VT with the function it belongs to
+def p_varsNP7(p):
+    '''varsNP7 :'''
+    global current_func_name
+    pd[current_func_name]['vt'] = vt
+
+# NP in which we create the VT
+def p_varsNP1(p):
+    '''varsNP1 :'''
+    global vt
+    vt = {}
 
 def p_varsA(p):
     '''varsA : varsB SEMICOLON varsF'''
 
 def p_varsB(p):
-    '''varsB : FILE ID varsE
-                | tipoSimple ID varsC'''
+    '''varsB : FILE varsNP2 ID varsNP3 varsNP6 varsE
+                | tipoSimple varsNP2 ID varsNP3 varsC varsNP6'''
+
+# NP in which we save the variable's type in a variable
+def p_varsNP2(p):
+    '''varsNP2 :'''
+    global current_var_type
+    current_var_type = p[-1]
+
+# NP in which we check if there already exists a variable
+# with the same name in the VT, and if not, we add the variable.
+def p_varsNP6(p):
+    '''varsNP6 :'''
+    global current_var_id
+    if current_var_id in vt:
+        raise Exception('This variable already exists: ' + current_var_id)
+    else:
+        vt[current_var_id] = {'type': current_var_type}
 
 def p_varsC(p):
-    '''varsC : LEFTBRACKET CTI RIGHTBRACKET varsD
+    '''varsC : LEFTBRACKET CTI varsNP4 RIGHTBRACKET varsD
                 | empty'''
+
+# NP in which we check if the 1D array is between the size of 1 and 100.
+# If it is we update the variable's type
+def p_varsNP4(p):
+    '''varsNP4 :'''
+    global current_var_type
+    arrSize = int(p[-1])
+    if 1 <= arrSize <= 100:
+        current_var_type = '1d_arr'
+    else:
+        raise Exception('Array size must be between 1 and 100')
 
 def p_varsD(p):
-    '''varsD : LEFTBRACKET CTI RIGHTBRACKET
+    '''varsD : LEFTBRACKET CTI varsNP5 RIGHTBRACKET
                 | empty'''
 
+# NP in which we check if the 2D array is between the size of 1 and 100.
+# If it is we update the variable's type
+def p_varsNP5(p):
+    '''varsNP5 :'''
+    global current_var_type
+    arrSize = int(p[-1])
+    if 1 <= arrSize <= 100:
+        current_var_type = '2d_arr'
+    else:
+        raise Exception('Array size must be between 1 and 100')
+
 def p_varsE(p):
-    '''varsE : COMMA ID varsE
+    '''varsE : COMMA ID varsNP3 varsE
                 | empty'''
+
+# NP in which we save the variable's ID in a variable
+def p_varsNP3(p):
+    '''varsNP3 :'''
+    global current_var_id
+    current_var_id = p[-1]
 
 def p_varsF(p):
     '''varsF : varsA
                 | empty'''
 
 def p_funcion(p):
-    '''funcion : FUNC funcionA ID LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque'''
+    '''funcion : FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque'''
+
+# NP in which we save the function's type in a variable
+def p_funcionNP1(p):
+    '''funcionNP1 :'''
+    global current_func_type
+    current_func_type = p[-1]
+
+# NP in which we check if there already exists a procedure
+# with the same name in the PD, and if not, we add the function.
+# If the function gets added, we also save its name in a variable
+# so that we can link it to its variable table (VT) later
+def p_funcionNP2(p):
+    '''funcionNP2 :'''
+    global current_func_name
+    if p[-1] in pd:
+        raise Exception('This function already exists: ' + current_func_name)
+    else:
+        pd[p[-1]] = {'type': current_func_type}
+        current_func_name = p[-1]
 
 def p_funcionA(p):
     '''funcionA : tipoSimple 
@@ -56,7 +150,11 @@ def p_funcionC(p):
                     | empty'''
 
 def p_main(p):
-    '''main : MAINSTART bloque'''
+    '''main : MAINSTART mainNP1 bloque'''
+
+def p_mainNP1(p):
+    '''mainNP1 :'''
+    pd[p[-1]] = {'type': 'void'}
 
 def p_tipoSimple(p):
     '''tipoSimple : INT
@@ -197,10 +295,10 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-# Test file 1
-print("\nTest file 1:")
+# Test file 
+print("\nTest file:")
 try:
-    file = open("./avance1_test1.txt", "r")
+    file = open("./avance2_test6.txt", "r")
     input = file.read()
 except EOFError:
     pass
@@ -210,19 +308,3 @@ if (result == 1):
     print("Pass")
 else:
     print("Fail")
-print("\n")
-
-# Test file 2
-print("\nTest file 2:")
-try:
-    file = open("./avance1_test2.txt", "r")
-    input = file.read()
-except EOFError:
-    pass
-result = parser.parse(input)
-print("------------")
-if (result == 1):
-    print("Pass")
-else:
-    print("Fail")
-print("\n")
