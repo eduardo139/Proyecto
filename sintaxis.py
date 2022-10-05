@@ -2,6 +2,72 @@ import ply.yacc as yacc
 
 from lexico import tokens
 
+# This boolean tracks whether we are inside a function call
+# It's used in a function call to make sure there are no nested calls inside the arguments
+global in_function_call
+in_function_call = False
+
+# Our semantic consideration table (semantic cube)
+global sc
+sc = {
+    'int': {
+        'int': {
+            'mul': 'int', 
+            'div': 'float', 
+            'sum': 'int', 
+            'sub': 'int', 
+            'lt': 'int', 
+            'gt': 'int',
+            'diff': 'int',
+            'eq': 'int',
+            'and': 'int',
+            'or': 'int',
+            'assign': 'int'
+        },
+        'float': {
+            'mul': 'float', 
+            'div': 'float', 
+            'sum': 'float', 
+            'sub': 'float', 
+            'lt': 'int', 
+            'gt': 'int',
+            'diff': 'int',
+            'eq': 'int',
+            'and': 'int',
+            'or': 'int',
+            'assign': 'error'
+        }
+    },
+    'float': {
+        'int': {
+            'mul': 'float', 
+            'div': 'float', 
+            'sum': 'float', 
+            'sub': 'float', 
+            'lt': 'int', 
+            'gt': 'int',
+            'diff': 'int',
+            'eq': 'int',
+            'and': 'int',
+            'or': 'int',
+            'assign': 'error'
+        },
+        'float': {
+            'mul': 'float', 
+            'div': 'float', 
+            'sum': 'float', 
+            'sub': 'float', 
+            'lt': 'int', 
+            'gt': 'int',
+            'diff': 'int',
+            'eq': 'int',
+            'and': 'int',
+            'or': 'int',
+            'assign': 'float'
+        }
+    }
+}
+
 def p_program(p):
     '''program : PROGRAM programNP1 ID programNP2 SEMICOLON programA programB main'''
     p[0] = 1
@@ -12,11 +78,15 @@ def p_programNP1(p):
     global pd 
     pd = {}
 
-# NP in which we add the program ID to the PD and assign the type 'void' to it
-# We also set current_func_name to the program ID in order to be
-# able to link the global variable table (if there is one) to it
-# We also save the program name to a variable so we can easily
-# access the global variable table (VT) later
+# NP in which we add the program ID to the PD and assign the type 'void' to it.
+#
+# We also set current_func_name to the program ID in order to be 
+# able to link the global variable table (VT) to it.
+#
+# We also save the program name to a variable so we can easily access the global VT later.
+#
+# Finally, we create an empty global VT so even if the program doesn't declare global variables,
+# the table is still there and we don't get KeyErrors later when trying to find it
 def p_programNP2(p):
     '''programNP2 :'''
     pd[p[-1]] = {'type': 'void'}
@@ -24,6 +94,7 @@ def p_programNP2(p):
     current_func_name = p[-1]
     global program_name
     program_name = p[-1]
+    pd[program_name]['vt'] = {}
 
 def p_programA(p):
     '''programA : vars
@@ -128,14 +199,17 @@ def p_funcionNP1(p):
 # with the same name in the PD, and if not, we add the function.
 # If the function gets added, we also save its name in a variable
 # so that we can link it to its variable table (VT) later
+# We also create an empty VT for the function just in case the function doesn't
+# declare any variables; this way we avoid getting KeyErrors
 def p_funcionNP2(p):
     '''funcionNP2 :'''
     global current_func_name
     if p[-1] in pd:
         raise Exception('This function already exists: ' + current_func_name)
     else:
-        pd[p[-1]] = {'type': current_func_type}
+        pd[p[-1]] = {'type': current_func_type, 'params': []}
         current_func_name = p[-1]
+        pd[current_func_name]['vt'] = {}
 
 def p_funcionA(p):
     '''funcionA : tipoSimple 
@@ -152,20 +226,30 @@ def p_funcionC(p):
 def p_main(p):
     '''main : MAINSTART mainNP1 bloque'''
 
+# NP in which we assign the type 'void' and an empty VT to main
+# We also change the current_func_name variable
 def p_mainNP1(p):
     '''mainNP1 :'''
-    pd[p[-1]] = {'type': 'void'}
+    pd[p[-1]] = {'type': 'void', 'vt': {}}
+    global current_func_name
+    current_func_name = 'main'
 
 def p_tipoSimple(p):
     '''tipoSimple : INT
                     | FLOAT'''
 
 def p_params(p):
-    '''params : tipoSimple ID paramsA'''
+    '''params : tipoSimple paramsNP1 ID paramsA'''
 
 def p_paramsA(p):
-    '''paramsA : COMMA tipoSimple ID paramsA
+    '''paramsA : COMMA tipoSimple paramsNP1 ID paramsA
                 | empty'''
+
+# NP in which we add each parameter type to the 
+# parameter list for the function that's being declared
+def p_paramsNP1(p):
+    '''paramsNP1 :'''
+    pd[current_func_name]['params'].append(p[-1])
 
 def p_bloque(p):
     '''bloque : LEFTCURLY bloqueA RIGHTCURLY'''
@@ -186,11 +270,48 @@ def p_asignacion(p):
     '''asignacion : variable ASSIGNOP exp'''
 
 def p_llamada(p):
-    '''llamada : ID LEFTPAR exp llamadaA RIGHTPAR'''
+    '''llamada : ID llamadaNP1 LEFTPAR llamadaNP2 exp llamadaNP3 llamadaA RIGHTPAR llamadaNP4'''
+    in_function_call = False
 
 def p_llamadaA(p):
-    '''llamadaA : COMMA exp llamadaA
+    '''llamadaA : COMMA exp llamadaNP2 llamadaA
                 | empty'''
+
+# NP in which first we check if we are already inside of a call (which would mean
+# this call is nested). If that is so we throw an error. 
+# If everything's OK, then we save the function's name in a variable in order
+# to be able to access its params list later, in NP4
+# We also change the in_function_call boolean to true because we will start analyzing the function call
+def p_llamadaNP1(p):
+    '''llamadaNP1 :'''
+    if in_function_call:
+        raise Exception('Nesting function calls is not supported')
+    global current_call_name
+    current_call_name = p[-1]
+    in_function_call = True
+
+# NP in which we define (and reset) a temporary list.
+# We will add all the call's arguments' types to this list and then, in llamadaNP4, compare it
+# with the params list that the function has in the PD to see if the arguments' types are correct
+def p_llamadaNP2(p):
+    '''llamadaNP2 :'''
+    global arg_list
+    arg_list = []
+
+# NP in which we add the call's arguments' types to the temporary list.
+def p_llamadaNP3(p):
+    '''llamadaNP3 :'''
+    global arg_list
+    arg_list.append(p[-1])
+
+# NP in which we compare the temporary list's contents with the function's params list.
+# If they're not identical (meaning the order or types of the 
+# parameters are different) then we throw an error
+def p_llamadaNP4(p):
+    '''llamadaNP4 :'''
+    global arg_list
+    if arg_list != pd[current_call_name]['params']:
+        raise Exception('The order or types of the parameters in a ' + current_call_name + ' call are incorrect')
 
 def p_read(p):
     '''read : READ ID'''
@@ -217,7 +338,15 @@ def p_ciclo(p):
     '''ciclo : FROM exp TO exp DO bloque'''
 
 def p_variable(p):
-    '''variable : ID variableA'''
+    '''variable : ID variableNP1 variableA'''
+
+# NP in which we verify if the variable exists, either in the local or global VT.
+# The local VT has priority over the global VT
+def p_variableNP1(p):
+    '''variableNP1 :'''
+    if p[-1] not in pd[current_func_name]['vt']:
+        if p[-1] not in pd[program_name]['vt']:
+            raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
 
 def p_variableA(p):
     '''variableA : LEFTBRACKET exp RIGHTBRACKET variableB
@@ -266,22 +395,25 @@ def p_exp3B(p):
                 | SUBOP'''
 
 def p_termino(p):
-    '''termino : factor terminoA'''
+    '''termino : terminoC terminoA'''
 
 def p_terminoA(p):
-    '''terminoA : terminoB factor terminoA
+    '''terminoA : terminoB terminoC terminoA
                     | empty'''
 
 def p_terminoB(p):
     '''terminoB : MULOP
                     | DIVOP'''
 
+def p_terminoC(p):
+    '''terminoC : factor
+                    | llamada'''
+
 def p_factor(p):
     '''factor : LEFTPAR exp RIGHTPAR
                 | CTI
                 | CTF
-                | variable
-                | llamada'''
+                | variable'''
 
 # For empty / epsilon
 def p_empty(p):
@@ -298,7 +430,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance2_test6.txt", "r")
+    file = open("./avance2_test1.txt", "r")
     input = file.read()
 except EOFError:
     pass

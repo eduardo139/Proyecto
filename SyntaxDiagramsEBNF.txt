@@ -17,5 +17,5 @@ Exp ::= Exp1 ('|' Exp1)*
 Exp1 ::= Exp2 ('&' Exp2)*
 Exp2 ::= Exp3 (('<' | '>' | '<>' | '==') Exp3)?
 Exp3 ::= Termino (('+' | '-') Termino)*
-Termino ::= Factor (('*' | '/') Factor)*
-Factor ::= '(' Exp ')' | 'cte_i' | 'cte_f' | Variable | Llamada
+Termino ::= (Factor | Llamada) (('*' | '/') (Factor | Llamada))*
+Factor ::= '(' Exp ')' | 'cte_i' | 'cte_f' | Variable

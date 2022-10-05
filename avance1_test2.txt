@@ -6,14 +6,14 @@ var
    int i;
    int j;
    int arr[6][8];
-   float somenum;
+   float someNum;
 
 func int myFunc (int a, float b, float c);
 var
     int funcInt;
     file funcFile, funcFile2;
 {
-    read funcFile2
+    read somefile
     funcInt = 3 + 5
 }
 

@@ -1,18 +1,34 @@
-program test1;
+program test2;
 var
-   file myfile, a123f;
+   file myfile, a123f, somefile;
    int myint;
    int otherint;
    int i;
    int j;
    int arr[6][8];
    float someNum;
+
+func int myFunc (int a, float b, float c);
+var
+    int funcInt;
+    file funcFile, funcFile2;
+{
+    read somefile
+    funcInt = 3 + 5
+}
+
+func void anotherFunc();
+{
+    j = 5
+    write("some function")
+}
+
 main
 {
    myint = 1
    read myfile
-   write("letrero", 1+3, 0|1)
-   if (myint > 0) {
+   write("letrero", 1+3, 0&1)
+   if (myint & 1) {
         someNum = 4
    }
    else

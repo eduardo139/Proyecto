@@ -1,0 +1,22 @@
+program test1;
+
+func int myFunc (int a, float b, float c);
+var
+    int funcInt;
+    file funcFile, funcFile2;
+{
+    read funcFile2
+    funcInt = 3 + 5
+}
+
+func void anotherFunc();
+var
+    int yourint;
+{
+    write("some function")
+}
+
+main
+{
+   write("letrero", 1+3, 0&1)
+}

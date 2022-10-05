@@ -1,27 +1,29 @@
-program test1;
+program test7;
 var
    file myfile, a123f, somefile;
    int myint;
    int otherint;
-   int i;
+   float i;
    int j;
    int arr[1][100];
-   float someNum;
+   float somenum;
 
 func int myFunc (int a, float b, float c);
 var
     int funcInt;
     int myint;
     file funcFile, funcFile2;
+    int arr[100];
 {
     read funcFile2
     funcInt = 3 + 5
 }
 
-func void anotherFunc();
+func void someFunc();
 var
     int myint;
 {
+    funcInt = 6
     write("some function")
 }
 
