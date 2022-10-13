@@ -1,3 +1,4 @@
+from numpy import result_type
 import ply.yacc as yacc
 
 from lexico import tokens
@@ -11,27 +12,6 @@ in_function_call = False
 # that represents the index of the avail list where the result will be stored
 global avail_list_current_index
 avail_list_current_index = 0
-
-global quad_list
-quad_list = []
-
-global quad_number
-quad_number = 0
-
-global avail_list
-avail_list = []
-
-global poper
-poper = []
-
-global pilao
-pilao = []
-
-global ptypes
-ptypes = []
-
-global psaltos
-psaltos = []
 
 # Our semantic consideration table (semantic cube)
 global sc
@@ -94,84 +74,6 @@ sc = {
     }
 }
 
-def generate_quad(oper, l_op, r_op, result_type):
-    global quad_list
-    global avail_list
-    global avail_list_current_index
-    global pilao
-    global ptypes
-
-    # If statement is read, write, assignment or a jump (goto, gtf)
-    if oper == 'read' or oper == 'write' or oper == '=' or oper == 'goto':
-        result = 'null'
-    elif oper == 'gtf':
-        # The result of evaluating the if expression
-        l_op = pilao.pop()
-        # Getting rid of the result type
-        ptypes.pop()
-        result = 'null'
-    # Else it's a call or an expression
-    else:
-        result = avail_list_current_index
-        avail_list_current_index += 1
-        pilao.append(result)
-        ptypes.append(result_type)
-    quad_list.append([oper, l_op, r_op, result])
-    
-    global quad_number
-    quad_number += 1
-    return quad_number - 1
-
-def process_statement():
-    global poper
-    global pilao
-    global ptypes
-
-    operator = poper.pop()
-    if operator == '=':
-        r_op = pilao.pop()
-        l_op = pilao.pop()
-        r_type = ptypes.pop()
-        l_type = ptypes.pop()
-        if (l_type == r_type):
-            generate_quad(operator, l_op, r_op, 'null')
-        else:
-            raise Exception('Cannot assign an element (' + r_type + ') to another that is not of the same type (' + l_type + ')')
-    elif operator == 'call':
-        arg_types = pilao.pop()
-        arg_list = pilao.pop()
-        # getting rid of the 'list's in ptypes
-        ptypes.pop()
-        ptypes.pop()
-        func_id = pilao.pop()
-        return_type = ptypes.pop()
-        generate_quad(operator, func_id, arg_list, return_type)
-    elif operator == 'read':
-        file_to_read_from = pilao.pop()
-        file_type = ptypes.pop()
-        generate_quad(operator, file_to_read_from, 'null', 'null')
-    elif operator == 'write':
-        arg_list = pilao.pop()
-        # getting rid of the 'list' in ptypes
-        ptypes.pop()
-        generate_quad(operator, arg_list, 'null', 'null')
-
-def process_exp():
-    global poper
-    global pilao
-    global ptypes
-
-    oper = poper.pop()
-    r_op = pilao.pop()
-    l_op = pilao.pop()
-    r_type = ptypes.pop()
-    l_type = ptypes.pop()
-    result_type = sc[l_type][r_type][oper]
-    if result_type != 'error':
-        generate_quad(oper, l_op, r_op, result_type)
-    else:
-        raise Exception('Type mismatch at expression ' + r_op + ' ' + oper + ' ' + l_op)
-
 def p_program(p):
     '''program : PROGRAM programNP1 ID programNP2 SEMICOLON programA programB main'''
     p[0] = 1
@@ -215,7 +117,6 @@ def p_vars(p):
 def p_varsNP7(p):
     '''varsNP7 :'''
     global current_func_name
-    global vt
     pd[current_func_name]['vt'] = vt
 
 # NP in which we create the VT
@@ -242,12 +143,10 @@ def p_varsNP2(p):
 def p_varsNP6(p):
     '''varsNP6 :'''
     global current_var_id
-    global current_var_type
-    global vt
     if current_var_id in vt:
         raise Exception('This variable already exists: ' + current_var_id)
     else:
-        vt[current_var_id] = current_var_type
+        vt[current_var_id] = {'type': current_var_type}
 
 def p_varsC(p):
     '''varsC : LEFTBRACKET CTI varsNP4 RIGHTBRACKET varsD
@@ -280,7 +179,7 @@ def p_varsNP5(p):
         raise Exception('Array size must be between 1 and 100')
 
 def p_varsE(p):
-    '''varsE : COMMA ID varsNP3 varsNP6 varsE
+    '''varsE : COMMA ID varsNP3 varsE
                 | empty'''
 
 # NP in which we save the variable's ID in a variable
@@ -311,7 +210,6 @@ def p_funcionNP1(p):
 def p_funcionNP2(p):
     '''funcionNP2 :'''
     global current_func_name
-    global current_func_type
     if p[-1] in pd:
         raise Exception('This function already exists: ' + current_func_name)
     else:
@@ -320,14 +218,8 @@ def p_funcionNP2(p):
         pd[current_func_name]['vt'] = {}
 
 def p_funcionA(p):
-    '''funcionA : tipoSimple funcionANP1
-                    | VOID funcionANP1'''
-    p[0] = p[2]
-
-def p_funcionANP1(p):
-    '''funcionANP1 :'''
-    tipo = p[-1]
-    p[0] = tipo
+    '''funcionA : tipoSimple 
+                    | VOID'''
 
 def p_funcionB(p):
     '''funcionB : params
@@ -349,14 +241,8 @@ def p_mainNP1(p):
     current_func_name = 'main'
 
 def p_tipoSimple(p):
-    '''tipoSimple : INT tipoSimpleNP1
-                    | FLOAT tipoSimpleNP1'''
-    p[0] = p[2]
-
-def p_tipoSimpleNP1(p):
-    '''tipoSimpleNP1 :'''
-    tipo = p[-1]
-    p[0] = tipo
+    '''tipoSimple : INT
+                    | FLOAT'''
 
 def p_params(p):
     '''params : tipoSimple paramsNP1 ID paramsA'''
@@ -385,7 +271,7 @@ def p_estatuto(p):
 # without having to repeat it over and over in the ORs.
 # It is not in the design document
 def p_estatutoA(p):
-    '''estatutoA : asignacion 
+    '''estatutoA : asignacion estatutoNP2
                 | llamada
                 | read
                 | escritura
@@ -402,6 +288,42 @@ def p_estatutoNP1(p):
     pilao = []
     ptypes = []
 
+def generate_quad(oper, l_op, r_op, result_type):
+    global quad_list
+    global avail_list
+
+    if oper == '=':
+        result = avail_list_current_index
+        quad_list.append([oper, l_op, r_op, result])
+        pilao.append(result)
+        ptypes.append(result_type)
+        avail_list_current_index += 1
+
+def process_statement():
+    if poper[-1] == '=':
+        r_op = pilao.pop()
+        l_op = pilao.pop()
+        r_type = ptypes.pop()
+        l_type = ptypes.pop()
+        if (l_type == r_type):
+            generate_quad('=', l_op, r_op, 'null')
+        else:
+            raise Exception('Cannot assign an element to another that is not of the same type')
+    elif poper[-1] == 'call':
+        arg_list = pilao.pop()
+        # getting rid of the 'list' in ptypes
+        ptypes.pop()
+        func_id = pilao.pop()
+        return_type = ptypes.pop()
+        generate_quad('call', func_id, arg_list, return_type)
+    elif poper[-1] == 'write':
+        arg_list = pilao.pop()
+        # getting rid of the 'list' in ptypes
+        ptypes.pop()
+        generate_quad('write', arg_list, 'null', 'null')
+    else:
+        raise Exception('Expected statement, but got ' + poper[-1])
+
 def p_asignacion(p):
     '''asignacion : variable ASSIGNOP asignacionNP1 exp asignacionNP2'''
 
@@ -416,13 +338,8 @@ def p_asignacionNP2(p):
     process_statement()
 
 def p_llamada(p):
-    '''llamada : ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3'''
-    global in_function_call
+    '''llamada : ID llamadaNP1 LEFTPAR loeNP2 exp loeNP1 llamadaA RIGHTPAR llamadaNP3'''
     in_function_call = False
-
-def p_primerparam(p):
-    '''primerparam : exp loeNP1
-                    | empty'''
 
 def p_llamadaA(p):
     '''llamadaA : COMMA exp loeNP1 llamadaA
@@ -436,12 +353,8 @@ def p_llamadaA(p):
 # We also push 'call' to poper, the id to pilao and 'func' to ptypess
 def p_llamadaNP1(p):
     '''llamadaNP1 :'''
-    global in_function_call
     if in_function_call:
         raise Exception('Nesting function calls is not supported')
-    id = p[-1]
-    if id not in pd:
-        raise Exception('Function ' + id + ' was not declared but is being called')
     global current_call_name
     current_call_name = p[-1]
     in_function_call = True
@@ -454,35 +367,19 @@ def p_llamadaNP1(p):
 # then we throw an error
 def p_llamadaNP3(p):
     '''llamadaNP3 :'''
-    arg_types = pilao[-1]
-    arg_list = pilao[-2]
-    func_id = pilao[-3]
-    if arg_types == pd[func_id]['params']:
+    arg_list = pilao[-1]
+    func_id = pilao[-2]
+    if arg_list == pd[func_id]['params']:
         process_statement()
     else:
         raise Exception('The order or types of the parameters in a ' + current_call_name + ' call are incorrect')
 
 
 def p_read(p):
-    '''read : READ ID readNP1'''
-
-def p_readNP1(p):
-    '''readNP1 :'''
-    global current_func_name
-    global program_name
-    poper.append('read')
-    if p[-1] not in pd[current_func_name]['vt']:
-        if p[-1] not in pd[program_name]['vt']:
-            raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
-        else:
-            ptypes.append(pd[program_name]['vt'][p[-1]])
-    else:
-        ptypes.append(pd[current_func_name]['vt'][p[-1]])
-    pilao.append(p[-1])
-    process_statement()
+    '''read : READ ID'''
 
 def p_escritura(p):
-    '''escritura : WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP3'''
+    '''escritura : WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP2'''
 
 # NP in which we push 'write' to poper
 # We also create/reset an argument list that will have all the arguments
@@ -490,8 +387,8 @@ def p_escrituraNP1(p):
     '''escrituraNP1 :'''
     poper.append('write')
 
-def p_escrituraNP3(p):
-    '''escrituraNP3 :'''
+def p_escrituraNP2(p):
+    '''escrituraNP2 :'''
     process_statement()
 
 # loe = Llamada o escritura
@@ -518,10 +415,6 @@ def p_escrituraA(p):
 # Only EXP arguments, CTSTRING arguments to write have their own NP
 def p_loeNP1(p):
     '''loeNP1 :'''
-    global poper
-    global pilao
-    global ptypes
-
     exp_value = pilao.pop()
     exp_type = ptypes.pop()
     arg_types = pilao.pop()
@@ -546,35 +439,11 @@ def p_escrituraB(p):
                     | empty'''
 
 def p_condicion(p):
-    '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA'''
-
-def p_condicionNP1(p):
-    '''condicionNP1 :'''
-    quad_num = generate_quad('gtf', 'null', 'waiting for quad number to jump to', 'null')
-    global psaltos
-    psaltos.append(quad_num)
+    '''condicion : IF LEFTPAR exp RIGHTPAR bloque condicionA'''
 
 def p_condicionA(p):
-    '''condicionA : ELSE condicionANP1 bloque condicionANP2
+    '''condicionA : ELSE bloque
                     | empty'''
-
-def p_condicionANP1(p):
-    '''condicionANP1 :'''
-    global quad_number
-    quad_to_jump_to = quad_number + 1 
-    global psaltos
-    quad_to_fill = psaltos.pop()
-    quad_list[quad_to_fill][2] = quad_to_jump_to
-    quad_num = generate_quad('goto', 'waiting for quad number to jump to', 'null', 'null')
-    psaltos.append(quad_num)
-
-def p_condicionANP2(p):
-    '''condicionANP2 :'''
-    global quad_number
-    quad_to_jump_to = quad_number
-    global psaltos
-    quad_to_fill = psaltos.pop()
-    quad_list[quad_to_fill][1] = quad_to_jump_to
 
 def p_ciclo(p):
     '''ciclo : FROM exp TO exp DO bloque'''
@@ -588,8 +457,6 @@ def p_variable(p):
 # to the pilaO and pTypes stacks
 def p_variableNP1(p):
     '''variableNP1 :'''
-    global current_func_name
-    global program_name
     if p[-1] not in pd[current_func_name]['vt']:
         if p[-1] not in pd[program_name]['vt']:
             raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
@@ -607,81 +474,71 @@ def p_variableB(p):
     '''variableB : LEFTBRACKET exp RIGHTBRACKET
                     | empty'''
 
+def process_exp():
+    oper = poper.pop()
+    r_op = pilao.pop()
+    l_op = pilao.pop()
+    r_type = ptypes.pop()
+    l_type = ptypes.pop()
+    result_type = sc[l_type][r_type][oper]
+    if result_type != 'error':
+        generate_quad(oper, l_op, r_op, result_type)
+    else:
+        raise Exception('Type mismatch at expression ' + r_op + ' ' + oper + ' ' + l_op)
+
 def p_exp(p):
-    '''exp : exp1 expA'''
+    '''exp : exp1 expNP1 expA'''
 
 def p_expNP1(p):
     '''expNP1 :'''
     if poper[-1] == '|':
-        process_exp()
+        pass
 
 def p_expA(p):
-    '''expA : OROP operNP1 exp1 expNP1 expA
+    '''expA : OROP operNP1 exp1 expA
                 | empty'''
 
 def p_exp1(p):
     '''exp1 : exp2 exp1A'''
 
-def p_exp1NP1(p):
-    '''exp1NP1 :'''
-    if poper[-1] == '&':
-        process_exp()
-
 def p_exp1A(p):
-    '''exp1A : ANDOP operNP1 exp2 exp1NP1 exp1A
+    '''exp1A : ANDOP operNP1 exp2 exp1A
                 | empty'''
 
 def p_exp2(p):
     '''exp2 : exp3 exp2A'''
 
 def p_exp2A(p):
-    '''exp2A : exp2B operNP1 exp3 exp2ANP1
+    '''exp2A : exp2B operNP1 exp3
                 | empty'''
-
-def p_exp2ANP1(p):
-    '''exp2ANP1 :'''
-    process_exp()
 
 def p_exp2B(p):
     '''exp2B : LESSTHANOP
                 | GREATERTHANOP
                 | DIFFERENTOP
                 | EQUALOP'''
-    p[0] = p[1]
 
 def p_exp3(p):
     '''exp3 : termino exp3A'''
 
-def p_exp3NP1(p):
-    '''exp3NP1 :'''
-    if poper[-1] == '+' or poper[-1] == '-':
-        process_exp()
-
 def p_exp3A(p):
-    '''exp3A : exp3B operNP1 termino exp3NP1 exp3A
+    '''exp3A : exp3B operNP1 termino exp3A
                 | empty'''
 
 def p_exp3B(p):
     '''exp3B : SUMOP
                 | SUBOP'''
-    p[0] = p[1]
 
 def p_termino(p):
     '''termino : terminoC terminoA'''
 
 def p_terminoA(p):
-    '''terminoA : terminoB operNP1 terminoC terminoANP1 terminoA
+    '''terminoA : terminoB operNP1 terminoC terminoA
                     | empty'''
-
-def p_terminoANP1(p):
-    '''terminoANP1 :'''
-    if poper[-1] == '*' or poper[-1] == '/':
-        process_exp()
 
 def p_terminoB(p):
     '''terminoB : MULOP
                     | DIVOP'''
-    p[0] = p[1]
 
 def p_terminoC(p):
     '''terminoC : factor
@@ -696,7 +553,6 @@ def p_factor(p):
 # NP in which we add an operator to pOper
 def p_operNP1(p):
     '''operNP1 :'''
-    global poper
     poper.append(p[-1])
 
 # NP in which we pop the ( from pOper, erasing the 'fake bottom' from the stack
@@ -729,18 +585,13 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance3_test4.txt", "r")
+    file = open("./avance2_test1.txt", "r")
     input = file.read()
 except EOFError:
     pass
 result = parser.parse(input)
 print("------------")
 if (result == 1):
-    num = 0
-    for i in quad_list:
-        print(num)
-        print(i)
-        num += 1
     print("Pass")
 else:
     print("Fail")

@@ -1,0 +1,1 @@
+Se crean correctamente el directorio de procedimientos, la tabla de variables y la tabla de consideraciones semánticas. Al crear variables o funciones nuevas se checa que no existan ya en la tabla local. Se pueden usar variables globales, aunque si existe una variable local con el mismo nombre en el contexto, se usa la local.
