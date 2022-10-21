@@ -33,11 +33,6 @@ ptypes = []
 global psaltos
 psaltos = []
 
-global opcodes
-opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
-           '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
-           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20}
-
 # Our semantic consideration table (semantic cube)
 global sc
 sc = {
@@ -99,44 +94,6 @@ sc = {
     }
 }
 
-def compute_function_memory_requirements(function_name):
-    memory_requirements = {'int': 0, 'float': 0, 'file': 0}
-    for variable in pd[function_name]['vt']:
-        if pd[function_name]['vt'][variable]['type'] == 'int':
-            memory_requirements['int'] += 1
-        elif pd[function_name]['vt'][variable]['type'] == 'float':
-            memory_requirements['float'] += 1
-        elif pd[function_name]['vt'][variable]['type'] == 'file':
-            memory_requirements['file'] += 1
-    pd[function_name]['mem'] = memory_requirements
-
-def assign_virtual_address(type, context):
-    if context == 'null':
-        if current_func_name == program_name:
-            context = 'global'
-        else:
-            context = 'local'
-    virtual_address = virtual_addresses[context][type]
-    virtual_addresses[context][type] += 1
-    return virtual_address
-
-def reset_virtual_address_counters():
-    global virtual_addresses
-    virtual_addresses['local'] = {'int': 2000, 'float': 2333, 'file': 2666}
-    virtual_addresses['temp'] = {'int': 3000, 'float': 3333, 'file': 3666}
-
-def find_virtual_address(operand):
-    if operand not in pd[current_func_name]['vt']:
-        if operand not in pd[program_name]['vt']:
-            if operand not in const_table:
-                raise Exception(str(operand) + ' does not exist on either the local or global scopes')
-            else:
-                return const_table[operand]['va']
-        else:
-            return pd[program_name]['vt'][operand]['va']
-    else:
-        return pd[current_func_name]['vt'][operand]['va']
-
 def generate_quad(oper, l_op, r_op, result_type):
     global quad_list
     global avail_list
@@ -153,27 +110,12 @@ def generate_quad(oper, l_op, r_op, result_type):
         # Getting rid of the result type
         ptypes.pop()
         result = 'null'
-    elif oper == 'endfunc' or oper == 'era' or oper == 'gosub':
-        oper = opcodes[oper]
-        result = 'null'
-    elif oper == 'parameter':
-        oper = opcodes[oper]
-        l_op = find_virtual_address(l_op)
-        result = 'null'
-    # Else it's an expression
+    # Else it's a call or an expression
     else:
         result = avail_list_current_index
         avail_list_current_index += 1
         pilao.append(result)
         ptypes.append(result_type)
-        pd[current_func_name]['vt'][result] = {'type': '', 'va': ''}
-        pd[current_func_name]['vt'][result]['type'] = result_type
-        pd[current_func_name]['vt'][result]['va'] = assign_virtual_address(result_type, 'temp')
-        if oper != 'call':
-            oper = opcodes[oper]
-            l_op = find_virtual_address(l_op)
-            r_op = find_virtual_address(r_op)
-            result = find_virtual_address(result)
     quad_list.append([oper, l_op, r_op, result])
     
     global quad_number
@@ -196,20 +138,14 @@ def process_statement():
         else:
             raise Exception('Cannot assign an element (' + r_type + ') to another that is not of the same type (' + l_type + ')')
     elif operator == 'call':
-        # Getting rid of arg_types
-        pilao.pop()
+        arg_types = pilao.pop()
         arg_list = pilao.pop()
         # getting rid of the 'list's in ptypes
         ptypes.pop()
         ptypes.pop()
-
-        func_id = pilao[-1]
-
-        i = 1
-        for arg in arg_list:
-            generate_quad('parameter', arg, i, 'null')
-            i += 1
-        generate_quad('gosub', func_id, pd[func_id]['quadstart'], 'null')
+        func_id = pilao.pop()
+        return_type = ptypes.pop()
+        generate_quad(operator, func_id, arg_list, return_type)
     elif operator == 'read':
         file_to_read_from = pilao.pop()
         file_type = ptypes.pop()
@@ -240,23 +176,11 @@ def p_program(p):
     '''program : PROGRAM programNP1 ID programNP2 SEMICOLON programA programB main'''
     p[0] = 1
 
+# Neuralgic point (NP) in which we create the procedure directory (PD)
 def p_programNP1(p):
     '''programNP1 :'''
     global pd 
     pd = {}
-
-    global virtual_addresses
-    virtual_addresses = {'global': {'int': 1000, 'float': 1333, 'file': 1666}, 
-                        'local': {'int': 2000, 'float': 2333, 'file': 2666},
-                        'temp': {'int': 3000, 'float': 3333, 'file': 3666},
-                        'constant': {'int': 4000, 'float': 4333, 'string': 4666}}
-    
-    global const_table
-    const_table = {}
-
-    quad_num = generate_quad('goto', 'waiting for quad number of main', 'null', 'null')
-    global psaltos
-    psaltos.append(quad_num)
 
 # NP in which we add the program ID to the PD and assign the type 'void' to it.
 #
@@ -285,7 +209,20 @@ def p_programB(p):
                     | empty'''
 
 def p_vars(p):
-    '''vars : VAR varsA'''
+    '''vars : varsNP1 VAR varsA varsNP7'''
+
+# NP in which we link the VT with the function it belongs to
+def p_varsNP7(p):
+    '''varsNP7 :'''
+    global current_func_name
+    global vt
+    pd[current_func_name]['vt'] = vt
+
+# NP in which we create the VT
+def p_varsNP1(p):
+    '''varsNP1 :'''
+    global vt
+    vt = {}
 
 def p_varsA(p):
     '''varsA : varsB SEMICOLON varsF'''
@@ -306,12 +243,11 @@ def p_varsNP6(p):
     '''varsNP6 :'''
     global current_var_id
     global current_var_type
-    if current_var_id in pd[current_func_name]['vt']:
+    global vt
+    if current_var_id in vt:
         raise Exception('This variable already exists: ' + current_var_id)
     else:
-        pd[current_func_name]['vt'][current_var_id] = {'type': '', 'va': ''}
-        pd[current_func_name]['vt'][current_var_id]['type'] = current_var_type
-        pd[current_func_name]['vt'][current_var_id]['va'] = assign_virtual_address(current_var_type, 'null')
+        vt[current_var_id] = current_var_type
 
 def p_varsC(p):
     '''varsC : LEFTBRACKET CTI varsNP4 RIGHTBRACKET varsD
@@ -319,20 +255,14 @@ def p_varsC(p):
 
 # NP in which we check if the 1D array is between the size of 1 and 100.
 # If it is we update the variable's type
-# We also add the constant to the const table
 def p_varsNP4(p):
     '''varsNP4 :'''
     global current_var_type
-    global const_table
     arrSize = int(p[-1])
     if 1 <= arrSize <= 100:
         current_var_type = '1d_arr'
     else:
         raise Exception('Array size must be between 1 and 100')
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_varsD(p):
     '''varsD : LEFTBRACKET CTI varsNP5 RIGHTBRACKET
@@ -340,20 +270,14 @@ def p_varsD(p):
 
 # NP in which we check if the 2D array is between the size of 1 and 100.
 # If it is we update the variable's type
-# We also add the constant to the const table
 def p_varsNP5(p):
     '''varsNP5 :'''
     global current_var_type
-    global const_table
     arrSize = int(p[-1])
     if 1 <= arrSize <= 100:
         current_var_type = '2d_arr'
     else:
         raise Exception('Array size must be between 1 and 100')
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_varsE(p):
     '''varsE : COMMA ID varsNP3 varsNP6 varsE
@@ -370,24 +294,13 @@ def p_varsF(p):
                 | empty'''
 
 def p_funcion(p):
-    '''funcion : FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs'''
-
-def p_quadStart(p):
-    '''quadStart :'''
-    pd[current_func_name]['quadstart'] = quad_number
-
-def p_genMemReqs(p):
-    '''genMemReqs :'''
-    compute_function_memory_requirements(current_func_name)
-    generate_quad('endfunc', 'null', 'null', 'null')
+    '''funcion : FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC bloque'''
 
 # NP in which we save the function's type in a variable
-# We also reset the virtual address counters
 def p_funcionNP1(p):
     '''funcionNP1 :'''
     global current_func_type
     current_func_type = p[-1]
-    reset_virtual_address_counters()
 
 # NP in which we check if there already exists a procedure
 # with the same name in the PD, and if not, we add the function.
@@ -405,12 +318,6 @@ def p_funcionNP2(p):
         pd[p[-1]] = {'type': current_func_type, 'params': []}
         current_func_name = p[-1]
         pd[current_func_name]['vt'] = {}
-
-        # Create a global variable that will store the function's return value at runtime
-        if current_func_type != 'void':
-            pd[program_name]['vt'][current_func_name] = {'type': '', 'va': ''}
-            pd[program_name]['vt'][current_func_name]['type'] = current_func_type
-            pd[program_name]['vt'][current_func_name]['va'] = assign_virtual_address(current_func_type, 'global')
 
 def p_funcionA(p):
     '''funcionA : tipoSimple funcionANP1
@@ -435,19 +342,11 @@ def p_main(p):
 
 # NP in which we assign the type 'void' and an empty VT to main
 # We also change the current_func_name variable
-# We also reset the virtual address counets
 def p_mainNP1(p):
     '''mainNP1 :'''
     pd[p[-1]] = {'type': 'void', 'vt': {}}
     global current_func_name
     current_func_name = 'main'
-    reset_virtual_address_counters()
-
-    global quad_number
-    quad_to_jump_to = quad_number
-    global psaltos
-    quad_to_fill = psaltos.pop()
-    quad_list[quad_to_fill][1] = quad_to_jump_to
 
 def p_tipoSimple(p):
     '''tipoSimple : INT tipoSimpleNP1
@@ -460,31 +359,17 @@ def p_tipoSimpleNP1(p):
     p[0] = tipo
 
 def p_params(p):
-    '''params : tipoSimple paramsNP1 ID paramsNP2 paramsA'''
+    '''params : tipoSimple paramsNP1 ID paramsA'''
 
 def p_paramsA(p):
-    '''paramsA : COMMA tipoSimple paramsNP1 ID paramsNP2 paramsA
+    '''paramsA : COMMA tipoSimple paramsNP1 ID paramsA
                 | empty'''
 
 # NP in which we add each parameter type to the 
 # parameter list for the function that's being declared
 def p_paramsNP1(p):
     '''paramsNP1 :'''
-    global current_param_type
-    current_param_type = p[-1]
     pd[current_func_name]['params'].append(p[-1])
-
-def p_paramsNP2(p):
-    '''paramsNP2 :'''
-    global current_param_id
-    global current_param_type
-    current_param_id = p[-1]
-    if current_param_id in pd[current_func_name]['vt']:
-        raise Exception('This variable already exists: ' + current_param_id)
-    else:
-        pd[current_func_name]['vt'][current_param_id] = {'type': '', 'va': ''}
-        pd[current_func_name]['vt'][current_param_id]['type'] = current_param_type
-        pd[current_func_name]['vt'][current_param_id]['va'] = assign_virtual_address(current_param_type, 'local')
 
 def p_bloque(p):
     '''bloque : LEFTCURLY bloqueA RIGHTCURLY'''
@@ -501,17 +386,11 @@ def p_estatuto(p):
 # It is not in the design document
 def p_estatutoA(p):
     '''estatutoA : asignacion 
-                | llamada checkIfVoid
+                | llamada
                 | read
                 | escritura
-                | return
                 | condicion
                 | ciclo'''
-
-def p_checkIfVoid(p):
-    '''checkIfVoid :'''
-    if p[-1] != 'void':
-        raise Exception('Non-void function is being called as a statement')
 
 # NP in which we create the stacks needed to generate quadruples
 def p_estatutoNP1(p):
@@ -540,7 +419,6 @@ def p_llamada(p):
     '''llamada : ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3'''
     global in_function_call
     in_function_call = False
-    p[0] = p[2]
 
 def p_primerparam(p):
     '''primerparam : exp loeNP1
@@ -556,7 +434,6 @@ def p_llamadaA(p):
 # to be able to access its params list later, in NP4
 # We also change the in_function_call boolean to true because we will start analyzing the function call
 # We also push 'call' to poper, the id to pilao and 'func' to ptypess
-# We also generate the ERA quad
 def p_llamadaNP1(p):
     '''llamadaNP1 :'''
     global in_function_call
@@ -571,9 +448,6 @@ def p_llamadaNP1(p):
     poper.append('call')
     pilao.append(p[-1])
     ptypes.append(pd[p[-1]]['type'])
-
-    generate_quad('era', pd[id]['mem'], 'null', 'null')
-    p[0] = pd[id]['type']
 
 # NP in which we compare the arg_list's contents with the function's params list.
 # If they're not identical (meaning the order or types of the parameters are different) 
@@ -601,9 +475,9 @@ def p_readNP1(p):
         if p[-1] not in pd[program_name]['vt']:
             raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
         else:
-            ptypes.append(pd[program_name]['vt'][p[-1]]['type'])
+            ptypes.append(pd[program_name]['vt'][p[-1]])
     else:
-        ptypes.append(pd[current_func_name]['vt'][p[-1]]['type'])
+        ptypes.append(pd[current_func_name]['vt'][p[-1]])
     pilao.append(p[-1])
     process_statement()
 
@@ -658,41 +532,18 @@ def p_loeNP1(p):
     pilao.append(arg_types)
 
 # NP in which we append the CTSTRING to the argument list
-# We also add it to the constants table if it's not there
 def p_escrituraNP2(p):
     '''escrituraNP2 :'''
-    global const_table
     arg_types = pilao.pop()
     arg_list = pilao.pop()
     arg_list.append(p[-1])
     arg_types.append('ctstring')
     pilao.append(arg_list)
     pilao.append(arg_types)
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'string'
-        const_table[p[-1]]['va'] = assign_virtual_address('string', 'constant')
 
 def p_escrituraB(p):
     '''escrituraB : COMMA escrituraA escrituraB
                     | empty'''
-
-def p_return(p):
-    '''return : RETURN exp returnNP1'''
-
-def p_returnNP1(p):
-    '''returnNP1 :'''
-    if current_func_name == 'main':
-        raise Exception('Return statement in main')
-    else:
-        exp_value = pilao.pop()
-        exp_type = ptypes.pop()
-        poper.append('=')
-        pilao.append(pd[program_name]['vt'][current_func_name]['va'])
-        ptypes.append(pd[program_name]['vt'][current_func_name]['type'])
-        pilao.append(exp_value)
-        ptypes.append(exp_type)
-        process_statement()
 
 def p_condicion(p):
     '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA'''
@@ -772,9 +623,9 @@ def p_variableNP1(p):
         if p[-1] not in pd[program_name]['vt']:
             raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
         else:
-            ptypes.append(pd[program_name]['vt'][p[-1]]['type'])
+            ptypes.append(pd[program_name]['vt'][p[-1]])
     else:
-        ptypes.append(pd[current_func_name]['vt'][p[-1]]['type'])
+        ptypes.append(pd[current_func_name]['vt'][p[-1]])
     pilao.append(p[-1])
 
 def p_variableA(p):
@@ -863,12 +714,7 @@ def p_terminoB(p):
 
 def p_terminoC(p):
     '''terminoC : factor
-                    | llamada checkIfNotVoid'''
-
-def p_checkIfNotVoid(p):
-    '''checkIfNotVoid :'''
-    if p[-1] == 'void':
-        raise Exception('Void function is being called as part of an expression')
+                    | llamada'''
 
 def p_factor(p):
     '''factor : LEFTPAR operNP1 exp RIGHTPAR factorNP1
@@ -889,23 +735,13 @@ def p_factorNP1(p):
 
 def p_factorNP2(p):
     '''factorNP2 :'''
-    global const_table
     pilao.append(p[-1])
     ptypes.append('int')
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_factorNP3(p):
     '''factorNP3 :'''
-    global const_table
     pilao.append(p[-1])
     ptypes.append('float')
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'float'
-        const_table[p[-1]]['va'] = assign_virtual_address('float', 'constant')
 
 # For empty / epsilon
 def p_empty(p):
@@ -922,7 +758,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance5_test1.txt", "r")
+    file = open("./avance4_test2.txt", "r")
     input = file.read()
 except EOFError:
     pass

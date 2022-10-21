@@ -5,11 +5,12 @@ Main ::= 'main' Bloque
 TipoSimple ::= 'int' | 'float' 
 Params ::= TipoSimple 'id' (',' TipoSimple 'id' )*
 Bloque ::= '{' Estatuto+ '}'
-Estatuto ::= Asignacion | Llamada | Read | Escritura | Condicion | Ciclo
+Estatuto ::= Asignacion | Llamada | Read | Escritura | Condicion | Ciclo | Return
 Asignacion ::= Variable '=' Exp
 Llamada ::= 'id' '(' Exp (',' Exp)* ')'
 Read ::= 'read' 'id'
 Escritura ::= 'write' '(' (Exp | 'cte_s') (',' (Exp | 'cte_s'))* ')'
+Return ::= 'return' Exp
 Condicion ::= 'if' '(' Exp ')' Bloque ('else' Bloque)?
 Ciclo ::= 'from' Exp 'to' Exp 'do' Bloque
 Variable ::= 'id' ('[' Exp ']' ('[' Exp ']')? )?

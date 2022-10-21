@@ -16,8 +16,7 @@ reserved = {
     'func' : 'FUNC',
     'void' : 'VOID',
     'read' : 'READ',
-    'write' : 'WRITE',
-    'return': 'RETURN'
+    'write' : 'WRITE'
 }
 
 # List of token names
