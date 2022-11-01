@@ -1,4 +1,5 @@
 import ply.yacc as yacc
+import json
 
 from lexico import tokens
 
@@ -100,14 +101,23 @@ sc = {
 }
 
 def compute_function_memory_requirements(function_name):
-    memory_requirements = {'int': 0, 'float': 0, 'file': 0}
+    memory_requirements = {'var': {'int': 0, 'float': 0, 'file': 0}, 'temp': {'int': 0, 'float': 0}}
     for variable in pd[function_name]['vt']:
-        if pd[function_name]['vt'][variable]['type'] == 'int':
-            memory_requirements['int'] += 1
-        elif pd[function_name]['vt'][variable]['type'] == 'float':
-            memory_requirements['float'] += 1
-        elif pd[function_name]['vt'][variable]['type'] == 'file':
-            memory_requirements['file'] += 1
+        variable_type = pd[function_name]['vt'][variable]['type']
+        if type(variable) is int:
+            if variable_type == 'int':
+                memory_requirements['temp']['int'] += 1
+            elif variable_type == 'float':
+                memory_requirements['temp']['float'] += 1
+            elif variable_type == 'file':
+                memory_requirements['temp']['file'] += 1
+        else:
+            if variable_type == 'int':
+                memory_requirements['var']['int'] += 1
+            elif variable_type == 'float':
+                memory_requirements['var']['float'] += 1
+            elif variable_type == 'file':
+                memory_requirements['var']['file'] += 1
     pd[function_name]['mem'] = memory_requirements
 
 def assign_virtual_address(type, context):
@@ -144,21 +154,13 @@ def generate_quad(oper, l_op, r_op, result_type):
     global pilao
     global ptypes
 
-    # If statement is read, write, assignment or a jump (goto, gtf)
-    if oper == 'read' or oper == 'write' or oper == '=' or oper == 'goto':
+    if oper == 'read' or oper == 'write' or oper == '=' or oper == 'goto' or oper == 'endfunc' or oper == 'era' or oper == 'gosub' or oper == 'parameter':
         result = 'null'
     elif oper == 'gtf':
         # The result of evaluating the if expression
         l_op = pilao.pop()
         # Getting rid of the result type
         ptypes.pop()
-        result = 'null'
-    elif oper == 'endfunc' or oper == 'era' or oper == 'gosub':
-        oper = opcodes[oper]
-        result = 'null'
-    elif oper == 'parameter':
-        oper = opcodes[oper]
-        l_op = find_virtual_address(l_op)
         result = 'null'
     # Else it's an expression
     else:
@@ -169,11 +171,19 @@ def generate_quad(oper, l_op, r_op, result_type):
         pd[current_func_name]['vt'][result] = {'type': '', 'va': ''}
         pd[current_func_name]['vt'][result]['type'] = result_type
         pd[current_func_name]['vt'][result]['va'] = assign_virtual_address(result_type, 'temp')
-        if oper != 'call':
-            oper = opcodes[oper]
-            l_op = find_virtual_address(l_op)
-            r_op = find_virtual_address(r_op)
-            result = find_virtual_address(result)
+        l_op = find_virtual_address(l_op)
+        r_op = find_virtual_address(r_op)
+        result = find_virtual_address(result)
+    if oper == '=':
+        l_op = find_virtual_address(l_op)
+        r_op = find_virtual_address(r_op)
+    if oper == 'read' or oper == 'gtf' or oper == 'parameter':
+        l_op = find_virtual_address(l_op)
+    if oper == 'write':
+        for index, item in enumerate(l_op):
+            l_op[index] = find_virtual_address(l_op[index])
+
+    oper = opcodes[oper]
     quad_list.append([oper, l_op, r_op, result])
     
     global quad_number
@@ -186,6 +196,7 @@ def process_statement():
     global ptypes
 
     operator = poper.pop()
+
     if operator == '=':
         r_op = pilao.pop()
         l_op = pilao.pop()
@@ -215,6 +226,9 @@ def process_statement():
         file_type = ptypes.pop()
         generate_quad(operator, file_to_read_from, 'null', 'null')
     elif operator == 'write':
+        # Getting rid of the types list
+        pilao.pop()
+        ptypes.pop()
         arg_list = pilao.pop()
         # getting rid of the 'list' in ptypes
         ptypes.pop()
@@ -381,6 +395,10 @@ def p_genMemReqs(p):
     compute_function_memory_requirements(current_func_name)
     generate_quad('endfunc', 'null', 'null', 'null')
 
+    global has_a_return
+    if not has_a_return and current_func_type != 'void':
+        raise Exception('Non-void function ' + current_func_name + ' has no return statement')
+
 # NP in which we save the function's type in a variable
 # We also reset the virtual address counters
 def p_funcionNP1(p):
@@ -388,6 +406,8 @@ def p_funcionNP1(p):
     global current_func_type
     current_func_type = p[-1]
     reset_virtual_address_counters()
+    global has_a_return
+    has_a_return = False
 
 # NP in which we check if there already exists a procedure
 # with the same name in the PD, and if not, we add the function.
@@ -431,16 +451,19 @@ def p_funcionC(p):
                     | empty'''
 
 def p_main(p):
-    '''main : MAINSTART mainNP1 bloque'''
+    '''main : MAINSTART mainNP1 bloque getGlobalMemReqs'''
+
+def p_getGlobalMemReqs(p):
+    '''getGlobalMemReqs :'''
+    compute_function_memory_requirements(program_name)
 
 # NP in which we assign the type 'void' and an empty VT to main
 # We also change the current_func_name variable
 # We also reset the virtual address counets
 def p_mainNP1(p):
     '''mainNP1 :'''
-    pd[p[-1]] = {'type': 'void', 'vt': {}}
     global current_func_name
-    current_func_name = 'main'
+    current_func_name = program_name
     reset_virtual_address_counters()
 
     global quad_number
@@ -682,20 +705,24 @@ def p_return(p):
 
 def p_returnNP1(p):
     '''returnNP1 :'''
-    if current_func_name == 'main':
+    if current_func_name == program_name:
         raise Exception('Return statement in main')
+    elif current_func_type == 'void':
+        raise Exception('Return statement in void function')
     else:
+        global has_a_return
+        has_a_return = True
         exp_value = pilao.pop()
         exp_type = ptypes.pop()
         poper.append('=')
-        pilao.append(pd[program_name]['vt'][current_func_name]['va'])
+        pilao.append(current_func_name)
         ptypes.append(pd[program_name]['vt'][current_func_name]['type'])
         pilao.append(exp_value)
         ptypes.append(exp_type)
         process_statement()
 
 def p_condicion(p):
-    '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA'''
+    '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2'''
 
 def p_condicionNP1(p):
     '''condicionNP1 :'''
@@ -704,7 +731,7 @@ def p_condicionNP1(p):
     psaltos.append(quad_num)
 
 def p_condicionA(p):
-    '''condicionA : ELSE condicionANP1 bloque condicionANP2
+    '''condicionA : ELSE condicionANP1 bloque
                     | empty'''
 
 def p_condicionANP1(p):
@@ -723,7 +750,10 @@ def p_condicionANP2(p):
     quad_to_jump_to = quad_number
     global psaltos
     quad_to_fill = psaltos.pop()
-    quad_list[quad_to_fill][1] = quad_to_jump_to
+    if (quad_list[quad_to_fill][0] == 14):
+        quad_list[quad_to_fill][1] = quad_to_jump_to
+    else:
+        quad_list[quad_to_fill][2] = quad_to_jump_to
 
 def p_ciclo(p):
     '''ciclo : FROM exp TO exp DO cicloNP1 bloque cicloNP2'''
@@ -931,9 +961,12 @@ print("------------")
 if (result == 1):
     num = 0
     for i in quad_list:
-        print(num)
-        print(i)
+        print(num, i)
         num += 1
+    print (json.dumps(pd, indent=2))
     print("Pass")
+    json.dump(pd, open('proc_dir.txt', 'w'))
+    json.dump(const_table, open('const_table.txt', 'w'))
+    json.dump(quad_list, open('quad_list.txt', 'w'))
 else:
     print("Fail")
