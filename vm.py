@@ -53,6 +53,27 @@ def get_operand_type(virtual_address):
     elif virtual_address >= 4333 and virtual_address < 4666:
         return 'const_float'
 
+def get_operand_value(type, real_address, memory, const_mem):
+    value = -9999
+    match type:
+        case 'int':
+            value = memory.ints[real_address]
+        case 'float':
+            value = memory.floats[real_address]
+        case 'file':
+            value = memory.files[real_address]
+        case 'string':
+            value = const_mem.strings[real_address]          
+        case 'temp_int':
+            value = memory.temp_ints[real_address]
+        case 'temp_float':
+            value = memory.temp_floats[real_address]
+        case 'const_int':
+            value = const_mem.ints[real_address]
+        case 'const_float':
+            value = const_mem.floats[real_address]
+    return value
+
 def get_real_memory_address(virtual_address, current_function):
     # Globals
     if virtual_address >= 1000 and virtual_address < 1333:
@@ -95,56 +116,41 @@ while instruction_pointer < len(quad_list):
     left_operand_virtual_address = quad_list[instruction_pointer][1]
     right_operand_virtual_address = quad_list[instruction_pointer][2]
     result_virtual_address = quad_list[instruction_pointer][3]
+    print(instruction_pointer)
     print(quad_list[instruction_pointer])
 
-    if (opcode == 'goto'):
-        instruction_pointer = quad_list[instruction_pointer][1] - 1
-
-    if not isinstance(opcode, str) and not isinstance(left_operand_virtual_address, str) and not isinstance(right_operand_virtual_address, str) and not isinstance(result_virtual_address, str):
-        if left_operand_virtual_address != 'null':
+    if opcode not in [16, 17, 18, 19, 20]:
+        if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) is not list:
             left_operand_type = get_operand_type(left_operand_virtual_address)
-            match left_operand_type:
-                case 'int':
-                    left_operand_value = current_memory.ints[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'float':
-                    left_operand_value = current_memory.floats[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'file':
-                    left_operand_value = current_memory.files[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'string':
-                    left_operand_value = current_memory.strings[get_real_memory_address(left_operand_virtual_address, current_function)]          
-                case 'temp_int':
-                    left_operand_value = current_memory.temp_ints[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'temp_float':
-                    left_operand_value = current_memory.temp_floats[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'const_int':
-                    left_operand_value = constants_memory.ints[get_real_memory_address(left_operand_virtual_address, current_function)]
-                case 'const_float':
-                    left_operand_value = constants_memory.floats[get_real_memory_address(left_operand_virtual_address, current_function)]
+            left_operand_real_address = get_real_memory_address(left_operand_virtual_address, current_function)
+            left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
+        elif type(left_operand_virtual_address) is list:
+            arg_list = []
+            for virtual_address in left_operand_virtual_address:
+                operand_type = get_operand_type(virtual_address)
+                operand_real_address = get_real_memory_address(virtual_address, current_function)
+                operand_value = get_operand_value(operand_type, operand_real_address, current_memory, constants_memory)
+                arg_list.append(operand_value)
+
         if right_operand_virtual_address != 'null':
             right_operand_type = get_operand_type(right_operand_virtual_address)
-            match right_operand_type:
-                case 'int':
-                    right_operand_value = current_memory.ints[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'float':
-                    right_operand_value = current_memory.floats[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'file':
-                    right_operand_value = current_memory.files[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'string':
-                    right_operand_value = current_memory.strings[get_real_memory_address(right_operand_virtual_address, current_function)]            
-                case 'temp_int':
-                    right_operand_value = current_memory.temp_ints[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'temp_float':
-                    right_operand_value = current_memory.temp_floats[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'const_int':
-                    right_operand_value = constants_memory.ints[get_real_memory_address(right_operand_virtual_address, current_function)]
-                case 'const_float':
-                    right_operand_value = constants_memory.floats[get_real_memory_address(right_operand_virtual_address, current_function)]
+            right_operand_real_address = get_real_memory_address(right_operand_virtual_address, current_function)
+            right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
 
-        result_real_address = get_real_memory_address(result_virtual_address, current_function)
+        if result_virtual_address != 'null':
+            result_real_address = get_real_memory_address(result_virtual_address, current_function)
+        
         match opcode:
             case 1:
-                pass
-            # 2 a 11 es el avance 5
+                if left_operand_type in ['int', 'temp_int', 'const_int']:
+                    # This if only exists so the case where we
+                    # add 1 to cont (in a loop) works
+                    if left_operand_virtual_address >= 3000:
+                        current_memory.temp_ints[left_operand_real_address] = right_operand_value
+                    else:
+                        current_memory.ints[left_operand_real_address] = right_operand_value
+                else:
+                    current_memory.floats[left_operand_real_address] = right_operand_value
             case 2:
                 if left_operand_value < right_operand_value:
                     current_memory.temp_ints[result_real_address] = 1
@@ -198,12 +204,17 @@ while instruction_pointer < len(quad_list):
                     current_memory.temp_ints[result_real_address] = 0
             case 12:
                 pass
+                # file = open(left_operand_value)
+                # data_dict = json.load(file)
+                # print(data_dict)
             case 13:
-                pass
+                for arg in arg_list:
+                    print(arg)
             case 14:
-                pass
+                instruction_pointer = quad_list[instruction_pointer][1] - 1
             case 15:
-                pass
+                if left_operand_value == 0:
+                    instruction_pointer = quad_list[instruction_pointer][1] - 1
             case 16:
                 pass
             case 17:
@@ -216,5 +227,4 @@ while instruction_pointer < len(quad_list):
                 pass
             case _:
                 pass
-        print('Applied operation ' + str(opcode) + ' to operands ' + str(left_operand_value) + ' and ' + str(right_operand_value) + ' and stored the result in address ' + str(result_real_address))
     instruction_pointer += 1

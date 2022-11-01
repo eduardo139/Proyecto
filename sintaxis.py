@@ -762,7 +762,7 @@ def p_cicloNP1(p):
     '''cicloNP1 :''' 
     global pilao
     global psaltos
-    global cont
+    global cont_avail_list_index
 
     # We generate a quad where we substract the start from the end
     # We are substracting the end from the start, so cont should be less than 0
@@ -770,18 +770,38 @@ def p_cicloNP1(p):
     poper.append('-')
     process_exp()
 
-    cont = pilao.pop()
-    ptypes.pop()
-    quad_num = generate_quad('<', cont, '0', 'int')
+    cont_avail_list_index = pilao.pop()
+    cont_avail_list_type = ptypes.pop()
+
+    global const_table
+    if '0' not in const_table:
+        const_table['0'] = {'type': '', 'va': ''}
+        const_table['0']['type'] = 'int'
+        const_table['0']['va'] = assign_virtual_address('int', 'constant')
+        
+    quad_num = generate_quad('<', cont_avail_list_index, '0', 'int')
     quad_num_gtf = generate_quad('gtf', 'null', 'waiting for quad num', 'null')
     psaltos.append(quad_num)
     psaltos.append(quad_num_gtf)
 
 def p_cicloNP2(p):
     '''cicloNP2 :''' 
-    global cont
+    global cont_avail_list_index
     global quad_number
-    cont += 1
+    
+    # Para generar el cuadruplo (+, cont_avail_list_index, 1, int)
+    global const_table
+    if '1' not in const_table:
+        const_table['1'] = {'type': '', 'va': ''}
+        const_table['1']['type'] = 'int'
+        const_table['1']['va'] = assign_virtual_address('int', 'constant')
+    generate_quad('+', cont_avail_list_index, '1', 'int')
+
+    # Para generar el cuadruplo (=, cont_avail_list_index, [resultado de anterior cuadruplo], 'null')
+    result_of_cont_plus_1 = pilao.pop()
+    result_of_cont_plus_1_type = ptypes.pop()
+    generate_quad('=', cont_avail_list_index, result_of_cont_plus_1, 'int')
+
     quad_to_fill = psaltos.pop()
     quad_to_jump_to = psaltos.pop()
     generate_quad('goto', quad_to_jump_to, 'null', 'null')
@@ -952,7 +972,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance5_test1.txt", "r")
+    file = open("./avance5_test2.txt", "r")
     input = file.read()
 except EOFError:
     pass
