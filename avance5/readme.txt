@@ -1,0 +1,1 @@
+Se generan correctamente los cuádruplos asociados a las funciones.

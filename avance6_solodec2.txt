@@ -1,0 +1,51 @@
+program test8;
+var
+   int myint;
+   int otherint;
+   float i;
+   int j;
+   int matg[1][100];
+   float someNum;
+
+func int myFunc (int a, float b, float c);
+var
+    int mat[100][100];
+    int otro[99];
+    int funcInt;
+    int myint;
+    int mira[11];
+{
+    funcInt = 3 + 5
+    return funcInt
+}
+
+func void someFunc();
+var
+    int myint;
+    int otroarr[12];
+{
+    myint = myFunc(3,2.0,5.4)
+    write("some function")
+}
+
+main
+{
+   myint = 1
+   write("letrero", 1+3, 0&1)
+   if (myint & 1) {
+        someNum = 4.0
+   }
+   else
+   {
+        someNum = myint - 2 + 4.0 * 10 / 5
+   }
+
+   i = 0.0
+   j = 0
+   otherint = 6
+   from 1 to 5 do
+   {
+        i = i + 1
+        j = j + 1
+   }
+}

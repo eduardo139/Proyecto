@@ -1,0 +1,1 @@
+Se generan correctamente los cuádruplos asociados a los estatutos condicionales y cíclicos. Nótese que no se soporta el anidamiento de estatutos condicionales.

@@ -120,14 +120,14 @@ def compute_function_memory_requirements(function_name):
                 memory_requirements['var']['file'] += 1
     pd[function_name]['mem'] = memory_requirements
 
-def assign_virtual_address(type, context, spaces_needed):
+def assign_virtual_address(type, context):
     if context == 'null':
         if current_func_name == program_name:
             context = 'global'
         else:
             context = 'local'
     virtual_address = virtual_addresses[context][type]
-    virtual_addresses[context][type] += spaces_needed
+    virtual_addresses[context][type] += 1
     return virtual_address
 
 def reset_virtual_address_counters():
@@ -170,7 +170,7 @@ def generate_quad(oper, l_op, r_op, result_type):
         ptypes.append(result_type)
         pd[current_func_name]['vt'][result] = {'type': '', 'va': ''}
         pd[current_func_name]['vt'][result]['type'] = result_type
-        pd[current_func_name]['vt'][result]['va'] = assign_virtual_address(result_type, 'temp', 1)
+        pd[current_func_name]['vt'][result]['va'] = assign_virtual_address(result_type, 'temp')
         l_op = find_virtual_address(l_op)
         r_op = find_virtual_address(r_op)
         result = find_virtual_address(result)
@@ -314,11 +314,6 @@ def p_varsNP2(p):
     global current_var_type
     current_var_type = p[-1]
 
-    global isArray
-    global isMatrix
-    isArray = False
-    isMatrix = False
-
 # NP in which we check if there already exists a variable
 # with the same name in the VT, and if not, we add the variable.
 def p_varsNP6(p):
@@ -330,69 +325,49 @@ def p_varsNP6(p):
     else:
         pd[current_func_name]['vt'][current_var_id] = {'type': '', 'va': ''}
         pd[current_func_name]['vt'][current_var_id]['type'] = current_var_type
-
-    global arrSize
-    global matSize
-    if isArray:
-        pd[current_func_name]['vt'][current_var_id]['dim'] = {'lsup': arrSize}
-        needed_spaces = arrSize
-    elif isMatrix:
-        pd[current_func_name]['vt'][current_var_id]['dim'] = {'lsup': arrSize, 'm1': matSize, 'next_dim': {'lsup': matSize}}
-        needed_spaces = arrSize * matSize
-    else:
-        needed_spaces = 1
-    pd[current_func_name]['vt'][current_var_id]['va'] = assign_virtual_address(current_var_type, 'null', needed_spaces)
-
+        pd[current_func_name]['vt'][current_var_id]['va'] = assign_virtual_address(current_var_type, 'null')
 
 def p_varsC(p):
-    '''varsC : LEFTBRACKET varIsArray CTI varsNP4 RIGHTBRACKET varsD
+    '''varsC : LEFTBRACKET CTI varsNP4 RIGHTBRACKET varsD
                 | empty'''
-
-def p_varIsArray(p):
-    '''varIsArray :'''
-    global isArray
-    isArray = True
 
 # NP in which we check if the 1D array is between the size of 1 and 100.
 # If it is we update the variable's type
 # We also add the constant to the const table
 def p_varsNP4(p):
     '''varsNP4 :'''
+    global current_var_type
     global const_table
-    global arrSize
     arrSize = int(p[-1])
-    if arrSize < 1 or arrSize > 100:
+    if 1 <= arrSize <= 100:
+        current_var_type = '1d_arr'
+    else:
         raise Exception('Array size must be between 1 and 100')
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant', 1)
+        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_varsD(p):
-    '''varsD : LEFTBRACKET varIsMatrix CTI varsNP5 RIGHTBRACKET
+    '''varsD : LEFTBRACKET CTI varsNP5 RIGHTBRACKET
                 | empty'''
-
-def p_varIsMatrix(p):
-    '''varIsMatrix :'''
-    global isArray
-    isArray = False
-    global isMatrix
-    isMatrix = True
 
 # NP in which we check if the 2D array is between the size of 1 and 100.
 # If it is we update the variable's type
 # We also add the constant to the const table
 def p_varsNP5(p):
     '''varsNP5 :'''
+    global current_var_type
     global const_table
-    global matSize
-    matSize = int(p[-1])
-    if matSize < 1 or matSize > 100:
+    arrSize = int(p[-1])
+    if 1 <= arrSize <= 100:
+        current_var_type = '2d_arr'
+    else:
         raise Exception('Array size must be between 1 and 100')
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant', 1)
+        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_varsE(p):
     '''varsE : COMMA ID varsNP3 varsNP6 varsE
@@ -455,7 +430,7 @@ def p_funcionNP2(p):
         if current_func_type != 'void':
             pd[program_name]['vt'][current_func_name] = {'type': '', 'va': ''}
             pd[program_name]['vt'][current_func_name]['type'] = current_func_type
-            pd[program_name]['vt'][current_func_name]['va'] = assign_virtual_address(current_func_type, 'global', 1)
+            pd[program_name]['vt'][current_func_name]['va'] = assign_virtual_address(current_func_type, 'global')
 
 def p_funcionA(p):
     '''funcionA : tipoSimple funcionANP1
@@ -532,7 +507,7 @@ def p_paramsNP2(p):
     else:
         pd[current_func_name]['vt'][current_param_id] = {'type': '', 'va': ''}
         pd[current_func_name]['vt'][current_param_id]['type'] = current_param_type
-        pd[current_func_name]['vt'][current_param_id]['va'] = assign_virtual_address(current_param_type, 'local', 1)
+        pd[current_func_name]['vt'][current_param_id]['va'] = assign_virtual_address(current_param_type, 'local')
 
 def p_bloque(p):
     '''bloque : LEFTCURLY bloqueA RIGHTCURLY'''
@@ -719,7 +694,7 @@ def p_escrituraNP2(p):
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'string'
-        const_table[p[-1]]['va'] = assign_virtual_address('string', 'constant', 1)
+        const_table[p[-1]]['va'] = assign_virtual_address('string', 'constant')
 
 def p_escrituraB(p):
     '''escrituraB : COMMA escrituraA escrituraB
@@ -802,7 +777,7 @@ def p_cicloNP1(p):
     if '0' not in const_table:
         const_table['0'] = {'type': '', 'va': ''}
         const_table['0']['type'] = 'int'
-        const_table['0']['va'] = assign_virtual_address('int', 'constant', 1)
+        const_table['0']['va'] = assign_virtual_address('int', 'constant')
         
     quad_num = generate_quad('<', cont_avail_list_index, '0', 'int')
     quad_num_gtf = generate_quad('gtf', 'null', 'waiting for quad num', 'null')
@@ -819,7 +794,7 @@ def p_cicloNP2(p):
     if '1' not in const_table:
         const_table['1'] = {'type': '', 'va': ''}
         const_table['1']['type'] = 'int'
-        const_table['1']['va'] = assign_virtual_address('int', 'constant', 1)
+        const_table['1']['va'] = assign_virtual_address('int', 'constant')
     generate_quad('+', cont_avail_list_index, '1', 'int')
 
     # Para generar el cuadruplo (=, cont_avail_list_index, [resultado de anterior cuadruplo], 'null')
@@ -970,7 +945,7 @@ def p_factorNP2(p):
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
-        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant', 1)
+        const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant')
 
 def p_factorNP3(p):
     '''factorNP3 :'''
@@ -980,7 +955,7 @@ def p_factorNP3(p):
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'float'
-        const_table[p[-1]]['va'] = assign_virtual_address('float', 'constant', 1)
+        const_table[p[-1]]['va'] = assign_virtual_address('float', 'constant')
 
 # For empty / epsilon
 def p_empty(p):
@@ -997,7 +972,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance6_solodec2.txt", "r")
+    file = open("./avance5_test2.txt", "r")
     input = file.read()
 except EOFError:
     pass
