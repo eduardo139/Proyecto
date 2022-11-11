@@ -6,6 +6,7 @@ var
    int i;
    int j;
    int arr[9];
+   int arr2[10];
    int mat[6][8];
    float someNum;
 main
@@ -21,8 +22,8 @@ main
         someNum = myint - 2 + 4 * 10 / 5
    }
 
-   arr[5] = 1
-   i = arr[5]
+   arr[5][0] = 1
+   i = arr[arr2[2]]
    j = 0
    otherint = 6
    from 1 to 5 do

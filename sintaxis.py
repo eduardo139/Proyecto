@@ -31,13 +31,16 @@ pilao = []
 global ptypes
 ptypes = []
 
+global piladim
+piladim = []
+
 global psaltos
 psaltos = []
 
 global opcodes
 opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
            '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
-           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20}
+           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21}
 
 # Our semantic consideration table (semantic cube)
 global sc
@@ -126,6 +129,7 @@ def assign_virtual_address(type, context, spaces_needed):
             context = 'global'
         else:
             context = 'local'
+    global virtual_addresses
     virtual_address = virtual_addresses[context][type]
     virtual_addresses[context][type] += spaces_needed
     return virtual_address
@@ -133,7 +137,7 @@ def assign_virtual_address(type, context, spaces_needed):
 def reset_virtual_address_counters():
     global virtual_addresses
     virtual_addresses['local'] = {'int': 2000, 'float': 2333, 'file': 2666}
-    virtual_addresses['temp'] = {'int': 3000, 'float': 3333, 'file': 3666}
+    virtual_addresses['temp'] = {'int': 3000, 'float': 3333, 'pointer': 3666}
 
 def find_virtual_address(operand):
     if operand not in pd[current_func_name]['vt']:
@@ -162,7 +166,7 @@ def generate_quad(oper, l_op, r_op, result_type):
         # Getting rid of the result type
         ptypes.pop()
         result = 'null'
-    # Else it's an expression
+    # Else it's an expression or a verify
     else:
         result = avail_list_current_index
         avail_list_current_index += 1
@@ -202,7 +206,7 @@ def process_statement():
         l_op = pilao.pop()
         r_type = ptypes.pop()
         l_type = ptypes.pop()
-        if (l_type == r_type):
+        if (l_type == r_type) or (l_type == 'pointer' and r_type == 'int') or (l_type == 'pointer' and r_type == 'float') or (l_type == 'int' and r_type == 'pointer') or (l_type == 'float' and r_type == 'pointer'):
             generate_quad(operator, l_op, r_op, 'null')
         else:
             raise Exception('Cannot assign an element (' + r_type + ') to another that is not of the same type (' + l_type + ')')
@@ -262,7 +266,7 @@ def p_programNP1(p):
     global virtual_addresses
     virtual_addresses = {'global': {'int': 1000, 'float': 1333, 'file': 1666}, 
                         'local': {'int': 2000, 'float': 2333, 'file': 2666},
-                        'temp': {'int': 3000, 'float': 3333, 'file': 3666},
+                        'temp': {'int': 3000, 'float': 3333, 'pointer': 3666},
                         'constant': {'int': 4000, 'float': 4333, 'string': 4666}}
     
     global const_table
@@ -843,6 +847,8 @@ def p_variableNP1(p):
     '''variableNP1 :'''
     global current_func_name
     global program_name
+    global current_var_id
+    current_var_id = p[-1]
     if p[-1] not in pd[current_func_name]['vt']:
         if p[-1] not in pd[program_name]['vt']:
             raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
@@ -853,12 +859,78 @@ def p_variableNP1(p):
     pilao.append(p[-1])
 
 def p_variableA(p):
-    '''variableA : LEFTBRACKET exp RIGHTBRACKET variableB
+    '''variableA : LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET variableB
                     | empty'''
 
+def p_check_if_non_atomic(p):
+    '''check_if_non_atomic :'''
+    global current_var_id
+    global current_nonatomic_id
+    global current_var_type
+    global piladim
+    global on_matrix
+    on_matrix = False
+    current_var_id = pilao.pop()
+    current_nonatomic_id = current_var_id
+    current_var_type = ptypes.pop()
+    if not 'dim' in pd[current_func_name]['vt'][current_var_id]:
+        raise Exception('Trying to access an index on atomic variable ' + current_var_id)
+    else:
+        piladim.append(current_var_id)
+
+def p_verify(p):
+    '''verify :'''
+    arr_id = piladim[-1]
+    lsup = str(pd[current_func_name]['vt'][arr_id]['dim']['lsup'])
+    generate_quad('verify', pilao[-1], lsup, 'int')
+    # Getting rid of the verification's result and its type
+    pilao.pop()
+    ptypes.pop()
+    aux = pilao.pop()
+    ptypes.pop()
+
+    if 'next_dim' in pd[current_func_name]['vt'][arr_id]['dim']:
+        m1 = pd[current_func_name]['vt'][arr_id]['dim']['m1']
+        generate_quad('*', aux, m1, 'int')
+        global on_matrix
+        on_matrix = True
+    else:
+        piladim.pop()
+        generate_quad('+', aux, arr_id, 'pointer')
+
 def p_variableB(p):
-    '''variableB : LEFTBRACKET exp RIGHTBRACKET
-                    | empty'''
+    '''variableB : LEFTBRACKET check_if_matrix exp verify_matrix RIGHTBRACKET
+                    | empty on_matrix_check'''
+
+def p_check_if_matrix(p):
+    '''check_if_matrix :'''
+    global piladim
+    mat_id = piladim[-1]
+    if not 'next_dim' in pd[current_func_name]['vt'][mat_id]['dim'] or mat_id != current_nonatomic_id:
+        raise Exception('Trying to access a 2nd dimension in array' + mat_id)
+
+def p_verify_matrix(p):
+    '''verify_matrix :'''
+    mat_id = piladim.pop()
+    lsup = str(pd[current_func_name]['vt'][mat_id]['dim']['next_dim']['lsup'])
+    generate_quad('verify', pilao[-1], lsup, 'int')
+    # Getting rid of the verification's result and its type
+    pilao.pop()
+    ptypes.pop()
+    aux = pilao.pop()
+    ptypes.pop()
+    s1m1 = pilao.pop()
+    ptypes.pop()
+    generate_quad('+', aux, s1m1, 'int')
+    result = pilao.pop()
+    ptypes.pop()
+    generate_quad('+', result, mat_id, 'pointer')
+
+def p_on_matrix_check(p):
+    '''on_matrix_check :'''
+    global on_matrix
+    if on_matrix:
+        raise Exception('Tried to access matrix with only one index')
 
 def p_exp(p):
     '''exp : exp1 expA'''
@@ -997,7 +1069,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance6_solodec2.txt", "r")
+    file = open("./avance6_test5.txt", "r")
     input = file.read()
 except EOFError:
     pass

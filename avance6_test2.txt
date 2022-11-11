@@ -23,7 +23,7 @@ main
 
    arr[5] = 1
    i = arr[5]
-   j = 0
+   j[2] = 0
    otherint = 6
    from 1 to 5 do
    {
