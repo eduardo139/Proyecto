@@ -5,7 +5,7 @@ var
    int otherint;
    int i;
    int j;
-   int arr[1][100];
+   int arr[6][10];
    float someNum;
 
 func int myFunc (int a, float b, float c);
@@ -16,6 +16,7 @@ var
 {
     read funcFile2
     funcInt = 3 + 5
+    return funcInt
 }
 
 func void anotherFunc();

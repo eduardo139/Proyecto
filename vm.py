@@ -33,7 +33,7 @@ for constant in constants_table:
 
 program_name = list(procedure_directory)[0]
 global_memory = Memory('global', procedure_directory[program_name]['mem'])
-
+execution_stack = []
 instruction_pointer = 0
 
 def get_operand_type(virtual_address):
@@ -111,7 +111,7 @@ def get_real_memory_address(virtual_address, current_function):
 
 # opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
 #           '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
-#           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20}
+#           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21}
 
 current_function = program_name
 current_memory = global_memory
@@ -124,12 +124,12 @@ while instruction_pointer < len(quad_list):
     print(instruction_pointer)
     print(quad_list[instruction_pointer])
 
-    if opcode not in [16, 17, 18, 19, 20, 21]:
+    if opcode not in [16, 17, 20]:
         if result_virtual_address != 'null':
             result_type = get_operand_type(result_virtual_address)
             result_real_address = get_real_memory_address(result_virtual_address, current_function)
 
-        if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) is not list:
+        if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) not in [list, dict]:
             left_operand_type = get_operand_type(left_operand_virtual_address)
             left_operand_real_address = get_real_memory_address(left_operand_virtual_address, current_function)
             left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
@@ -153,7 +153,7 @@ while instruction_pointer < len(quad_list):
                 
                 arg_list.append(operand_value)
 
-        if right_operand_virtual_address != 'null':
+        if right_operand_virtual_address != 'null' and opcode != 19:
             right_operand_type = get_operand_type(right_operand_virtual_address)
             right_operand_real_address = get_real_memory_address(right_operand_virtual_address, current_function)
             right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
@@ -247,11 +247,28 @@ while instruction_pointer < len(quad_list):
             case 17:
                 pass
             case 18:
-                pass
+                memory_reqs = left_operand_virtual_address
+                memory_instance = Memory('local', memory_reqs)
+                execution_stack.append(memory_instance)
+                global int_param_counter
+                global float_param_counter
+                int_param_counter = 0
+                float_param_counter = 0
             case 19:
-                pass
+                memory_instance = execution_stack.pop()
+                if left_operand_type in ['int', 'temp_int', 'const_int']:
+                    memory_instance.ints[int_param_counter] = left_operand_value
+                    int_param_counter += 1
+                else:
+                    memory_instance.floats[float_param_counter] = left_operand_value
+                    float_param_counter += 1
+                execution_stack.append(memory_instance)
             case 20:
                 pass
+            case 21:
+                # verify
+                if left_operand_value < 0 or left_operand_value >= right_operand_value:
+                    raise Exception('Tried to access index ' + str(left_operand_value) + ' but index must be between 0 and ' + str(right_operand_value-1))
             case _:
                 pass
     instruction_pointer += 1

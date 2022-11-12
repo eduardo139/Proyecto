@@ -1088,7 +1088,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance6_test6.txt", "r")
+    file = open("./avance3_test3.txt", "r")
     input = file.read()
 except EOFError:
     pass
