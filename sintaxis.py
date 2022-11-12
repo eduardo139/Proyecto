@@ -104,23 +104,41 @@ sc = {
 }
 
 def compute_function_memory_requirements(function_name):
-    memory_requirements = {'var': {'int': 0, 'float': 0, 'file': 0}, 'temp': {'int': 0, 'float': 0}}
+    memory_requirements = {'var': {'int': 0, 'float': 0, 'file': 0}, 'temp': {'int': 0, 'float': 0, 'pointer' : 0}}
     for variable in pd[function_name]['vt']:
         variable_type = pd[function_name]['vt'][variable]['type']
-        if type(variable) is int:
+        # Temp variables
+        # dont make any other variable start with 'temp' or you will break this
+        if variable[:4] == 'temp':
             if variable_type == 'int':
                 memory_requirements['temp']['int'] += 1
             elif variable_type == 'float':
                 memory_requirements['temp']['float'] += 1
-            elif variable_type == 'file':
-                memory_requirements['temp']['file'] += 1
+            elif variable_type == 'pointer':
+                memory_requirements['temp']['pointer'] += 1
         else:
-            if variable_type == 'int':
-                memory_requirements['var']['int'] += 1
-            elif variable_type == 'float':
-                memory_requirements['var']['float'] += 1
-            elif variable_type == 'file':
-                memory_requirements['var']['file'] += 1
+            # Non-atomic vars
+            if 'dim' in  pd[function_name]['vt'][variable]:
+                # Matrices
+                if 'm1' in pd[function_name]['vt'][variable]['dim']:
+                    if variable_type == 'int':
+                        memory_requirements['var']['int'] += pd[function_name]['vt'][variable]['dim']['lsup'] * pd[function_name]['vt'][variable]['dim']['m1']
+                    elif variable_type == 'float':
+                        memory_requirements['var']['float'] += pd[function_name]['vt'][variable]['dim']['lsup'] * pd[function_name]['vt'][variable]['dim']['m1']
+                # Arrays
+                else:
+                    if variable_type == 'int':
+                        memory_requirements['var']['int'] += pd[function_name]['vt'][variable]['dim']['lsup']
+                    elif variable_type == 'float':
+                        memory_requirements['var']['float'] += pd[function_name]['vt'][variable]['dim']['lsup']
+            # Atomic vars
+            else:
+                if variable_type == 'int':
+                    memory_requirements['var']['int'] += 1
+                elif variable_type == 'float':
+                    memory_requirements['var']['float'] += 1
+                elif variable_type == 'file':
+                    memory_requirements['var']['file'] += 1
     pd[function_name]['mem'] = memory_requirements
 
 def assign_virtual_address(type, context, spaces_needed):
@@ -168,7 +186,7 @@ def generate_quad(oper, l_op, r_op, result_type):
         result = 'null'
     # Else it's an expression or a verify
     else:
-        result = avail_list_current_index
+        result = 'temp' + str(avail_list_current_index)
         avail_list_current_index += 1
         pilao.append(result)
         ptypes.append(result_type)
@@ -891,7 +909,8 @@ def p_verify(p):
 
     if 'next_dim' in pd[current_func_name]['vt'][arr_id]['dim']:
         m1 = pd[current_func_name]['vt'][arr_id]['dim']['m1']
-        generate_quad('*', aux, m1, 'int')
+
+        generate_quad('*', aux, str(m1), 'int')
         global on_matrix
         on_matrix = True
     else:
@@ -1069,7 +1088,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance6_test5.txt", "r")
+    file = open("./avance6_test6.txt", "r")
     input = file.read()
 except EOFError:
     pass
@@ -1080,7 +1099,7 @@ if (result == 1):
     for i in quad_list:
         print(num, i)
         num += 1
-    print (json.dumps(pd, indent=2))
+    # print (json.dumps(pd, indent=2))
     print("Pass")
     json.dump(pd, open('proc_dir.txt', 'w'))
     json.dump(const_table, open('const_table.txt', 'w'))
