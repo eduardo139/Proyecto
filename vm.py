@@ -136,7 +136,7 @@ while instruction_pointer < len(quad_list):
         result_type = get_operand_type(result_virtual_address)
         result_real_address = get_real_memory_address(result_virtual_address)
 
-    if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) not in [list, dict] and opcode != 17:
+    if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) not in [list, dict] and opcode not in [17, 18]:
         left_operand_type = get_operand_type(left_operand_virtual_address)
         left_operand_real_address = get_real_memory_address(left_operand_virtual_address)
         left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
@@ -173,16 +173,16 @@ while instruction_pointer < len(quad_list):
     
     match opcode:
         case 1:
-            if left_operand_type is 'global_int':
+            if left_operand_type == 'global_int':
                 global_memory.ints[left_operand_real_address] = right_operand_value
-            elif left_operand_type is 'global_float':
+            elif left_operand_type == 'global_float':
                 global_memory.floats[left_operand_real_address] = right_operand_value
-            elif left_operand_type is 'local_int':
+            elif left_operand_type == 'local_int':
                 current_memory.ints[left_operand_real_address] = right_operand_value
             # This elif only exists for two cases:
             # when we add 1 to cont (in a loop)
             # when we assign the result of a function's return to a temp variable
-            elif left_operand_type is 'temp_int':
+            elif left_operand_type == 'temp_int':
                 current_memory.temp_ints[left_operand_real_address] = right_operand_value
             # else it's a local float
             else:
@@ -254,7 +254,7 @@ while instruction_pointer < len(quad_list):
             instruction_pointer = quad_list[instruction_pointer][1] - 1
         case 15:
             if left_operand_value == 0:
-                instruction_pointer = quad_list[instruction_pointer][1] - 1
+                instruction_pointer = quad_list[instruction_pointer][2] - 1
         case 16:
             pass
         case 17:
@@ -264,7 +264,8 @@ while instruction_pointer < len(quad_list):
             ip_stack.append(instruction_pointer+1)
             instruction_pointer = right_operand_virtual_address-1
         case 18:
-            memory_reqs = left_operand_virtual_address
+            function_name = left_operand_virtual_address
+            memory_reqs = procedure_directory[function_name]['mem']
             memory_instance = Memory('local', memory_reqs)
             execution_stack.append(memory_instance)
             global int_param_counter
@@ -282,7 +283,7 @@ while instruction_pointer < len(quad_list):
             execution_stack.append(memory_instance)
         case 20:
             current_memory = execution_stack.pop()
-            instruction_pointer = ip_stack.pop()
+            instruction_pointer = ip_stack.pop() - 1
         case 21:
             if left_operand_value < 0 or left_operand_value >= right_operand_value:
                 raise Exception('Tried to access index ' + str(left_operand_value) + ' but index must be between 0 and ' + str(right_operand_value-1))

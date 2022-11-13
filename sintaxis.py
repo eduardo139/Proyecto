@@ -245,13 +245,17 @@ def process_statement():
         ptypes.pop()
         ptypes.pop()
 
-        func_id = pilao[-1]
+        func_id = pilao.pop()
+        func_type = ptypes.pop()
 
         i = 1
         for arg in arg_list:
             generate_quad('parameter', arg, i, 'null')
             i += 1
         generate_quad('gosub', func_id, pd[func_id]['quadstart'], 'null')
+
+        if func_type != 'void':
+            generate_quad('=', func_type, func_id, 'return')
     elif operator == 'read':
         file_to_read_from = pilao.pop()
         file_type = ptypes.pop()
@@ -482,6 +486,14 @@ def p_funcionNP2(p):
         current_func_name = p[-1]
         pd[current_func_name]['vt'] = {}
 
+        pd[current_func_name]['vt'] = {}
+
+        # Create a global variable that will store the function's return value at runtime
+        if current_func_type != 'void':
+            pd[program_name]['vt'][current_func_name] = {'type': '', 'va': ''}
+            pd[program_name]['vt'][current_func_name]['type'] = current_func_type
+            pd[program_name]['vt'][current_func_name]['va'] = assign_virtual_address(current_func_type, 'global', 1)
+
 def p_funcionA(p):
     '''funcionA : tipoSimple funcionANP1
                     | VOID funcionANP1'''
@@ -645,7 +657,7 @@ def p_llamadaNP1(p):
     pilao.append(p[-1])
     ptypes.append(pd[p[-1]]['type'])
 
-    generate_quad('era', pd[id]['mem'], 'null', 'null')
+    generate_quad('era', id, 'null', 'null')
     p[0] = pd[id]['type']
 
 # NP in which we compare the arg_list's contents with the function's params list.
@@ -764,7 +776,12 @@ def p_returnNP1(p):
         has_a_return = True
         exp_value = pilao.pop()
         exp_type = ptypes.pop()
-        generate_quad('=', exp_type, exp_value, 'return')
+        poper.append('=')
+        pilao.append(current_func_name)
+        ptypes.append(pd[program_name]['vt'][current_func_name]['type'])
+        pilao.append(exp_value)
+        ptypes.append(exp_type)
+        process_statement()
 
 def p_condicion(p):
     '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2'''

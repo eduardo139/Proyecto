@@ -1,0 +1,31 @@
+program factorial;
+var
+   int i;
+   int j;
+   int factorial;
+
+func int fac (int n);
+{
+    if (n > 1) {
+	return n * fac(n-1)
+    }
+    else 
+    {
+	return 1
+    }
+}
+
+main
+{
+   i = 1
+   j = 1
+   factorial = 5
+   from 0 to factorial do
+   {
+        j = j * i
+        i = i + 1
+   }
+   write("Result is ", j)
+   factorial = 6
+   write("Recursive result is", fac(factorial))
+}
