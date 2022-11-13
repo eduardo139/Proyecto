@@ -197,6 +197,15 @@ def generate_quad(oper, l_op, r_op, result_type):
         r_op = find_virtual_address(r_op)
         result = find_virtual_address(result)
     if oper == '=':
+        if result_type == 'return':
+            return_type = l_op
+            l_op = 'return' + str(avail_list_current_index)
+            avail_list_current_index += 1
+            pilao.append(l_op)
+            ptypes.append(return_type)
+            pd[program_name]['vt'][l_op] = {'type': '', 'va': ''}
+            pd[program_name]['vt'][l_op]['type'] = return_type
+            pd[program_name]['vt'][l_op]['va'] = assign_virtual_address(return_type, 'global', 1)
         l_op = find_virtual_address(l_op)
         r_op = find_virtual_address(r_op)
     if oper == 'read' or oper == 'gtf' or oper == 'parameter':
@@ -472,12 +481,6 @@ def p_funcionNP2(p):
         pd[p[-1]] = {'type': current_func_type, 'params': []}
         current_func_name = p[-1]
         pd[current_func_name]['vt'] = {}
-
-        # Create a global variable that will store the function's return value at runtime
-        if current_func_type != 'void':
-            pd[program_name]['vt'][current_func_name] = {'type': '', 'va': ''}
-            pd[program_name]['vt'][current_func_name]['type'] = current_func_type
-            pd[program_name]['vt'][current_func_name]['va'] = assign_virtual_address(current_func_type, 'global', 1)
 
 def p_funcionA(p):
     '''funcionA : tipoSimple funcionANP1
@@ -761,12 +764,7 @@ def p_returnNP1(p):
         has_a_return = True
         exp_value = pilao.pop()
         exp_type = ptypes.pop()
-        poper.append('=')
-        pilao.append(current_func_name)
-        ptypes.append(pd[program_name]['vt'][current_func_name]['type'])
-        pilao.append(exp_value)
-        ptypes.append(exp_type)
-        process_statement()
+        generate_quad('=', exp_type, exp_value, 'return')
 
 def p_condicion(p):
     '''condicion : IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2'''

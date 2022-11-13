@@ -34,17 +34,20 @@ for constant in constants_table:
 program_name = list(procedure_directory)[0]
 global_memory = Memory('global', procedure_directory[program_name]['mem'])
 execution_stack = []
+ip_stack = []
 instruction_pointer = 0
 
 def get_operand_type(virtual_address):
-    if (virtual_address >= 1000 and virtual_address < 1333) or (virtual_address >= 2000 and virtual_address < 2333): 
-        return 'int'
-    elif (virtual_address >= 1333 and virtual_address < 1666) or (virtual_address >= 2333 and virtual_address < 2666):
-        return 'float'
+    if virtual_address >= 1000 and virtual_address < 1333: 
+        return 'global_int'
+    elif virtual_address >= 1333 and virtual_address < 1666:
+        return 'global_float'
     elif (virtual_address >= 1666 and virtual_address < 2000) or (virtual_address >= 2666 and virtual_address < 3000):
         return 'file'
-    elif virtual_address >= 4666:
-        return 'string'
+    if virtual_address >= 2000 and virtual_address < 2333:
+        return 'local_int'
+    elif virtual_address >= 2333 and virtual_address < 2666:
+        return 'local_float'
     elif virtual_address >= 3000 and virtual_address < 3333:
         return 'temp_int'
     elif virtual_address >= 3333 and virtual_address < 3666:
@@ -55,20 +58,24 @@ def get_operand_type(virtual_address):
         return 'const_int'
     elif virtual_address >= 4333 and virtual_address < 4666:
         return 'const_float'
+    elif virtual_address >= 4666:
+        return 'string'
 
 def get_operand_value(type, real_address, memory, const_mem):
     value = -9999
     match type:
-        case 'int':
+        case 'global_int':
+            value = global_memory.ints[real_address]
+        case 'local_int':
             value = memory.ints[real_address]
-        case 'float':
+        case 'global_float':
+            value = global_memory.floats[real_address]
+        case 'local_float':
             value = memory.floats[real_address]
         case 'file':
             value = memory.files[real_address]
         case 'pointer':
-            value = memory.pointers[real_address]
-        case 'string':
-            value = const_mem.strings[real_address]          
+            value = memory.pointers[real_address]     
         case 'temp_int':
             value = memory.temp_ints[real_address]
         case 'temp_float':
@@ -77,9 +84,11 @@ def get_operand_value(type, real_address, memory, const_mem):
             value = const_mem.ints[real_address]
         case 'const_float':
             value = const_mem.floats[real_address]
+        case 'string':
+            value = const_mem.strings[real_address]     
     return value
 
-def get_real_memory_address(virtual_address, current_function):
+def get_real_memory_address(virtual_address):
     # Globals
     if virtual_address >= 1000 and virtual_address < 1333:
         return virtual_address - 1000
@@ -113,7 +122,6 @@ def get_real_memory_address(virtual_address, current_function):
 #           '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
 #           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21}
 
-current_function = program_name
 current_memory = global_memory
 
 while instruction_pointer < len(quad_list):
@@ -124,151 +132,160 @@ while instruction_pointer < len(quad_list):
     print(instruction_pointer)
     print(quad_list[instruction_pointer])
 
-    if opcode not in [16, 17, 20]:
-        if result_virtual_address != 'null':
-            result_type = get_operand_type(result_virtual_address)
-            result_real_address = get_real_memory_address(result_virtual_address, current_function)
+    if result_virtual_address != 'null':
+        result_type = get_operand_type(result_virtual_address)
+        result_real_address = get_real_memory_address(result_virtual_address)
 
-        if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) not in [list, dict]:
-            left_operand_type = get_operand_type(left_operand_virtual_address)
-            left_operand_real_address = get_real_memory_address(left_operand_virtual_address, current_function)
+    if left_operand_virtual_address != 'null' and type(left_operand_virtual_address) not in [list, dict] and opcode != 17:
+        left_operand_type = get_operand_type(left_operand_virtual_address)
+        left_operand_real_address = get_real_memory_address(left_operand_virtual_address)
+        left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
+
+        if left_operand_type == 'pointer':
+            left_operand_type = get_operand_type(left_operand_value)
+            left_operand_real_address = get_real_memory_address(left_operand_value)
             left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
-
-            if left_operand_type == 'pointer':
-                left_operand_type = get_operand_type(left_operand_value)
-                left_operand_real_address = get_real_memory_address(left_operand_value, current_function)
-                left_operand_value = get_operand_value(left_operand_type, left_operand_real_address, current_memory, constants_memory)
-        
-        elif type(left_operand_virtual_address) is list:
-            arg_list = []
-            for virtual_address in left_operand_virtual_address:
-                operand_type = get_operand_type(virtual_address)
-                operand_real_address = get_real_memory_address(virtual_address, current_function)
+    
+    elif type(left_operand_virtual_address) is list:
+        arg_list = []
+        for virtual_address in left_operand_virtual_address:
+            operand_type = get_operand_type(virtual_address)
+            operand_real_address = get_real_memory_address(virtual_address)
+            operand_value = get_operand_value(operand_type, operand_real_address, current_memory, constants_memory)
+            
+            if operand_type == 'pointer':
+                operand_type = get_operand_type(operand_value)
+                operand_real_address = get_real_memory_address(operand_value)
                 operand_value = get_operand_value(operand_type, operand_real_address, current_memory, constants_memory)
-                
-                if operand_type == 'pointer':
-                    operand_type = get_operand_type(operand_value)
-                    operand_real_address = get_real_memory_address(operand_value, current_function)
-                    operand_value = get_operand_value(operand_type, operand_real_address, current_memory, constants_memory)
-                
-                arg_list.append(operand_value)
+            
+            arg_list.append(operand_value)
 
-        if right_operand_virtual_address != 'null' and opcode != 19:
-            right_operand_type = get_operand_type(right_operand_virtual_address)
-            right_operand_real_address = get_real_memory_address(right_operand_virtual_address, current_function)
+    if right_operand_virtual_address != 'null' and opcode not in [17, 19]:
+        right_operand_type = get_operand_type(right_operand_virtual_address)
+        right_operand_real_address = get_real_memory_address(right_operand_virtual_address)
+        right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
+
+        if right_operand_type == 'pointer':
+            right_operand_type = get_operand_type(right_operand_value)
+            right_operand_real_address = get_real_memory_address(right_operand_value)
             right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
 
-            if right_operand_type == 'pointer':
-                right_operand_type = get_operand_type(right_operand_value)
-                right_operand_real_address = get_real_memory_address(right_operand_value, current_function)
-                right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
-
-        
-        match opcode:
-            case 1:
-                if left_operand_type in ['int', 'temp_int', 'const_int']:
-                    # This if only exists so the case where we
-                    # add 1 to cont (in a loop) works
-                    if left_operand_virtual_address >= 3000 and left_operand_virtual_address < 3666:
-                        current_memory.temp_ints[left_operand_real_address] = right_operand_value
-                    else:
-                        current_memory.ints[left_operand_real_address] = right_operand_value
-                else:
-                    current_memory.floats[left_operand_real_address] = right_operand_value
-            case 2:
-                if left_operand_value < right_operand_value:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 3:
-                if left_operand_value > right_operand_value:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 4:
-                if left_operand_value != right_operand_value:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 5:
-                if left_operand_value == right_operand_value:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 6:
-                if result_type == 'pointer':
-                    right_operand_value = right_operand_virtual_address
-                    current_memory.pointers[result_real_address] = left_operand_value + right_operand_value
-                elif left_operand_type in ['int', 'temp_int', 'const_int'] and right_operand_type in ['int', 'temp_int', 'const_int']:
-                    current_memory.temp_ints[result_real_address] = left_operand_value + right_operand_value
-                else:
-                    current_memory.temp_floats[result_real_address] = left_operand_value + right_operand_value
-            case 7:
-                if left_operand_type in ['int', 'temp_int', 'const_int'] and right_operand_type in ['int', 'temp_int', 'const_int']:
-                    current_memory.temp_ints[result_real_address] = left_operand_value - right_operand_value
-                else:
-                    current_memory.temp_floats[result_real_address] = left_operand_value - right_operand_value
-            case 8:
-                if left_operand_type in ['int', 'temp_int', 'const_int'] and right_operand_type in ['int', 'temp_int', 'const_int']:
-                    current_memory.temp_ints[result_real_address] = left_operand_value * right_operand_value
-                else:
-                    current_memory.temp_floats[result_real_address] = left_operand_value * right_operand_value
-            case 9:
-                print(result_real_address)
-                if left_operand_type in ['int', 'temp_int', 'const_int'] and right_operand_type in ['int', 'temp_int', 'const_int']:
-                    current_memory.temp_ints[result_real_address] = left_operand_value / right_operand_value
-                else:
-                    current_memory.temp_floats[result_real_address] = left_operand_value / right_operand_value
-            case 10:
-                if left_operand_value != 0 and right_operand_value != 0:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 11:
-                if left_operand_value != 0 or right_operand_value != 0:
-                    current_memory.temp_ints[result_real_address] = 1
-                else:
-                    current_memory.temp_ints[result_real_address] = 0
-            case 12:
-                pass
-                # file = open(left_operand_value)
-                # data_dict = json.load(file)
-                # print(data_dict)
-            case 13:
-                for arg in arg_list:
-                    print(arg)
-            case 14:
+    
+    match opcode:
+        case 1:
+            if left_operand_type is 'global_int':
+                global_memory.ints[left_operand_real_address] = right_operand_value
+            elif left_operand_type is 'global_float':
+                global_memory.floats[left_operand_real_address] = right_operand_value
+            elif left_operand_type is 'local_int':
+                current_memory.ints[left_operand_real_address] = right_operand_value
+            # This elif only exists for two cases:
+            # when we add 1 to cont (in a loop)
+            # when we assign the result of a function's return to a temp variable
+            elif left_operand_type is 'temp_int':
+                current_memory.temp_ints[left_operand_real_address] = right_operand_value
+            # else it's a local float
+            else:
+                current_memory.floats[left_operand_real_address] = right_operand_value
+                
+        case 2:
+            if left_operand_value < right_operand_value:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 3:
+            if left_operand_value > right_operand_value:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 4:
+            if left_operand_value != right_operand_value:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 5:
+            if left_operand_value == right_operand_value:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 6:
+            if result_type == 'pointer':
+                right_operand_value = right_operand_virtual_address
+                current_memory.pointers[result_real_address] = left_operand_value + right_operand_value
+            elif left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int'] and right_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
+                current_memory.temp_ints[result_real_address] = left_operand_value + right_operand_value
+            else:
+                current_memory.temp_floats[result_real_address] = left_operand_value + right_operand_value
+        case 7:
+            if left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int'] and right_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
+                current_memory.temp_ints[result_real_address] = left_operand_value - right_operand_value
+            else:
+                current_memory.temp_floats[result_real_address] = left_operand_value - right_operand_value
+        case 8:
+            if left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int'] and right_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
+                current_memory.temp_ints[result_real_address] = left_operand_value * right_operand_value
+            else:
+                current_memory.temp_floats[result_real_address] = left_operand_value * right_operand_value
+        case 9:
+            print(result_real_address)
+            if left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int'] and right_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
+                current_memory.temp_ints[result_real_address] = left_operand_value / right_operand_value
+            else:
+                current_memory.temp_floats[result_real_address] = left_operand_value / right_operand_value
+        case 10:
+            if left_operand_value != 0 and right_operand_value != 0:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 11:
+            if left_operand_value != 0 or right_operand_value != 0:
+                current_memory.temp_ints[result_real_address] = 1
+            else:
+                current_memory.temp_ints[result_real_address] = 0
+        case 12:
+            pass
+            # file = open(left_operand_value)
+            # data_dict = json.load(file)
+            # print(data_dict)
+        case 13:
+            for arg in arg_list:
+                print(arg)
+        case 14:
+            instruction_pointer = quad_list[instruction_pointer][1] - 1
+        case 15:
+            if left_operand_value == 0:
                 instruction_pointer = quad_list[instruction_pointer][1] - 1
-            case 15:
-                if left_operand_value == 0:
-                    instruction_pointer = quad_list[instruction_pointer][1] - 1
-            case 16:
-                pass
-            case 17:
-                pass
-            case 18:
-                memory_reqs = left_operand_virtual_address
-                memory_instance = Memory('local', memory_reqs)
-                execution_stack.append(memory_instance)
-                global int_param_counter
-                global float_param_counter
-                int_param_counter = 0
-                float_param_counter = 0
-            case 19:
-                memory_instance = execution_stack.pop()
-                if left_operand_type in ['int', 'temp_int', 'const_int']:
-                    memory_instance.ints[int_param_counter] = left_operand_value
-                    int_param_counter += 1
-                else:
-                    memory_instance.floats[float_param_counter] = left_operand_value
-                    float_param_counter += 1
-                execution_stack.append(memory_instance)
-            case 20:
-                pass
-            case 21:
-                # verify
-                if left_operand_value < 0 or left_operand_value >= right_operand_value:
-                    raise Exception('Tried to access index ' + str(left_operand_value) + ' but index must be between 0 and ' + str(right_operand_value-1))
-            case _:
-                pass
+        case 16:
+            pass
+        case 17:
+            temp = current_memory
+            current_memory = execution_stack.pop()
+            execution_stack.append(temp)
+            ip_stack.append(instruction_pointer+1)
+            instruction_pointer = right_operand_virtual_address-1
+        case 18:
+            memory_reqs = left_operand_virtual_address
+            memory_instance = Memory('local', memory_reqs)
+            execution_stack.append(memory_instance)
+            global int_param_counter
+            global float_param_counter
+            int_param_counter = 0
+            float_param_counter = 0
+        case 19:
+            memory_instance = execution_stack.pop()
+            if left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
+                memory_instance.ints[int_param_counter] = left_operand_value
+                int_param_counter += 1
+            else:
+                memory_instance.floats[float_param_counter] = left_operand_value
+                float_param_counter += 1
+            execution_stack.append(memory_instance)
+        case 20:
+            current_memory = execution_stack.pop()
+            instruction_pointer = ip_stack.pop()
+        case 21:
+            if left_operand_value < 0 or left_operand_value >= right_operand_value:
+                raise Exception('Tried to access index ' + str(left_operand_value) + ' but index must be between 0 and ' + str(right_operand_value-1))
+        case _:
+            pass
     instruction_pointer += 1
