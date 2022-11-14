@@ -129,8 +129,6 @@ while instruction_pointer < len(quad_list):
     left_operand_virtual_address = quad_list[instruction_pointer][1]
     right_operand_virtual_address = quad_list[instruction_pointer][2]
     result_virtual_address = quad_list[instruction_pointer][3]
-    print(instruction_pointer)
-    print(quad_list[instruction_pointer])
 
     if result_virtual_address != 'null':
         result_type = get_operand_type(result_virtual_address)
@@ -227,11 +225,8 @@ while instruction_pointer < len(quad_list):
             else:
                 current_memory.temp_floats[result_real_address] = left_operand_value * right_operand_value
         case 9:
-            print(result_real_address)
-            if left_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int'] and right_operand_type in ['global_int', 'local_int', 'temp_int', 'const_int']:
-                current_memory.temp_ints[result_real_address] = left_operand_value / right_operand_value
-            else:
-                current_memory.temp_floats[result_real_address] = left_operand_value / right_operand_value
+            # The result of a division in Python is always float
+            current_memory.temp_floats[result_real_address] = left_operand_value / right_operand_value
         case 10:
             if left_operand_value != 0 and right_operand_value != 0:
                 current_memory.temp_ints[result_real_address] = 1

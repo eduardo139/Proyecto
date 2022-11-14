@@ -1,0 +1,136 @@
+program sfm;
+var
+   int v[10];
+   int sortedv[10];
+   int m1[2][2];
+   int m2[2][3];
+   int mres[2][3];
+   int numToFind;
+   int foundNum;
+   int i;
+   int j;
+   int n;
+   int t1;
+   int t2;
+
+func void matrixMult();
+var
+    int i;
+    int j;
+    int k;
+    int m1rows;
+    int m1cols;
+    int m2cols;
+    int m2rows;
+    int t1;
+    int t2;
+    int t3;
+{
+    i = 0
+    m1rows = 2
+    m1cols = 2
+    m2cols=3
+    m2rows=2
+
+    m1[0][0] = 1
+    m1[0][1] = 2
+    m1[1][0] = 3
+    m1[1][1] = 4
+
+    m2[0][0] = 5
+    m2[0][1] = 6
+    m2[0][2] = 7
+    m2[1][0] = 8
+    m2[1][1] = 9
+    m2[1][2] = 10
+
+    from 0 to m1rows do
+    {
+	j=0
+	from 0 to m2cols do
+	{
+	    k=0
+	    from 0 to m2rows do
+	    {
+		t1 = mres[i][j]
+		t2 = m1[i][k]
+		t3 = m2[k][j]
+		mres[i][j] = t1+t2*t3
+		k = k+1
+	    }
+	    j = j+1
+	}
+	i = i+1
+    }
+
+    i = 0
+    j = 0
+    write("result of matrix multiplication")
+    from 0 to m1rows do
+    {
+	j=0
+	from 0 to m2cols do
+	{
+	    write(mres[i][j])
+	    j = j+1
+	}
+	i = i+1
+    }
+}
+main
+{
+   matrixMult()
+   write("unsorted")
+   i = 0
+   from 0 to 10 do
+   {
+        v[i] = 10-i
+	write(v[i])
+	i = i+1
+   }
+
+
+   write("find")
+   i = 0
+   numToFind = 11
+   foundNum = 0
+   from 0 to 10 do
+   {
+	t1 = v[i]
+	if (t1 == numToFind) {
+	    write("found", numToFind, "at index", i)
+	    foundNum = 1
+	}
+	i = i+1
+   }
+   if (foundNum == 0) {
+	write("did not find", numToFind)
+   }
+
+
+
+   i = 0
+   from 0 to 10 do
+   {
+	j = i+1
+        from j to 10 do
+	{
+	    t1 = v[i]
+	    t2 = v[j]
+	    if (t1>t2) {
+	        n = v[i]
+		v[i] = v[j]
+		v[j] = n
+	    }
+	    j = j+1
+	}
+	i = i+1
+   }
+   i = 0
+   write("sorted")
+   from 0 to 10 do
+   {
+        write(v[i])
+	i = i+1
+   }
+}

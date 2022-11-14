@@ -37,6 +37,9 @@ piladim = []
 global psaltos
 psaltos = []
 
+global pilaciclos
+pilaciclos = []
+
 global opcodes
 opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
            '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
@@ -846,11 +849,17 @@ def p_cicloNP1(p):
     psaltos.append(quad_num)
     psaltos.append(quad_num_gtf)
 
+    # 1 Para ciclos anidados
+    pilaciclos.append(cont_avail_list_index)
+
 def p_cicloNP2(p):
     '''cicloNP2 :''' 
     global cont_avail_list_index
     global quad_number
     
+    # 2 Para ciclos anidados
+    cont_avail_list_index = pilaciclos.pop()
+
     # Para generar el cuadruplo (+, cont_avail_list_index, 1, int)
     global const_table
     if '1' not in const_table:
@@ -906,15 +915,26 @@ def p_check_if_non_atomic(p):
     current_var_id = pilao.pop()
     current_nonatomic_id = current_var_id
     current_var_type = ptypes.pop()
-    if not 'dim' in pd[current_func_name]['vt'][current_var_id]:
-        raise Exception('Trying to access an index on atomic variable ' + current_var_id)
+    if not current_var_id in pd[current_func_name]['vt']:
+        if not 'dim' in pd[program_name]['vt'][current_var_id]:
+            raise Exception('Trying to access an index on atomic variable ' + current_var_id)
+        else:
+            piladim.append(current_var_id)
     else:
-        piladim.append(current_var_id)
+        if not 'dim' in pd[current_func_name]['vt'][current_var_id]:
+            raise Exception('Trying to access an index on atomic variable ' + current_var_id)
+        else:
+            piladim.append(current_var_id)
 
 def p_verify(p):
     '''verify :'''
     arr_id = piladim[-1]
-    lsup = str(pd[current_func_name]['vt'][arr_id]['dim']['lsup'])
+    if arr_id in pd[current_func_name]['vt']:
+        procedure = current_func_name
+    else:
+        procedure = program_name
+
+    lsup = str(pd[procedure]['vt'][arr_id]['dim']['lsup'])
     generate_quad('verify', pilao[-1], lsup, 'int')
     # Getting rid of the verification's result and its type
     pilao.pop()
@@ -922,8 +942,8 @@ def p_verify(p):
     aux = pilao.pop()
     ptypes.pop()
 
-    if 'next_dim' in pd[current_func_name]['vt'][arr_id]['dim']:
-        m1 = pd[current_func_name]['vt'][arr_id]['dim']['m1']
+    if 'next_dim' in pd[procedure]['vt'][arr_id]['dim']:
+        m1 = pd[procedure]['vt'][arr_id]['dim']['m1']
 
         generate_quad('*', aux, str(m1), 'int')
         global on_matrix
@@ -940,13 +960,24 @@ def p_check_if_matrix(p):
     '''check_if_matrix :'''
     global piladim
     mat_id = piladim[-1]
-    if not 'next_dim' in pd[current_func_name]['vt'][mat_id]['dim'] or mat_id != current_nonatomic_id:
+
+    if mat_id in pd[current_func_name]['vt']:
+        procedure = current_func_name
+    else:
+        procedure = program_name
+
+    if not 'next_dim' in pd[procedure]['vt'][mat_id]['dim'] or mat_id != current_nonatomic_id:
         raise Exception('Trying to access a 2nd dimension in array' + mat_id)
 
 def p_verify_matrix(p):
     '''verify_matrix :'''
     mat_id = piladim.pop()
-    lsup = str(pd[current_func_name]['vt'][mat_id]['dim']['next_dim']['lsup'])
+    if mat_id in pd[current_func_name]['vt']:
+        procedure = current_func_name
+    else:
+        procedure = program_name
+
+    lsup = str(pd[procedure]['vt'][mat_id]['dim']['next_dim']['lsup'])
     generate_quad('verify', pilao[-1], lsup, 'int')
     # Getting rid of the verification's result and its type
     pilao.pop()
@@ -1103,7 +1134,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance3_test3.txt", "r")
+    file = open("./vector.txt", "r")
     input = file.read()
 except EOFError:
     pass

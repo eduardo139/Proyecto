@@ -1,0 +1,20 @@
+program sfm;
+var
+   int i;
+   int j;
+main
+{
+   i = 0
+   from 0 to 3 do
+   {
+	write("on i", i)
+	j = i+1
+        from j to 5 do
+	{
+	    write("on j", j)
+	    i = 5
+	    j = j+1
+	}
+	i = i+1
+   }
+}

@@ -1,0 +1,43 @@
+program fibonacci;
+var
+   int i;
+   int j;
+   int n;
+   int fibonacci;
+
+func int fib (int n);
+var
+   int m;
+   int p;
+{
+    if (n == 0) {
+	return 0
+    }
+    else {
+	if (n == 1) {
+            return 1
+	}
+	else {
+	    m = fib(n-1)
+	    p = fib(n-2)
+	    write("We are on fib", n)
+	    return m+p
+	}
+    }
+}
+
+main
+{
+   i = 0
+   j = 1
+   fibonacci = 6
+   write("Recursive result is", fib(fibonacci))
+   write("Loop result is 0, 1...")
+   from 2 to fibonacci+1 do
+   {
+	n=i+j
+	i=j
+	j=n
+	write(n)
+   }
+}
