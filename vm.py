@@ -2,6 +2,31 @@ import json
 import statistics
 import matplotlib.pyplot as plt
 
+global global_int_start
+global global_float_start
+global global_file_start
+global local_int_start
+global locat_float_start
+global local_file_start
+global temp_int_start
+global temp_float_start
+global temp_pointer_start
+global constant_int_start
+global constant_float_start
+global constant_string_start
+global_int_start = 100000
+global_float_start = 200000
+global_file_start = 300000
+local_int_start = 400000
+local_float_start = 500000
+local_file_start = 600000
+temp_int_start = 700000
+temp_float_start = 800000
+temp_pointer_start = 900000
+constant_int_start = 925000
+constant_float_start = 950000
+constant_string_start = 975000
+
 program_file = 'quad_list.txt'
 proc_dir_file = 'proc_dir.txt'
 const_table_file = 'const_table.txt'
@@ -40,27 +65,27 @@ ip_stack = []
 instruction_pointer = 0
 
 def get_operand_type(virtual_address):
-    if virtual_address >= 1000 and virtual_address < 1333: 
+    if virtual_address >= global_int_start and virtual_address < global_float_start: 
         return 'global_int'
-    elif virtual_address >= 1333 and virtual_address < 1666:
+    elif virtual_address >= global_float_start and virtual_address < global_file_start:
         return 'global_float'
-    elif (virtual_address >= 1666 and virtual_address < 2000) or (virtual_address >= 2666 and virtual_address < 3000):
+    elif (virtual_address >= global_file_start and virtual_address < local_int_start) or (virtual_address >= local_file_start and virtual_address < temp_int_start):
         return 'file'
-    if virtual_address >= 2000 and virtual_address < 2333:
+    if virtual_address >= local_int_start and virtual_address < local_float_start:
         return 'local_int'
-    elif virtual_address >= 2333 and virtual_address < 2666:
+    elif virtual_address >= local_float_start and virtual_address < local_file_start:
         return 'local_float'
-    elif virtual_address >= 3000 and virtual_address < 3333:
+    elif virtual_address >= temp_int_start and virtual_address < temp_float_start:
         return 'temp_int'
-    elif virtual_address >= 3333 and virtual_address < 3666:
+    elif virtual_address >= temp_float_start and virtual_address < temp_pointer_start:
         return 'temp_float'
-    elif virtual_address >= 3666 and virtual_address < 4000:
+    elif virtual_address >= temp_pointer_start and virtual_address < constant_int_start:
         return 'pointer'
-    elif virtual_address >= 4000 and virtual_address < 4333:
+    elif virtual_address >= constant_int_start and virtual_address < constant_float_start:
         return 'const_int'
-    elif virtual_address >= 4333 and virtual_address < 4666:
+    elif virtual_address >= constant_float_start and virtual_address < constant_string_start:
         return 'const_float'
-    elif virtual_address >= 4666:
+    elif virtual_address >= constant_string_start:
         return 'string'
 
 def get_operand_value(type, real_address, memory, const_mem):
@@ -92,33 +117,32 @@ def get_operand_value(type, real_address, memory, const_mem):
 
 def get_real_memory_address(virtual_address):
     # Globals
-    if virtual_address >= 1000 and virtual_address < 1333:
-        return virtual_address - 1000
-    elif virtual_address >= 1333 and virtual_address < 1666:
-        return virtual_address - 1333 
-    elif virtual_address >= 1666 and virtual_address < 2000:
-        return virtual_address - 1666 
+    if virtual_address >= global_int_start and virtual_address < global_float_start:
+        return virtual_address - global_int_start
+    elif virtual_address >= global_float_start and virtual_address < global_file_start:
+        return virtual_address - global_float_start
+    elif virtual_address >= global_file_start and virtual_address < local_int_start:
+        return virtual_address - global_file_start 
     # Locals
-    if virtual_address >= 2000 and virtual_address < 2333:
-        return virtual_address - 2000
-    elif virtual_address >= 2333 and virtual_address < 2666:
-        return virtual_address - 2333
-    elif virtual_address >= 2666 and virtual_address < 3000:
-        return virtual_address - 2666
+    if virtual_address >= local_int_start and virtual_address < local_float_start:
+        return virtual_address - local_int_start
+    elif virtual_address >= local_float_start and virtual_address < local_file_start:
+        return virtual_address - local_float_start
+    elif virtual_address >= local_file_start and virtual_address < temp_int_start:
+        return virtual_address - local_file_start
     # Temps
-    if virtual_address >= 3000 and virtual_address < 3333:
-        return virtual_address - 3000
-    elif virtual_address >= 3333 and virtual_address < 3666:
-        return virtual_address - 3333
-    elif virtual_address >= 3666 and virtual_address < 4000:
-        return virtual_address - 3666 
-    # What if it´s a constant? still got to do that??????????
-    elif virtual_address >= 4000 and virtual_address < 4333:
-        return virtual_address - 4000
-    elif virtual_address >= 4333 and virtual_address < 4666:
-        return virtual_address - 4333
-    elif virtual_address >= 4666:
-        return virtual_address - 4666
+    if virtual_address >= temp_int_start and virtual_address < temp_float_start:
+        return virtual_address - temp_int_start
+    elif virtual_address >= temp_float_start and virtual_address < temp_pointer_start:
+        return virtual_address - temp_float_start
+    elif virtual_address >= temp_pointer_start and virtual_address < constant_int_start:
+        return virtual_address - temp_pointer_start
+    elif virtual_address >= constant_int_start and virtual_address < constant_float_start:
+        return virtual_address - constant_int_start
+    elif virtual_address >= constant_float_start and virtual_address < constant_string_start:
+        return virtual_address - constant_float_start
+    elif virtual_address >= constant_string_start:
+        return virtual_address - constant_string_start
 
 def get_entire_matrix(real_initial_matrix_address, matrix_size, matrix_type, global_memory, current_memory):
     entire_matrix = []

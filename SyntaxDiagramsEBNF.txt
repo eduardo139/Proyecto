@@ -20,3 +20,7 @@ Exp2 ::= Exp3 (('<' | '>' | '<>' | '==') Exp3)?
 Exp3 ::= Termino (('+' | '-') Termino)*
 Termino ::= (Factor | Llamada) (('*' | '/') (Factor | Llamada))*
 Factor ::= '(' Exp ')' | 'cte_i' | 'cte_f' | Variable
+Special ::= SpecialFunc '(' 'id' ')'
+SpecialFunc ::= 'mean' | 'median' | 'mode' | 'variance' | 'stddev'
+SpecialGraph ::= SpecialGraphFunc '(' 'id' ')'
+SpecialGraphFunc ::= 'histogram' | 'boxplot'

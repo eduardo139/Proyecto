@@ -3,6 +3,34 @@ import json
 
 from lexico import tokens
 
+global global_int_start
+global global_float_start
+global global_file_start
+global local_int_start
+global locat_float_start
+global local_file_start
+global temp_int_start
+global temp_float_start
+global temp_pointer_start
+global constant_int_start
+global constant_float_start
+global constant_string_start
+global_int_start = 100000
+global_float_start = 200000
+global_file_start = 300000
+local_int_start = 400000
+local_float_start = 500000
+local_file_start = 600000
+temp_int_start = 700000
+temp_float_start = 800000
+temp_pointer_start = 900000
+constant_int_start = 925000
+constant_float_start = 950000
+constant_string_start = 975000
+
+global max_dimension_size
+max_dimension_size = 100
+
 # This boolean tracks whether we are inside a function call
 # It's used in a function call to make sure there are no nested calls inside the arguments
 global in_function_call
@@ -159,8 +187,8 @@ def assign_virtual_address(type, context, spaces_needed):
 
 def reset_virtual_address_counters():
     global virtual_addresses
-    virtual_addresses['local'] = {'int': 2000, 'float': 2333, 'file': 2666}
-    virtual_addresses['temp'] = {'int': 3000, 'float': 3333, 'pointer': 3666}
+    virtual_addresses['local'] = {'int': local_int_start, 'float': local_float_start, 'file': local_file_start}
+    virtual_addresses['temp'] = {'int': temp_int_start, 'float': temp_float_start, 'pointer': temp_pointer_start}
 
 def find_virtual_address(operand):
     if operand not in pd[current_func_name]['vt']:
@@ -331,10 +359,10 @@ def p_programNP1(p):
     pd = {}
 
     global virtual_addresses
-    virtual_addresses = {'global': {'int': 1000, 'float': 1333, 'file': 1666}, 
-                        'local': {'int': 2000, 'float': 2333, 'file': 2666},
-                        'temp': {'int': 3000, 'float': 3333, 'pointer': 3666},
-                        'constant': {'int': 4000, 'float': 4333, 'string': 4666}}
+    virtual_addresses = {'global': {'int': global_int_start, 'float': global_float_start, 'file': global_file_start}, 
+                        'local': {'int': local_int_start, 'float': local_float_start, 'file': local_file_start},
+                        'temp': {'int': temp_int_start, 'float': temp_float_start, 'pointer': temp_pointer_start},
+                        'constant': {'int': constant_int_start, 'float': constant_float_start, 'string': constant_string_start}}
     
     global const_table
     const_table = {}
@@ -424,7 +452,7 @@ def p_varIsArray(p):
     global isArray
     isArray = True
 
-# NP in which we check if the 1D array is between the size of 1 and 100.
+# NP in which we check if the 1D array is between the size of 1 and max_dimension_size.
 # If it is we update the variable's type
 # We also add the constant to the const table
 def p_varsNP4(p):
@@ -432,8 +460,8 @@ def p_varsNP4(p):
     global const_table
     global arrSize
     arrSize = int(p[-1])
-    if arrSize < 1 or arrSize > 16:
-        raise Exception('Array size must be between 1 and 16')
+    if arrSize < 1 or arrSize > max_dimension_size:
+        raise Exception('Array size must be between 1 and ' + str(max_dimension_size))
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
@@ -450,7 +478,7 @@ def p_varIsMatrix(p):
     global isMatrix
     isMatrix = True
 
-# NP in which we check if the 2D array is between the size of 1 and 100.
+# NP in which we check if the 2D array is between the size of 1 and max_dimension_size.
 # If it is we update the variable's type
 # We also add the constant to the const table
 def p_varsNP5(p):
@@ -458,8 +486,8 @@ def p_varsNP5(p):
     global const_table
     global matSize
     matSize = int(p[-1])
-    if matSize < 1 or matSize > 16:
-        raise Exception('Array size must be between 1 and 16')
+    if matSize < 1 or matSize > max_dimension_size:
+        raise Exception('Array size must be between 1 and ' + str(max_dimension_size))
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
@@ -1203,7 +1231,7 @@ def p_process_special(p):
 def p_process_specialGraph(p):
     '''process_specialGraph :'''
     process_statement()
-    
+
 # For empty / epsilon
 def p_empty(p):
     '''empty : '''
