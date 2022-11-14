@@ -1148,8 +1148,18 @@ def p_factor(p):
     '''factor : LEFTPAR operNP1 exp RIGHTPAR factorNP1
                 | CTI factorNP2
                 | CTF factorNP3
+                | negative_int factorNP2
+                | negative_float factorNP3
                 | variable
                 | special'''
+
+def p_negative_int(p):
+    '''negative_int : SUBOP CTI'''
+    p[0] = p[1]+p[2]
+
+def p_negative_float(p):
+    '''negative_float : SUBOP CTF'''
+    p[0] = p[1]+p[2]
 
 # NP in which we add an operator to pOper
 def p_operNP1(p):
@@ -1247,7 +1257,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./avance7_s.txt", "r")
+    file = open("./vector.txt", "r")
     input = file.read()
 except EOFError:
     pass

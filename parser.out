@@ -144,35 +144,39 @@ Rule 138   checkIfNotVoid -> <empty>
 Rule 139   factor -> LEFTPAR operNP1 exp RIGHTPAR factorNP1
 Rule 140   factor -> CTI factorNP2
 Rule 141   factor -> CTF factorNP3
-Rule 142   factor -> variable
-Rule 143   factor -> special
-Rule 144   operNP1 -> <empty>
-Rule 145   factorNP1 -> <empty>
-Rule 146   factorNP2 -> <empty>
-Rule 147   factorNP3 -> <empty>
-Rule 148   special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-Rule 149   specialFunc -> MEAN
-Rule 150   specialFunc -> MEDIAN
-Rule 151   specialFunc -> MODE
-Rule 152   specialFunc -> VARIANCE
-Rule 153   specialFunc -> STDDEV
-Rule 154   specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
-Rule 155   specialGraphFunc -> HISTOGRAM
-Rule 156   specialGraphFunc -> BOXPLOT
-Rule 157   addSpecialToStack -> <empty>
-Rule 158   check_if_is_matrix -> <empty>
-Rule 159   process_special -> <empty>
-Rule 160   process_specialGraph -> <empty>
-Rule 161   empty -> <empty>
+Rule 142   factor -> negative_int factorNP2
+Rule 143   factor -> negative_float factorNP3
+Rule 144   factor -> variable
+Rule 145   factor -> special
+Rule 146   negative_int -> SUBOP CTI
+Rule 147   negative_float -> SUBOP CTF
+Rule 148   operNP1 -> <empty>
+Rule 149   factorNP1 -> <empty>
+Rule 150   factorNP2 -> <empty>
+Rule 151   factorNP3 -> <empty>
+Rule 152   special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+Rule 153   specialFunc -> MEAN
+Rule 154   specialFunc -> MEDIAN
+Rule 155   specialFunc -> MODE
+Rule 156   specialFunc -> VARIANCE
+Rule 157   specialFunc -> STDDEV
+Rule 158   specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+Rule 159   specialGraphFunc -> HISTOGRAM
+Rule 160   specialGraphFunc -> BOXPLOT
+Rule 161   addSpecialToStack -> <empty>
+Rule 162   check_if_is_matrix -> <empty>
+Rule 163   process_special -> <empty>
+Rule 164   process_specialGraph -> <empty>
+Rule 165   empty -> <empty>
 
 Terminals, with rules where they appear
 
 ANDOP                : 114
 ASSIGNOP             : 64
-BOXPLOT              : 156
+BOXPLOT              : 160
 COMMA                : 22 46 70 84
-CTF                  : 141
-CTI                  : 14 18 140
+CTF                  : 141 147
+CTI                  : 14 18 140 146
 CTSTRING             : 81
 DIFFERENTOP          : 122
 DIVOP                : 135
@@ -184,18 +188,18 @@ FLOAT                : 43
 FROM                 : 94
 FUNC                 : 27
 GREATERTHANOP        : 121
-HISTOGRAM            : 155
-ID                   : 1 10 11 22 27 45 46 67 74 97 148 154
+HISTOGRAM            : 159
+ID                   : 1 10 11 22 27 45 46 67 74 97 152 158
 IF                   : 88
 INT                  : 42
 LEFTBRACKET          : 14 18 99 103
 LEFTCURLY            : 50
-LEFTPAR              : 27 67 76 88 139 148 154
+LEFTPAR              : 27 67 76 88 139 152 158
 LESSTHANOP           : 120
 MAINSTART            : 39
-MEAN                 : 149
-MEDIAN               : 150
-MODE                 : 151
+MEAN                 : 153
+MEDIAN               : 154
+MODE                 : 155
 MULOP                : 134
 OROP                 : 110
 PROGRAM              : 1
@@ -203,21 +207,21 @@ READ                 : 74
 RETURN               : 86
 RIGHTBRACKET         : 14 18 99 103
 RIGHTCURLY           : 50
-RIGHTPAR             : 27 67 76 88 139 148 154
+RIGHTPAR             : 27 67 76 88 139 152 158
 SEMICOLON            : 1 9 27
-STDDEV               : 153
-SUBOP                : 129
+STDDEV               : 157
+SUBOP                : 129 146 147
 SUMOP                : 128
 TO                   : 94
 VAR                  : 8
-VARIANCE             : 152
+VARIANCE             : 156
 VOID                 : 33
 WRITE                : 76
 error                : 
 
 Nonterminals, with rules where they appear
 
-addSpecialToStack    : 148 154
+addSpecialToStack    : 152 158
 asignacion           : 54
 asignacionNP1        : 64
 asignacionNP2        : 64
@@ -225,7 +229,7 @@ bloque               : 27 39 88 90 94
 bloqueA              : 50 51
 checkIfNotVoid       : 137
 checkIfVoid          : 55
-check_if_is_matrix   : 148 154
+check_if_is_matrix   : 152 158
 check_if_matrix      : 103
 check_if_non_atomic  : 99
 ciclo                : 60
@@ -262,8 +266,8 @@ expA                 : 108 110
 expNP1               : 110
 factor               : 136
 factorNP1            : 139
-factorNP2            : 140
-factorNP3            : 141
+factorNP2            : 140 142
+factorNP3            : 141 143
 funcion              : 6
 funcionA             : 27
 funcionANP1          : 32 33
@@ -281,6 +285,8 @@ loeNP1               : 68 70 80
 loeNP2               : 67 76
 main                 : 1
 mainNP1              : 39
+negative_float       : 143
+negative_int         : 142
 on_matrix_check      : 104
 operNP1              : 110 114 117 126 131 139
 params               : 35
@@ -288,8 +294,8 @@ paramsA              : 45 46
 paramsNP1            : 45 46
 paramsNP2            : 45 46
 primerparam          : 67
-process_special      : 148
-process_specialGraph : 154
+process_special      : 152
+process_specialGraph : 158
 program              : 0
 programA             : 1
 programB             : 1 6
@@ -300,10 +306,10 @@ read                 : 56
 readNP1              : 74
 return               : 58
 returnNP1            : 86
-special              : 143
-specialFunc          : 148
+special              : 145
+specialFunc          : 152
 specialGraph         : 61
-specialGraphFunc     : 154
+specialGraphFunc     : 158
 termino              : 124 126
 terminoA             : 130 131
 terminoANP1          : 131
@@ -313,10 +319,10 @@ tipoSimple           : 11 32 45 46
 tipoSimpleNP1        : 42 43
 varIsArray           : 14
 varIsMatrix          : 18
-variable             : 64 142
+variable             : 64 144
 variableA            : 97
 variableB            : 99
-variableNP1          : 97 148 154
+variableNP1          : 97 152 158
 vars                 : 4 37
 varsA                : 8 25
 varsB                : 9
@@ -387,11 +393,11 @@ state 6
     (4) programA -> . vars
     (5) programA -> . empty
     (8) vars -> . VAR varsA
-    (161) empty -> .
+    (165) empty -> .
 
     VAR             shift and go to state 10
-    FUNC            reduce using rule 161 (empty -> .)
-    MAINSTART       reduce using rule 161 (empty -> .)
+    FUNC            reduce using rule 165 (empty -> .)
+    MAINSTART       reduce using rule 165 (empty -> .)
 
     programA                       shift and go to state 7
     vars                           shift and go to state 8
@@ -403,10 +409,10 @@ state 7
     (6) programB -> . funcion programB
     (7) programB -> . empty
     (27) funcion -> . FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs
-    (161) empty -> .
+    (165) empty -> .
 
     FUNC            shift and go to state 14
-    MAINSTART       reduce using rule 161 (empty -> .)
+    MAINSTART       reduce using rule 165 (empty -> .)
 
     programB                       shift and go to state 11
     funcion                        shift and go to state 12
@@ -460,10 +466,10 @@ state 12
     (6) programB -> . funcion programB
     (7) programB -> . empty
     (27) funcion -> . FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs
-    (161) empty -> .
+    (165) empty -> .
 
     FUNC            shift and go to state 14
-    MAINSTART       reduce using rule 161 (empty -> .)
+    MAINSTART       reduce using rule 165 (empty -> .)
 
     funcion                        shift and go to state 12
     programB                       shift and go to state 23
@@ -599,15 +605,15 @@ state 27
     (25) varsF -> . varsA
     (26) varsF -> . empty
     (9) varsA -> . varsB SEMICOLON varsF
-    (161) empty -> .
+    (165) empty -> .
     (10) varsB -> . FILE varsNP2 ID varsNP3 varsNP6 varsE
     (11) varsB -> . tipoSimple varsNP2 ID varsNP3 varsC varsNP6
     (42) tipoSimple -> . INT tipoSimpleNP1
     (43) tipoSimple -> . FLOAT tipoSimpleNP1
 
-    FUNC            reduce using rule 161 (empty -> .)
-    MAINSTART       reduce using rule 161 (empty -> .)
-    LEFTCURLY       reduce using rule 161 (empty -> .)
+    FUNC            reduce using rule 165 (empty -> .)
+    MAINSTART       reduce using rule 165 (empty -> .)
+    LEFTCURLY       reduce using rule 165 (empty -> .)
     FILE            shift and go to state 17
     INT             shift and go to state 19
     FLOAT           shift and go to state 20
@@ -738,10 +744,10 @@ state 42
     (51) bloqueA -> . estatuto bloqueA
     (52) bloqueA -> . empty
     (53) estatuto -> . estatutoNP1 estatutoA
-    (161) empty -> .
+    (165) empty -> .
     (63) estatutoNP1 -> .
 
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
     ID              reduce using rule 63 (estatutoNP1 -> .)
     READ            reduce using rule 63 (estatutoNP1 -> .)
     WRITE           reduce using rule 63 (estatutoNP1 -> .)
@@ -780,10 +786,10 @@ state 45
     (11) varsB -> tipoSimple varsNP2 ID varsNP3 . varsC varsNP6
     (14) varsC -> . LEFTBRACKET varIsArray CTI varsNP4 RIGHTBRACKET varsD
     (15) varsC -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
     LEFTBRACKET     shift and go to state 54
-    SEMICOLON       reduce using rule 161 (empty -> .)
+    SEMICOLON       reduce using rule 165 (empty -> .)
 
     varsC                          shift and go to state 53
     empty                          shift and go to state 55
@@ -808,10 +814,10 @@ state 48
     (51) bloqueA -> . estatuto bloqueA
     (52) bloqueA -> . empty
     (53) estatuto -> . estatutoNP1 estatutoA
-    (161) empty -> .
+    (165) empty -> .
     (63) estatutoNP1 -> .
 
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
     ID              reduce using rule 63 (estatutoNP1 -> .)
     READ            reduce using rule 63 (estatutoNP1 -> .)
     WRITE           reduce using rule 63 (estatutoNP1 -> .)
@@ -851,10 +857,10 @@ state 50
     (86) return -> . RETURN exp returnNP1
     (88) condicion -> . IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2
     (94) ciclo -> . FROM exp TO exp DO cicloNP1 bloque cicloNP2
-    (154) specialGraph -> . specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+    (158) specialGraph -> . specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
     (97) variable -> . ID variableNP1 variableA
-    (155) specialGraphFunc -> . HISTOGRAM
-    (156) specialGraphFunc -> . BOXPLOT
+    (159) specialGraphFunc -> . HISTOGRAM
+    (160) specialGraphFunc -> . BOXPLOT
 
     ID              shift and go to state 68
     READ            shift and go to state 69
@@ -889,10 +895,10 @@ state 52
     (10) varsB -> FILE varsNP2 ID varsNP3 varsNP6 . varsE
     (22) varsE -> . COMMA ID varsNP3 varsNP6 varsE
     (23) varsE -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
     COMMA           shift and go to state 79
-    SEMICOLON       reduce using rule 161 (empty -> .)
+    SEMICOLON       reduce using rule 165 (empty -> .)
 
     varsE                          shift and go to state 78
     empty                          shift and go to state 80
@@ -1159,26 +1165,31 @@ state 71
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
     exp                            shift and go to state 89
     exp1                           shift and go to state 90
@@ -1188,15 +1199,17 @@ state 71
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
 state 72
 
     (88) condicion -> IF . LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2
 
-    LEFTPAR         shift and go to state 108
+    LEFTPAR         shift and go to state 111
 
 
 state 73
@@ -1212,28 +1225,33 @@ state 73
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 109
+    exp                            shift and go to state 112
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -1241,31 +1259,33 @@ state 73
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
 state 74
 
-    (154) specialGraph -> specialGraphFunc . addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
-    (157) addSpecialToStack -> .
+    (158) specialGraph -> specialGraphFunc . addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+    (161) addSpecialToStack -> .
 
-    LEFTPAR         reduce using rule 157 (addSpecialToStack -> .)
+    LEFTPAR         reduce using rule 161 (addSpecialToStack -> .)
 
-    addSpecialToStack              shift and go to state 110
+    addSpecialToStack              shift and go to state 113
 
 state 75
 
-    (155) specialGraphFunc -> HISTOGRAM .
+    (159) specialGraphFunc -> HISTOGRAM .
 
-    LEFTPAR         reduce using rule 155 (specialGraphFunc -> HISTOGRAM .)
+    LEFTPAR         reduce using rule 159 (specialGraphFunc -> HISTOGRAM .)
 
 
 state 76
 
-    (156) specialGraphFunc -> BOXPLOT .
+    (160) specialGraphFunc -> BOXPLOT .
 
-    LEFTPAR         reduce using rule 156 (specialGraphFunc -> BOXPLOT .)
+    LEFTPAR         reduce using rule 160 (specialGraphFunc -> BOXPLOT .)
 
 
 state 77
@@ -1274,18 +1294,18 @@ state 77
     (35) funcionB -> . params
     (36) funcionB -> . empty
     (45) params -> . tipoSimple paramsNP1 ID paramsNP2 paramsA
-    (161) empty -> .
+    (165) empty -> .
     (42) tipoSimple -> . INT tipoSimpleNP1
     (43) tipoSimple -> . FLOAT tipoSimpleNP1
 
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
     INT             shift and go to state 19
     FLOAT           shift and go to state 20
 
-    funcionB                       shift and go to state 111
-    params                         shift and go to state 112
-    empty                          shift and go to state 113
-    tipoSimple                     shift and go to state 114
+    funcionB                       shift and go to state 114
+    params                         shift and go to state 115
+    empty                          shift and go to state 116
+    tipoSimple                     shift and go to state 117
 
 state 78
 
@@ -1298,7 +1318,7 @@ state 79
 
     (22) varsE -> COMMA . ID varsNP3 varsNP6 varsE
 
-    ID              shift and go to state 115
+    ID              shift and go to state 118
 
 
 state 80
@@ -1319,7 +1339,7 @@ state 82
 
     (14) varsC -> LEFTBRACKET varIsArray . CTI varsNP4 RIGHTBRACKET varsD
 
-    CTI             shift and go to state 116
+    CTI             shift and go to state 119
 
 
 state 83
@@ -1346,19 +1366,20 @@ state 84
     CTI             reduce using rule 65 (asignacionNP1 -> .)
     CTF             reduce using rule 65 (asignacionNP1 -> .)
     ID              reduce using rule 65 (asignacionNP1 -> .)
+    SUBOP           reduce using rule 65 (asignacionNP1 -> .)
     MEAN            reduce using rule 65 (asignacionNP1 -> .)
     MEDIAN          reduce using rule 65 (asignacionNP1 -> .)
     MODE            reduce using rule 65 (asignacionNP1 -> .)
     VARIANCE        reduce using rule 65 (asignacionNP1 -> .)
     STDDEV          reduce using rule 65 (asignacionNP1 -> .)
 
-    asignacionNP1                  shift and go to state 117
+    asignacionNP1                  shift and go to state 120
 
 state 85
 
     (67) llamada -> ID llamadaNP1 . LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
 
-    LEFTPAR         shift and go to state 118
+    LEFTPAR         shift and go to state 121
 
 
 state 86
@@ -1366,37 +1387,37 @@ state 86
     (97) variable -> ID variableNP1 . variableA
     (99) variableA -> . LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET variableB
     (100) variableA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    LEFTBRACKET     shift and go to state 120
-    ASSIGNOP        reduce using rule 161 (empty -> .)
-    MULOP           reduce using rule 161 (empty -> .)
-    DIVOP           reduce using rule 161 (empty -> .)
-    SUMOP           reduce using rule 161 (empty -> .)
-    SUBOP           reduce using rule 161 (empty -> .)
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    LEFTBRACKET     shift and go to state 123
+    ASSIGNOP        reduce using rule 165 (empty -> .)
+    MULOP           reduce using rule 165 (empty -> .)
+    DIVOP           reduce using rule 165 (empty -> .)
+    SUMOP           reduce using rule 165 (empty -> .)
+    SUBOP           reduce using rule 165 (empty -> .)
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    variableA                      shift and go to state 119
-    empty                          shift and go to state 121
+    variableA                      shift and go to state 122
+    empty                          shift and go to state 124
 
 state 87
 
@@ -1413,13 +1434,13 @@ state 87
     BOXPLOT         reduce using rule 75 (readNP1 -> .)
     RIGHTCURLY      reduce using rule 75 (readNP1 -> .)
 
-    readNP1                        shift and go to state 122
+    readNP1                        shift and go to state 125
 
 state 88
 
     (76) escritura -> WRITE escrituraNP1 . LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP3
 
-    LEFTPAR         shift and go to state 123
+    LEFTPAR         shift and go to state 126
 
 
 state 89
@@ -1437,60 +1458,60 @@ state 89
     BOXPLOT         reduce using rule 87 (returnNP1 -> .)
     RIGHTCURLY      reduce using rule 87 (returnNP1 -> .)
 
-    returnNP1                      shift and go to state 124
+    returnNP1                      shift and go to state 127
 
 state 90
 
     (108) exp -> exp1 . expA
     (110) expA -> . OROP operNP1 exp1 expNP1 expA
     (111) expA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    OROP            shift and go to state 126
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    OROP            shift and go to state 129
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    expA                           shift and go to state 125
-    empty                          shift and go to state 127
+    expA                           shift and go to state 128
+    empty                          shift and go to state 130
 
 state 91
 
     (112) exp1 -> exp2 . exp1A
     (114) exp1A -> . ANDOP operNP1 exp2 exp1NP1 exp1A
     (115) exp1A -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    ANDOP           shift and go to state 129
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    ANDOP           shift and go to state 132
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    exp1A                          shift and go to state 128
-    empty                          shift and go to state 130
+    exp1A                          shift and go to state 131
+    empty                          shift and go to state 133
 
 state 92
 
@@ -1501,32 +1522,32 @@ state 92
     (121) exp2B -> . GREATERTHANOP
     (122) exp2B -> . DIFFERENTOP
     (123) exp2B -> . EQUALOP
-    (161) empty -> .
+    (165) empty -> .
 
-    LESSTHANOP      shift and go to state 134
-    GREATERTHANOP   shift and go to state 135
-    DIFFERENTOP     shift and go to state 136
-    EQUALOP         shift and go to state 137
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    LESSTHANOP      shift and go to state 137
+    GREATERTHANOP   shift and go to state 138
+    DIFFERENTOP     shift and go to state 139
+    EQUALOP         shift and go to state 140
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    exp2A                          shift and go to state 131
-    exp2B                          shift and go to state 132
-    empty                          shift and go to state 133
+    exp2A                          shift and go to state 134
+    exp2B                          shift and go to state 135
+    empty                          shift and go to state 136
 
 state 93
 
@@ -1535,34 +1556,34 @@ state 93
     (127) exp3A -> . empty
     (128) exp3B -> . SUMOP
     (129) exp3B -> . SUBOP
-    (161) empty -> .
+    (165) empty -> .
 
-    SUMOP           shift and go to state 141
-    SUBOP           shift and go to state 142
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    SUMOP           shift and go to state 144
+    SUBOP           shift and go to state 145
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    exp3A                          shift and go to state 138
-    exp3B                          shift and go to state 139
-    empty                          shift and go to state 140
+    exp3A                          shift and go to state 141
+    exp3B                          shift and go to state 142
+    empty                          shift and go to state 143
 
 state 94
 
@@ -1571,36 +1592,36 @@ state 94
     (132) terminoA -> . empty
     (134) terminoB -> . MULOP
     (135) terminoB -> . DIVOP
-    (161) empty -> .
+    (165) empty -> .
 
-    MULOP           shift and go to state 146
-    DIVOP           shift and go to state 147
-    SUMOP           reduce using rule 161 (empty -> .)
-    SUBOP           reduce using rule 161 (empty -> .)
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    MULOP           shift and go to state 149
+    DIVOP           shift and go to state 150
+    SUMOP           reduce using rule 165 (empty -> .)
+    SUBOP           reduce using rule 165 (empty -> .)
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    terminoA                       shift and go to state 143
-    terminoB                       shift and go to state 144
-    empty                          shift and go to state 145
+    terminoA                       shift and go to state 146
+    terminoB                       shift and go to state 147
+    empty                          shift and go to state 148
 
 state 95
 
@@ -1662,194 +1683,268 @@ state 96
     COMMA           reduce using rule 138 (checkIfNotVoid -> .)
     RIGHTBRACKET    reduce using rule 138 (checkIfNotVoid -> .)
 
-    checkIfNotVoid                 shift and go to state 148
+    checkIfNotVoid                 shift and go to state 151
 
 state 97
 
     (139) factor -> LEFTPAR . operNP1 exp RIGHTPAR factorNP1
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 149
+    operNP1                        shift and go to state 152
 
 state 98
 
     (140) factor -> CTI . factorNP2
-    (146) factorNP2 -> .
+    (150) factorNP2 -> .
 
-    MULOP           reduce using rule 146 (factorNP2 -> .)
-    DIVOP           reduce using rule 146 (factorNP2 -> .)
-    SUMOP           reduce using rule 146 (factorNP2 -> .)
-    SUBOP           reduce using rule 146 (factorNP2 -> .)
-    LESSTHANOP      reduce using rule 146 (factorNP2 -> .)
-    GREATERTHANOP   reduce using rule 146 (factorNP2 -> .)
-    DIFFERENTOP     reduce using rule 146 (factorNP2 -> .)
-    EQUALOP         reduce using rule 146 (factorNP2 -> .)
-    ANDOP           reduce using rule 146 (factorNP2 -> .)
-    OROP            reduce using rule 146 (factorNP2 -> .)
-    ID              reduce using rule 146 (factorNP2 -> .)
-    READ            reduce using rule 146 (factorNP2 -> .)
-    WRITE           reduce using rule 146 (factorNP2 -> .)
-    RETURN          reduce using rule 146 (factorNP2 -> .)
-    IF              reduce using rule 146 (factorNP2 -> .)
-    FROM            reduce using rule 146 (factorNP2 -> .)
-    HISTOGRAM       reduce using rule 146 (factorNP2 -> .)
-    BOXPLOT         reduce using rule 146 (factorNP2 -> .)
-    RIGHTCURLY      reduce using rule 146 (factorNP2 -> .)
-    TO              reduce using rule 146 (factorNP2 -> .)
-    RIGHTPAR        reduce using rule 146 (factorNP2 -> .)
-    DO              reduce using rule 146 (factorNP2 -> .)
-    COMMA           reduce using rule 146 (factorNP2 -> .)
-    RIGHTBRACKET    reduce using rule 146 (factorNP2 -> .)
+    MULOP           reduce using rule 150 (factorNP2 -> .)
+    DIVOP           reduce using rule 150 (factorNP2 -> .)
+    SUMOP           reduce using rule 150 (factorNP2 -> .)
+    SUBOP           reduce using rule 150 (factorNP2 -> .)
+    LESSTHANOP      reduce using rule 150 (factorNP2 -> .)
+    GREATERTHANOP   reduce using rule 150 (factorNP2 -> .)
+    DIFFERENTOP     reduce using rule 150 (factorNP2 -> .)
+    EQUALOP         reduce using rule 150 (factorNP2 -> .)
+    ANDOP           reduce using rule 150 (factorNP2 -> .)
+    OROP            reduce using rule 150 (factorNP2 -> .)
+    ID              reduce using rule 150 (factorNP2 -> .)
+    READ            reduce using rule 150 (factorNP2 -> .)
+    WRITE           reduce using rule 150 (factorNP2 -> .)
+    RETURN          reduce using rule 150 (factorNP2 -> .)
+    IF              reduce using rule 150 (factorNP2 -> .)
+    FROM            reduce using rule 150 (factorNP2 -> .)
+    HISTOGRAM       reduce using rule 150 (factorNP2 -> .)
+    BOXPLOT         reduce using rule 150 (factorNP2 -> .)
+    RIGHTCURLY      reduce using rule 150 (factorNP2 -> .)
+    TO              reduce using rule 150 (factorNP2 -> .)
+    RIGHTPAR        reduce using rule 150 (factorNP2 -> .)
+    DO              reduce using rule 150 (factorNP2 -> .)
+    COMMA           reduce using rule 150 (factorNP2 -> .)
+    RIGHTBRACKET    reduce using rule 150 (factorNP2 -> .)
 
-    factorNP2                      shift and go to state 150
+    factorNP2                      shift and go to state 153
 
 state 99
 
     (141) factor -> CTF . factorNP3
-    (147) factorNP3 -> .
+    (151) factorNP3 -> .
 
-    MULOP           reduce using rule 147 (factorNP3 -> .)
-    DIVOP           reduce using rule 147 (factorNP3 -> .)
-    SUMOP           reduce using rule 147 (factorNP3 -> .)
-    SUBOP           reduce using rule 147 (factorNP3 -> .)
-    LESSTHANOP      reduce using rule 147 (factorNP3 -> .)
-    GREATERTHANOP   reduce using rule 147 (factorNP3 -> .)
-    DIFFERENTOP     reduce using rule 147 (factorNP3 -> .)
-    EQUALOP         reduce using rule 147 (factorNP3 -> .)
-    ANDOP           reduce using rule 147 (factorNP3 -> .)
-    OROP            reduce using rule 147 (factorNP3 -> .)
-    ID              reduce using rule 147 (factorNP3 -> .)
-    READ            reduce using rule 147 (factorNP3 -> .)
-    WRITE           reduce using rule 147 (factorNP3 -> .)
-    RETURN          reduce using rule 147 (factorNP3 -> .)
-    IF              reduce using rule 147 (factorNP3 -> .)
-    FROM            reduce using rule 147 (factorNP3 -> .)
-    HISTOGRAM       reduce using rule 147 (factorNP3 -> .)
-    BOXPLOT         reduce using rule 147 (factorNP3 -> .)
-    RIGHTCURLY      reduce using rule 147 (factorNP3 -> .)
-    TO              reduce using rule 147 (factorNP3 -> .)
-    RIGHTPAR        reduce using rule 147 (factorNP3 -> .)
-    DO              reduce using rule 147 (factorNP3 -> .)
-    COMMA           reduce using rule 147 (factorNP3 -> .)
-    RIGHTBRACKET    reduce using rule 147 (factorNP3 -> .)
+    MULOP           reduce using rule 151 (factorNP3 -> .)
+    DIVOP           reduce using rule 151 (factorNP3 -> .)
+    SUMOP           reduce using rule 151 (factorNP3 -> .)
+    SUBOP           reduce using rule 151 (factorNP3 -> .)
+    LESSTHANOP      reduce using rule 151 (factorNP3 -> .)
+    GREATERTHANOP   reduce using rule 151 (factorNP3 -> .)
+    DIFFERENTOP     reduce using rule 151 (factorNP3 -> .)
+    EQUALOP         reduce using rule 151 (factorNP3 -> .)
+    ANDOP           reduce using rule 151 (factorNP3 -> .)
+    OROP            reduce using rule 151 (factorNP3 -> .)
+    ID              reduce using rule 151 (factorNP3 -> .)
+    READ            reduce using rule 151 (factorNP3 -> .)
+    WRITE           reduce using rule 151 (factorNP3 -> .)
+    RETURN          reduce using rule 151 (factorNP3 -> .)
+    IF              reduce using rule 151 (factorNP3 -> .)
+    FROM            reduce using rule 151 (factorNP3 -> .)
+    HISTOGRAM       reduce using rule 151 (factorNP3 -> .)
+    BOXPLOT         reduce using rule 151 (factorNP3 -> .)
+    RIGHTCURLY      reduce using rule 151 (factorNP3 -> .)
+    TO              reduce using rule 151 (factorNP3 -> .)
+    RIGHTPAR        reduce using rule 151 (factorNP3 -> .)
+    DO              reduce using rule 151 (factorNP3 -> .)
+    COMMA           reduce using rule 151 (factorNP3 -> .)
+    RIGHTBRACKET    reduce using rule 151 (factorNP3 -> .)
 
-    factorNP3                      shift and go to state 151
+    factorNP3                      shift and go to state 154
 
 state 100
 
-    (142) factor -> variable .
+    (142) factor -> negative_int . factorNP2
+    (150) factorNP2 -> .
 
-    MULOP           reduce using rule 142 (factor -> variable .)
-    DIVOP           reduce using rule 142 (factor -> variable .)
-    SUMOP           reduce using rule 142 (factor -> variable .)
-    SUBOP           reduce using rule 142 (factor -> variable .)
-    LESSTHANOP      reduce using rule 142 (factor -> variable .)
-    GREATERTHANOP   reduce using rule 142 (factor -> variable .)
-    DIFFERENTOP     reduce using rule 142 (factor -> variable .)
-    EQUALOP         reduce using rule 142 (factor -> variable .)
-    ANDOP           reduce using rule 142 (factor -> variable .)
-    OROP            reduce using rule 142 (factor -> variable .)
-    ID              reduce using rule 142 (factor -> variable .)
-    READ            reduce using rule 142 (factor -> variable .)
-    WRITE           reduce using rule 142 (factor -> variable .)
-    RETURN          reduce using rule 142 (factor -> variable .)
-    IF              reduce using rule 142 (factor -> variable .)
-    FROM            reduce using rule 142 (factor -> variable .)
-    HISTOGRAM       reduce using rule 142 (factor -> variable .)
-    BOXPLOT         reduce using rule 142 (factor -> variable .)
-    RIGHTCURLY      reduce using rule 142 (factor -> variable .)
-    TO              reduce using rule 142 (factor -> variable .)
-    RIGHTPAR        reduce using rule 142 (factor -> variable .)
-    DO              reduce using rule 142 (factor -> variable .)
-    COMMA           reduce using rule 142 (factor -> variable .)
-    RIGHTBRACKET    reduce using rule 142 (factor -> variable .)
+    MULOP           reduce using rule 150 (factorNP2 -> .)
+    DIVOP           reduce using rule 150 (factorNP2 -> .)
+    SUMOP           reduce using rule 150 (factorNP2 -> .)
+    SUBOP           reduce using rule 150 (factorNP2 -> .)
+    LESSTHANOP      reduce using rule 150 (factorNP2 -> .)
+    GREATERTHANOP   reduce using rule 150 (factorNP2 -> .)
+    DIFFERENTOP     reduce using rule 150 (factorNP2 -> .)
+    EQUALOP         reduce using rule 150 (factorNP2 -> .)
+    ANDOP           reduce using rule 150 (factorNP2 -> .)
+    OROP            reduce using rule 150 (factorNP2 -> .)
+    ID              reduce using rule 150 (factorNP2 -> .)
+    READ            reduce using rule 150 (factorNP2 -> .)
+    WRITE           reduce using rule 150 (factorNP2 -> .)
+    RETURN          reduce using rule 150 (factorNP2 -> .)
+    IF              reduce using rule 150 (factorNP2 -> .)
+    FROM            reduce using rule 150 (factorNP2 -> .)
+    HISTOGRAM       reduce using rule 150 (factorNP2 -> .)
+    BOXPLOT         reduce using rule 150 (factorNP2 -> .)
+    RIGHTCURLY      reduce using rule 150 (factorNP2 -> .)
+    TO              reduce using rule 150 (factorNP2 -> .)
+    RIGHTPAR        reduce using rule 150 (factorNP2 -> .)
+    DO              reduce using rule 150 (factorNP2 -> .)
+    COMMA           reduce using rule 150 (factorNP2 -> .)
+    RIGHTBRACKET    reduce using rule 150 (factorNP2 -> .)
 
+    factorNP2                      shift and go to state 155
 
 state 101
 
-    (143) factor -> special .
+    (143) factor -> negative_float . factorNP3
+    (151) factorNP3 -> .
 
-    MULOP           reduce using rule 143 (factor -> special .)
-    DIVOP           reduce using rule 143 (factor -> special .)
-    SUMOP           reduce using rule 143 (factor -> special .)
-    SUBOP           reduce using rule 143 (factor -> special .)
-    LESSTHANOP      reduce using rule 143 (factor -> special .)
-    GREATERTHANOP   reduce using rule 143 (factor -> special .)
-    DIFFERENTOP     reduce using rule 143 (factor -> special .)
-    EQUALOP         reduce using rule 143 (factor -> special .)
-    ANDOP           reduce using rule 143 (factor -> special .)
-    OROP            reduce using rule 143 (factor -> special .)
-    ID              reduce using rule 143 (factor -> special .)
-    READ            reduce using rule 143 (factor -> special .)
-    WRITE           reduce using rule 143 (factor -> special .)
-    RETURN          reduce using rule 143 (factor -> special .)
-    IF              reduce using rule 143 (factor -> special .)
-    FROM            reduce using rule 143 (factor -> special .)
-    HISTOGRAM       reduce using rule 143 (factor -> special .)
-    BOXPLOT         reduce using rule 143 (factor -> special .)
-    RIGHTCURLY      reduce using rule 143 (factor -> special .)
-    TO              reduce using rule 143 (factor -> special .)
-    RIGHTPAR        reduce using rule 143 (factor -> special .)
-    DO              reduce using rule 143 (factor -> special .)
-    COMMA           reduce using rule 143 (factor -> special .)
-    RIGHTBRACKET    reduce using rule 143 (factor -> special .)
+    MULOP           reduce using rule 151 (factorNP3 -> .)
+    DIVOP           reduce using rule 151 (factorNP3 -> .)
+    SUMOP           reduce using rule 151 (factorNP3 -> .)
+    SUBOP           reduce using rule 151 (factorNP3 -> .)
+    LESSTHANOP      reduce using rule 151 (factorNP3 -> .)
+    GREATERTHANOP   reduce using rule 151 (factorNP3 -> .)
+    DIFFERENTOP     reduce using rule 151 (factorNP3 -> .)
+    EQUALOP         reduce using rule 151 (factorNP3 -> .)
+    ANDOP           reduce using rule 151 (factorNP3 -> .)
+    OROP            reduce using rule 151 (factorNP3 -> .)
+    ID              reduce using rule 151 (factorNP3 -> .)
+    READ            reduce using rule 151 (factorNP3 -> .)
+    WRITE           reduce using rule 151 (factorNP3 -> .)
+    RETURN          reduce using rule 151 (factorNP3 -> .)
+    IF              reduce using rule 151 (factorNP3 -> .)
+    FROM            reduce using rule 151 (factorNP3 -> .)
+    HISTOGRAM       reduce using rule 151 (factorNP3 -> .)
+    BOXPLOT         reduce using rule 151 (factorNP3 -> .)
+    RIGHTCURLY      reduce using rule 151 (factorNP3 -> .)
+    TO              reduce using rule 151 (factorNP3 -> .)
+    RIGHTPAR        reduce using rule 151 (factorNP3 -> .)
+    DO              reduce using rule 151 (factorNP3 -> .)
+    COMMA           reduce using rule 151 (factorNP3 -> .)
+    RIGHTBRACKET    reduce using rule 151 (factorNP3 -> .)
 
+    factorNP3                      shift and go to state 156
 
 state 102
 
-    (148) special -> specialFunc . addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (157) addSpecialToStack -> .
+    (144) factor -> variable .
 
-    LEFTPAR         reduce using rule 157 (addSpecialToStack -> .)
+    MULOP           reduce using rule 144 (factor -> variable .)
+    DIVOP           reduce using rule 144 (factor -> variable .)
+    SUMOP           reduce using rule 144 (factor -> variable .)
+    SUBOP           reduce using rule 144 (factor -> variable .)
+    LESSTHANOP      reduce using rule 144 (factor -> variable .)
+    GREATERTHANOP   reduce using rule 144 (factor -> variable .)
+    DIFFERENTOP     reduce using rule 144 (factor -> variable .)
+    EQUALOP         reduce using rule 144 (factor -> variable .)
+    ANDOP           reduce using rule 144 (factor -> variable .)
+    OROP            reduce using rule 144 (factor -> variable .)
+    ID              reduce using rule 144 (factor -> variable .)
+    READ            reduce using rule 144 (factor -> variable .)
+    WRITE           reduce using rule 144 (factor -> variable .)
+    RETURN          reduce using rule 144 (factor -> variable .)
+    IF              reduce using rule 144 (factor -> variable .)
+    FROM            reduce using rule 144 (factor -> variable .)
+    HISTOGRAM       reduce using rule 144 (factor -> variable .)
+    BOXPLOT         reduce using rule 144 (factor -> variable .)
+    RIGHTCURLY      reduce using rule 144 (factor -> variable .)
+    TO              reduce using rule 144 (factor -> variable .)
+    RIGHTPAR        reduce using rule 144 (factor -> variable .)
+    DO              reduce using rule 144 (factor -> variable .)
+    COMMA           reduce using rule 144 (factor -> variable .)
+    RIGHTBRACKET    reduce using rule 144 (factor -> variable .)
 
-    addSpecialToStack              shift and go to state 152
 
 state 103
 
-    (149) specialFunc -> MEAN .
+    (145) factor -> special .
 
-    LEFTPAR         reduce using rule 149 (specialFunc -> MEAN .)
+    MULOP           reduce using rule 145 (factor -> special .)
+    DIVOP           reduce using rule 145 (factor -> special .)
+    SUMOP           reduce using rule 145 (factor -> special .)
+    SUBOP           reduce using rule 145 (factor -> special .)
+    LESSTHANOP      reduce using rule 145 (factor -> special .)
+    GREATERTHANOP   reduce using rule 145 (factor -> special .)
+    DIFFERENTOP     reduce using rule 145 (factor -> special .)
+    EQUALOP         reduce using rule 145 (factor -> special .)
+    ANDOP           reduce using rule 145 (factor -> special .)
+    OROP            reduce using rule 145 (factor -> special .)
+    ID              reduce using rule 145 (factor -> special .)
+    READ            reduce using rule 145 (factor -> special .)
+    WRITE           reduce using rule 145 (factor -> special .)
+    RETURN          reduce using rule 145 (factor -> special .)
+    IF              reduce using rule 145 (factor -> special .)
+    FROM            reduce using rule 145 (factor -> special .)
+    HISTOGRAM       reduce using rule 145 (factor -> special .)
+    BOXPLOT         reduce using rule 145 (factor -> special .)
+    RIGHTCURLY      reduce using rule 145 (factor -> special .)
+    TO              reduce using rule 145 (factor -> special .)
+    RIGHTPAR        reduce using rule 145 (factor -> special .)
+    DO              reduce using rule 145 (factor -> special .)
+    COMMA           reduce using rule 145 (factor -> special .)
+    RIGHTBRACKET    reduce using rule 145 (factor -> special .)
 
 
 state 104
 
-    (150) specialFunc -> MEDIAN .
+    (146) negative_int -> SUBOP . CTI
+    (147) negative_float -> SUBOP . CTF
 
-    LEFTPAR         reduce using rule 150 (specialFunc -> MEDIAN .)
+    CTI             shift and go to state 157
+    CTF             shift and go to state 158
 
 
 state 105
 
-    (151) specialFunc -> MODE .
+    (152) special -> specialFunc . addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (161) addSpecialToStack -> .
 
-    LEFTPAR         reduce using rule 151 (specialFunc -> MODE .)
+    LEFTPAR         reduce using rule 161 (addSpecialToStack -> .)
 
+    addSpecialToStack              shift and go to state 159
 
 state 106
 
-    (152) specialFunc -> VARIANCE .
+    (153) specialFunc -> MEAN .
 
-    LEFTPAR         reduce using rule 152 (specialFunc -> VARIANCE .)
+    LEFTPAR         reduce using rule 153 (specialFunc -> MEAN .)
 
 
 state 107
 
-    (153) specialFunc -> STDDEV .
+    (154) specialFunc -> MEDIAN .
 
-    LEFTPAR         reduce using rule 153 (specialFunc -> STDDEV .)
+    LEFTPAR         reduce using rule 154 (specialFunc -> MEDIAN .)
 
 
 state 108
+
+    (155) specialFunc -> MODE .
+
+    LEFTPAR         reduce using rule 155 (specialFunc -> MODE .)
+
+
+state 109
+
+    (156) specialFunc -> VARIANCE .
+
+    LEFTPAR         reduce using rule 156 (specialFunc -> VARIANCE .)
+
+
+state 110
+
+    (157) specialFunc -> STDDEV .
+
+    LEFTPAR         reduce using rule 157 (specialFunc -> STDDEV .)
+
+
+state 111
 
     (88) condicion -> IF LEFTPAR . exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2
     (108) exp -> . exp1 expA
@@ -1862,28 +1957,33 @@ state 108
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 153
+    exp                            shift and go to state 160
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -1891,55 +1991,57 @@ state 108
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 109
+state 112
 
     (94) ciclo -> FROM exp . TO exp DO cicloNP1 bloque cicloNP2
 
-    TO              shift and go to state 154
+    TO              shift and go to state 161
 
 
-state 110
+state 113
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack . LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+    (158) specialGraph -> specialGraphFunc addSpecialToStack . LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
 
-    LEFTPAR         shift and go to state 155
+    LEFTPAR         shift and go to state 162
 
 
-state 111
+state 114
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB . RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs
 
-    RIGHTPAR        shift and go to state 156
+    RIGHTPAR        shift and go to state 163
 
 
-state 112
+state 115
 
     (35) funcionB -> params .
 
     RIGHTPAR        reduce using rule 35 (funcionB -> params .)
 
 
-state 113
+state 116
 
     (36) funcionB -> empty .
 
     RIGHTPAR        reduce using rule 36 (funcionB -> empty .)
 
 
-state 114
+state 117
 
     (45) params -> tipoSimple . paramsNP1 ID paramsNP2 paramsA
     (48) paramsNP1 -> .
 
     ID              reduce using rule 48 (paramsNP1 -> .)
 
-    paramsNP1                      shift and go to state 157
+    paramsNP1                      shift and go to state 164
 
-state 115
+state 118
 
     (22) varsE -> COMMA ID . varsNP3 varsNP6 varsE
     (24) varsNP3 -> .
@@ -1947,18 +2049,18 @@ state 115
     COMMA           reduce using rule 24 (varsNP3 -> .)
     SEMICOLON       reduce using rule 24 (varsNP3 -> .)
 
-    varsNP3                        shift and go to state 158
+    varsNP3                        shift and go to state 165
 
-state 116
+state 119
 
     (14) varsC -> LEFTBRACKET varIsArray CTI . varsNP4 RIGHTBRACKET varsD
     (17) varsNP4 -> .
 
     RIGHTBRACKET    reduce using rule 17 (varsNP4 -> .)
 
-    varsNP4                        shift and go to state 159
+    varsNP4                        shift and go to state 166
 
-state 117
+state 120
 
     (64) asignacion -> variable ASSIGNOP asignacionNP1 . exp asignacionNP2
     (108) exp -> . exp1 expA
@@ -1971,29 +2073,34 @@ state 117
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    variable                       shift and go to state 100
-    exp                            shift and go to state 160
+    variable                       shift and go to state 102
+    exp                            shift and go to state 167
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2001,10 +2108,12 @@ state 117
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 118
+state 121
 
     (67) llamada -> ID llamadaNP1 LEFTPAR . loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
     (79) loeNP2 -> .
@@ -2013,6 +2122,7 @@ state 118
     CTI             reduce using rule 79 (loeNP2 -> .)
     CTF             reduce using rule 79 (loeNP2 -> .)
     ID              reduce using rule 79 (loeNP2 -> .)
+    SUBOP           reduce using rule 79 (loeNP2 -> .)
     MEAN            reduce using rule 79 (loeNP2 -> .)
     MEDIAN          reduce using rule 79 (loeNP2 -> .)
     MODE            reduce using rule 79 (loeNP2 -> .)
@@ -2021,9 +2131,9 @@ state 118
     COMMA           reduce using rule 79 (loeNP2 -> .)
     RIGHTPAR        reduce using rule 79 (loeNP2 -> .)
 
-    loeNP2                         shift and go to state 161
+    loeNP2                         shift and go to state 168
 
-state 119
+state 122
 
     (97) variable -> ID variableNP1 variableA .
 
@@ -2054,7 +2164,7 @@ state 119
     RIGHTBRACKET    reduce using rule 97 (variable -> ID variableNP1 variableA .)
 
 
-state 120
+state 123
 
     (99) variableA -> LEFTBRACKET . check_if_non_atomic exp verify RIGHTBRACKET variableB
     (101) check_if_non_atomic -> .
@@ -2063,15 +2173,16 @@ state 120
     CTI             reduce using rule 101 (check_if_non_atomic -> .)
     CTF             reduce using rule 101 (check_if_non_atomic -> .)
     ID              reduce using rule 101 (check_if_non_atomic -> .)
+    SUBOP           reduce using rule 101 (check_if_non_atomic -> .)
     MEAN            reduce using rule 101 (check_if_non_atomic -> .)
     MEDIAN          reduce using rule 101 (check_if_non_atomic -> .)
     MODE            reduce using rule 101 (check_if_non_atomic -> .)
     VARIANCE        reduce using rule 101 (check_if_non_atomic -> .)
     STDDEV          reduce using rule 101 (check_if_non_atomic -> .)
 
-    check_if_non_atomic            shift and go to state 162
+    check_if_non_atomic            shift and go to state 169
 
-state 121
+state 124
 
     (100) variableA -> empty .
 
@@ -2102,7 +2213,7 @@ state 121
     RIGHTBRACKET    reduce using rule 100 (variableA -> empty .)
 
 
-state 122
+state 125
 
     (74) read -> READ ID readNP1 .
 
@@ -2117,7 +2228,7 @@ state 122
     RIGHTCURLY      reduce using rule 74 (read -> READ ID readNP1 .)
 
 
-state 123
+state 126
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR . loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP3
     (79) loeNP2 -> .
@@ -2127,15 +2238,16 @@ state 123
     CTI             reduce using rule 79 (loeNP2 -> .)
     CTF             reduce using rule 79 (loeNP2 -> .)
     ID              reduce using rule 79 (loeNP2 -> .)
+    SUBOP           reduce using rule 79 (loeNP2 -> .)
     MEAN            reduce using rule 79 (loeNP2 -> .)
     MEDIAN          reduce using rule 79 (loeNP2 -> .)
     MODE            reduce using rule 79 (loeNP2 -> .)
     VARIANCE        reduce using rule 79 (loeNP2 -> .)
     STDDEV          reduce using rule 79 (loeNP2 -> .)
 
-    loeNP2                         shift and go to state 163
+    loeNP2                         shift and go to state 170
 
-state 124
+state 127
 
     (86) return -> RETURN exp returnNP1 .
 
@@ -2150,7 +2262,7 @@ state 124
     RIGHTCURLY      reduce using rule 86 (return -> RETURN exp returnNP1 .)
 
 
-state 125
+state 128
 
     (108) exp -> exp1 expA .
 
@@ -2170,24 +2282,25 @@ state 125
     RIGHTBRACKET    reduce using rule 108 (exp -> exp1 expA .)
 
 
-state 126
+state 129
 
     (110) expA -> OROP . operNP1 exp1 expNP1 expA
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 164
+    operNP1                        shift and go to state 171
 
-state 127
+state 130
 
     (111) expA -> empty .
 
@@ -2207,7 +2320,7 @@ state 127
     RIGHTBRACKET    reduce using rule 111 (expA -> empty .)
 
 
-state 128
+state 131
 
     (112) exp1 -> exp2 exp1A .
 
@@ -2228,24 +2341,25 @@ state 128
     RIGHTBRACKET    reduce using rule 112 (exp1 -> exp2 exp1A .)
 
 
-state 129
+state 132
 
     (114) exp1A -> ANDOP . operNP1 exp2 exp1NP1 exp1A
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 165
+    operNP1                        shift and go to state 172
 
-state 130
+state 133
 
     (115) exp1A -> empty .
 
@@ -2266,7 +2380,7 @@ state 130
     RIGHTBRACKET    reduce using rule 115 (exp1A -> empty .)
 
 
-state 131
+state 134
 
     (116) exp2 -> exp3 exp2A .
 
@@ -2288,24 +2402,25 @@ state 131
     RIGHTBRACKET    reduce using rule 116 (exp2 -> exp3 exp2A .)
 
 
-state 132
+state 135
 
     (117) exp2A -> exp2B . operNP1 exp3 exp2ANP1
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 166
+    operNP1                        shift and go to state 173
 
-state 133
+state 136
 
     (118) exp2A -> empty .
 
@@ -2327,7 +2442,7 @@ state 133
     RIGHTBRACKET    reduce using rule 118 (exp2A -> empty .)
 
 
-state 134
+state 137
 
     (120) exp2B -> LESSTHANOP .
 
@@ -2335,6 +2450,7 @@ state 134
     CTI             reduce using rule 120 (exp2B -> LESSTHANOP .)
     CTF             reduce using rule 120 (exp2B -> LESSTHANOP .)
     ID              reduce using rule 120 (exp2B -> LESSTHANOP .)
+    SUBOP           reduce using rule 120 (exp2B -> LESSTHANOP .)
     MEAN            reduce using rule 120 (exp2B -> LESSTHANOP .)
     MEDIAN          reduce using rule 120 (exp2B -> LESSTHANOP .)
     MODE            reduce using rule 120 (exp2B -> LESSTHANOP .)
@@ -2342,7 +2458,7 @@ state 134
     STDDEV          reduce using rule 120 (exp2B -> LESSTHANOP .)
 
 
-state 135
+state 138
 
     (121) exp2B -> GREATERTHANOP .
 
@@ -2350,6 +2466,7 @@ state 135
     CTI             reduce using rule 121 (exp2B -> GREATERTHANOP .)
     CTF             reduce using rule 121 (exp2B -> GREATERTHANOP .)
     ID              reduce using rule 121 (exp2B -> GREATERTHANOP .)
+    SUBOP           reduce using rule 121 (exp2B -> GREATERTHANOP .)
     MEAN            reduce using rule 121 (exp2B -> GREATERTHANOP .)
     MEDIAN          reduce using rule 121 (exp2B -> GREATERTHANOP .)
     MODE            reduce using rule 121 (exp2B -> GREATERTHANOP .)
@@ -2357,7 +2474,7 @@ state 135
     STDDEV          reduce using rule 121 (exp2B -> GREATERTHANOP .)
 
 
-state 136
+state 139
 
     (122) exp2B -> DIFFERENTOP .
 
@@ -2365,6 +2482,7 @@ state 136
     CTI             reduce using rule 122 (exp2B -> DIFFERENTOP .)
     CTF             reduce using rule 122 (exp2B -> DIFFERENTOP .)
     ID              reduce using rule 122 (exp2B -> DIFFERENTOP .)
+    SUBOP           reduce using rule 122 (exp2B -> DIFFERENTOP .)
     MEAN            reduce using rule 122 (exp2B -> DIFFERENTOP .)
     MEDIAN          reduce using rule 122 (exp2B -> DIFFERENTOP .)
     MODE            reduce using rule 122 (exp2B -> DIFFERENTOP .)
@@ -2372,7 +2490,7 @@ state 136
     STDDEV          reduce using rule 122 (exp2B -> DIFFERENTOP .)
 
 
-state 137
+state 140
 
     (123) exp2B -> EQUALOP .
 
@@ -2380,6 +2498,7 @@ state 137
     CTI             reduce using rule 123 (exp2B -> EQUALOP .)
     CTF             reduce using rule 123 (exp2B -> EQUALOP .)
     ID              reduce using rule 123 (exp2B -> EQUALOP .)
+    SUBOP           reduce using rule 123 (exp2B -> EQUALOP .)
     MEAN            reduce using rule 123 (exp2B -> EQUALOP .)
     MEDIAN          reduce using rule 123 (exp2B -> EQUALOP .)
     MODE            reduce using rule 123 (exp2B -> EQUALOP .)
@@ -2387,7 +2506,7 @@ state 137
     STDDEV          reduce using rule 123 (exp2B -> EQUALOP .)
 
 
-state 138
+state 141
 
     (124) exp3 -> termino exp3A .
 
@@ -2413,24 +2532,25 @@ state 138
     RIGHTBRACKET    reduce using rule 124 (exp3 -> termino exp3A .)
 
 
-state 139
+state 142
 
     (126) exp3A -> exp3B . operNP1 termino exp3NP1 exp3A
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 167
+    operNP1                        shift and go to state 174
 
-state 140
+state 143
 
     (127) exp3A -> empty .
 
@@ -2456,7 +2576,7 @@ state 140
     RIGHTBRACKET    reduce using rule 127 (exp3A -> empty .)
 
 
-state 141
+state 144
 
     (128) exp3B -> SUMOP .
 
@@ -2464,6 +2584,7 @@ state 141
     CTI             reduce using rule 128 (exp3B -> SUMOP .)
     CTF             reduce using rule 128 (exp3B -> SUMOP .)
     ID              reduce using rule 128 (exp3B -> SUMOP .)
+    SUBOP           reduce using rule 128 (exp3B -> SUMOP .)
     MEAN            reduce using rule 128 (exp3B -> SUMOP .)
     MEDIAN          reduce using rule 128 (exp3B -> SUMOP .)
     MODE            reduce using rule 128 (exp3B -> SUMOP .)
@@ -2471,7 +2592,7 @@ state 141
     STDDEV          reduce using rule 128 (exp3B -> SUMOP .)
 
 
-state 142
+state 145
 
     (129) exp3B -> SUBOP .
 
@@ -2479,6 +2600,7 @@ state 142
     CTI             reduce using rule 129 (exp3B -> SUBOP .)
     CTF             reduce using rule 129 (exp3B -> SUBOP .)
     ID              reduce using rule 129 (exp3B -> SUBOP .)
+    SUBOP           reduce using rule 129 (exp3B -> SUBOP .)
     MEAN            reduce using rule 129 (exp3B -> SUBOP .)
     MEDIAN          reduce using rule 129 (exp3B -> SUBOP .)
     MODE            reduce using rule 129 (exp3B -> SUBOP .)
@@ -2486,7 +2608,7 @@ state 142
     STDDEV          reduce using rule 129 (exp3B -> SUBOP .)
 
 
-state 143
+state 146
 
     (130) termino -> terminoC terminoA .
 
@@ -2514,24 +2636,25 @@ state 143
     RIGHTBRACKET    reduce using rule 130 (termino -> terminoC terminoA .)
 
 
-state 144
+state 147
 
     (131) terminoA -> terminoB . operNP1 terminoC terminoANP1 terminoA
-    (144) operNP1 -> .
+    (148) operNP1 -> .
 
-    LEFTPAR         reduce using rule 144 (operNP1 -> .)
-    CTI             reduce using rule 144 (operNP1 -> .)
-    CTF             reduce using rule 144 (operNP1 -> .)
-    ID              reduce using rule 144 (operNP1 -> .)
-    MEAN            reduce using rule 144 (operNP1 -> .)
-    MEDIAN          reduce using rule 144 (operNP1 -> .)
-    MODE            reduce using rule 144 (operNP1 -> .)
-    VARIANCE        reduce using rule 144 (operNP1 -> .)
-    STDDEV          reduce using rule 144 (operNP1 -> .)
+    LEFTPAR         reduce using rule 148 (operNP1 -> .)
+    CTI             reduce using rule 148 (operNP1 -> .)
+    CTF             reduce using rule 148 (operNP1 -> .)
+    ID              reduce using rule 148 (operNP1 -> .)
+    SUBOP           reduce using rule 148 (operNP1 -> .)
+    MEAN            reduce using rule 148 (operNP1 -> .)
+    MEDIAN          reduce using rule 148 (operNP1 -> .)
+    MODE            reduce using rule 148 (operNP1 -> .)
+    VARIANCE        reduce using rule 148 (operNP1 -> .)
+    STDDEV          reduce using rule 148 (operNP1 -> .)
 
-    operNP1                        shift and go to state 168
+    operNP1                        shift and go to state 175
 
-state 145
+state 148
 
     (132) terminoA -> empty .
 
@@ -2559,7 +2682,7 @@ state 145
     RIGHTBRACKET    reduce using rule 132 (terminoA -> empty .)
 
 
-state 146
+state 149
 
     (134) terminoB -> MULOP .
 
@@ -2567,6 +2690,7 @@ state 146
     CTI             reduce using rule 134 (terminoB -> MULOP .)
     CTF             reduce using rule 134 (terminoB -> MULOP .)
     ID              reduce using rule 134 (terminoB -> MULOP .)
+    SUBOP           reduce using rule 134 (terminoB -> MULOP .)
     MEAN            reduce using rule 134 (terminoB -> MULOP .)
     MEDIAN          reduce using rule 134 (terminoB -> MULOP .)
     MODE            reduce using rule 134 (terminoB -> MULOP .)
@@ -2574,7 +2698,7 @@ state 146
     STDDEV          reduce using rule 134 (terminoB -> MULOP .)
 
 
-state 147
+state 150
 
     (135) terminoB -> DIVOP .
 
@@ -2582,6 +2706,7 @@ state 147
     CTI             reduce using rule 135 (terminoB -> DIVOP .)
     CTF             reduce using rule 135 (terminoB -> DIVOP .)
     ID              reduce using rule 135 (terminoB -> DIVOP .)
+    SUBOP           reduce using rule 135 (terminoB -> DIVOP .)
     MEAN            reduce using rule 135 (terminoB -> DIVOP .)
     MEDIAN          reduce using rule 135 (terminoB -> DIVOP .)
     MODE            reduce using rule 135 (terminoB -> DIVOP .)
@@ -2589,7 +2714,7 @@ state 147
     STDDEV          reduce using rule 135 (terminoB -> DIVOP .)
 
 
-state 148
+state 151
 
     (137) terminoC -> llamada checkIfNotVoid .
 
@@ -2619,7 +2744,7 @@ state 148
     RIGHTBRACKET    reduce using rule 137 (terminoC -> llamada checkIfNotVoid .)
 
 
-state 149
+state 152
 
     (139) factor -> LEFTPAR operNP1 . exp RIGHTPAR factorNP1
     (108) exp -> . exp1 expA
@@ -2632,28 +2757,33 @@ state 149
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 169
+    exp                            shift and go to state 176
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2661,11 +2791,13 @@ state 149
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 150
+state 153
 
     (140) factor -> CTI factorNP2 .
 
@@ -2695,7 +2827,7 @@ state 150
     RIGHTBRACKET    reduce using rule 140 (factor -> CTI factorNP2 .)
 
 
-state 151
+state 154
 
     (141) factor -> CTF factorNP3 .
 
@@ -2725,23 +2857,143 @@ state 151
     RIGHTBRACKET    reduce using rule 141 (factor -> CTF factorNP3 .)
 
 
-state 152
+state 155
 
-    (148) special -> specialFunc addSpecialToStack . LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (142) factor -> negative_int factorNP2 .
 
-    LEFTPAR         shift and go to state 170
+    MULOP           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    DIVOP           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    SUMOP           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    SUBOP           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    LESSTHANOP      reduce using rule 142 (factor -> negative_int factorNP2 .)
+    GREATERTHANOP   reduce using rule 142 (factor -> negative_int factorNP2 .)
+    DIFFERENTOP     reduce using rule 142 (factor -> negative_int factorNP2 .)
+    EQUALOP         reduce using rule 142 (factor -> negative_int factorNP2 .)
+    ANDOP           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    OROP            reduce using rule 142 (factor -> negative_int factorNP2 .)
+    ID              reduce using rule 142 (factor -> negative_int factorNP2 .)
+    READ            reduce using rule 142 (factor -> negative_int factorNP2 .)
+    WRITE           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    RETURN          reduce using rule 142 (factor -> negative_int factorNP2 .)
+    IF              reduce using rule 142 (factor -> negative_int factorNP2 .)
+    FROM            reduce using rule 142 (factor -> negative_int factorNP2 .)
+    HISTOGRAM       reduce using rule 142 (factor -> negative_int factorNP2 .)
+    BOXPLOT         reduce using rule 142 (factor -> negative_int factorNP2 .)
+    RIGHTCURLY      reduce using rule 142 (factor -> negative_int factorNP2 .)
+    TO              reduce using rule 142 (factor -> negative_int factorNP2 .)
+    RIGHTPAR        reduce using rule 142 (factor -> negative_int factorNP2 .)
+    DO              reduce using rule 142 (factor -> negative_int factorNP2 .)
+    COMMA           reduce using rule 142 (factor -> negative_int factorNP2 .)
+    RIGHTBRACKET    reduce using rule 142 (factor -> negative_int factorNP2 .)
 
 
-state 153
+state 156
+
+    (143) factor -> negative_float factorNP3 .
+
+    MULOP           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    DIVOP           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    SUMOP           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    SUBOP           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    LESSTHANOP      reduce using rule 143 (factor -> negative_float factorNP3 .)
+    GREATERTHANOP   reduce using rule 143 (factor -> negative_float factorNP3 .)
+    DIFFERENTOP     reduce using rule 143 (factor -> negative_float factorNP3 .)
+    EQUALOP         reduce using rule 143 (factor -> negative_float factorNP3 .)
+    ANDOP           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    OROP            reduce using rule 143 (factor -> negative_float factorNP3 .)
+    ID              reduce using rule 143 (factor -> negative_float factorNP3 .)
+    READ            reduce using rule 143 (factor -> negative_float factorNP3 .)
+    WRITE           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    RETURN          reduce using rule 143 (factor -> negative_float factorNP3 .)
+    IF              reduce using rule 143 (factor -> negative_float factorNP3 .)
+    FROM            reduce using rule 143 (factor -> negative_float factorNP3 .)
+    HISTOGRAM       reduce using rule 143 (factor -> negative_float factorNP3 .)
+    BOXPLOT         reduce using rule 143 (factor -> negative_float factorNP3 .)
+    RIGHTCURLY      reduce using rule 143 (factor -> negative_float factorNP3 .)
+    TO              reduce using rule 143 (factor -> negative_float factorNP3 .)
+    RIGHTPAR        reduce using rule 143 (factor -> negative_float factorNP3 .)
+    DO              reduce using rule 143 (factor -> negative_float factorNP3 .)
+    COMMA           reduce using rule 143 (factor -> negative_float factorNP3 .)
+    RIGHTBRACKET    reduce using rule 143 (factor -> negative_float factorNP3 .)
+
+
+state 157
+
+    (146) negative_int -> SUBOP CTI .
+
+    MULOP           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    DIVOP           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    SUMOP           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    SUBOP           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    LESSTHANOP      reduce using rule 146 (negative_int -> SUBOP CTI .)
+    GREATERTHANOP   reduce using rule 146 (negative_int -> SUBOP CTI .)
+    DIFFERENTOP     reduce using rule 146 (negative_int -> SUBOP CTI .)
+    EQUALOP         reduce using rule 146 (negative_int -> SUBOP CTI .)
+    ANDOP           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    OROP            reduce using rule 146 (negative_int -> SUBOP CTI .)
+    ID              reduce using rule 146 (negative_int -> SUBOP CTI .)
+    READ            reduce using rule 146 (negative_int -> SUBOP CTI .)
+    WRITE           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    RETURN          reduce using rule 146 (negative_int -> SUBOP CTI .)
+    IF              reduce using rule 146 (negative_int -> SUBOP CTI .)
+    FROM            reduce using rule 146 (negative_int -> SUBOP CTI .)
+    HISTOGRAM       reduce using rule 146 (negative_int -> SUBOP CTI .)
+    BOXPLOT         reduce using rule 146 (negative_int -> SUBOP CTI .)
+    RIGHTCURLY      reduce using rule 146 (negative_int -> SUBOP CTI .)
+    TO              reduce using rule 146 (negative_int -> SUBOP CTI .)
+    RIGHTPAR        reduce using rule 146 (negative_int -> SUBOP CTI .)
+    DO              reduce using rule 146 (negative_int -> SUBOP CTI .)
+    COMMA           reduce using rule 146 (negative_int -> SUBOP CTI .)
+    RIGHTBRACKET    reduce using rule 146 (negative_int -> SUBOP CTI .)
+
+
+state 158
+
+    (147) negative_float -> SUBOP CTF .
+
+    MULOP           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    DIVOP           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    SUMOP           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    SUBOP           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    LESSTHANOP      reduce using rule 147 (negative_float -> SUBOP CTF .)
+    GREATERTHANOP   reduce using rule 147 (negative_float -> SUBOP CTF .)
+    DIFFERENTOP     reduce using rule 147 (negative_float -> SUBOP CTF .)
+    EQUALOP         reduce using rule 147 (negative_float -> SUBOP CTF .)
+    ANDOP           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    OROP            reduce using rule 147 (negative_float -> SUBOP CTF .)
+    ID              reduce using rule 147 (negative_float -> SUBOP CTF .)
+    READ            reduce using rule 147 (negative_float -> SUBOP CTF .)
+    WRITE           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    RETURN          reduce using rule 147 (negative_float -> SUBOP CTF .)
+    IF              reduce using rule 147 (negative_float -> SUBOP CTF .)
+    FROM            reduce using rule 147 (negative_float -> SUBOP CTF .)
+    HISTOGRAM       reduce using rule 147 (negative_float -> SUBOP CTF .)
+    BOXPLOT         reduce using rule 147 (negative_float -> SUBOP CTF .)
+    RIGHTCURLY      reduce using rule 147 (negative_float -> SUBOP CTF .)
+    TO              reduce using rule 147 (negative_float -> SUBOP CTF .)
+    RIGHTPAR        reduce using rule 147 (negative_float -> SUBOP CTF .)
+    DO              reduce using rule 147 (negative_float -> SUBOP CTF .)
+    COMMA           reduce using rule 147 (negative_float -> SUBOP CTF .)
+    RIGHTBRACKET    reduce using rule 147 (negative_float -> SUBOP CTF .)
+
+
+state 159
+
+    (152) special -> specialFunc addSpecialToStack . LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+
+    LEFTPAR         shift and go to state 177
+
+
+state 160
 
     (88) condicion -> IF LEFTPAR exp . condicionNP1 RIGHTPAR bloque condicionA condicionANP2
     (89) condicionNP1 -> .
 
     RIGHTPAR        reduce using rule 89 (condicionNP1 -> .)
 
-    condicionNP1                   shift and go to state 171
+    condicionNP1                   shift and go to state 178
 
-state 154
+state 161
 
     (94) ciclo -> FROM exp TO . exp DO cicloNP1 bloque cicloNP2
     (108) exp -> . exp1 expA
@@ -2754,28 +3006,33 @@ state 154
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 172
+    exp                            shift and go to state 179
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2783,32 +3040,34 @@ state 154
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 155
+state 162
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR . ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR . ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
 
-    ID              shift and go to state 173
+    ID              shift and go to state 180
 
 
-state 156
+state 163
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR . SEMICOLON funcionC quadStart bloque genMemReqs
 
-    SEMICOLON       shift and go to state 174
+    SEMICOLON       shift and go to state 181
 
 
-state 157
+state 164
 
     (45) params -> tipoSimple paramsNP1 . ID paramsNP2 paramsA
 
-    ID              shift and go to state 175
+    ID              shift and go to state 182
 
 
-state 158
+state 165
 
     (22) varsE -> COMMA ID varsNP3 . varsNP6 varsE
     (13) varsNP6 -> .
@@ -2816,16 +3075,16 @@ state 158
     COMMA           reduce using rule 13 (varsNP6 -> .)
     SEMICOLON       reduce using rule 13 (varsNP6 -> .)
 
-    varsNP6                        shift and go to state 176
+    varsNP6                        shift and go to state 183
 
-state 159
+state 166
 
     (14) varsC -> LEFTBRACKET varIsArray CTI varsNP4 . RIGHTBRACKET varsD
 
-    RIGHTBRACKET    shift and go to state 177
+    RIGHTBRACKET    shift and go to state 184
 
 
-state 160
+state 167
 
     (64) asignacion -> variable ASSIGNOP asignacionNP1 exp . asignacionNP2
     (66) asignacionNP2 -> .
@@ -2840,15 +3099,15 @@ state 160
     BOXPLOT         reduce using rule 66 (asignacionNP2 -> .)
     RIGHTCURLY      reduce using rule 66 (asignacionNP2 -> .)
 
-    asignacionNP2                  shift and go to state 178
+    asignacionNP2                  shift and go to state 185
 
-state 161
+state 168
 
     (67) llamada -> ID llamadaNP1 LEFTPAR loeNP2 . primerparam llamadaA RIGHTPAR llamadaNP3
     (68) primerparam -> . exp loeNP1
     (69) primerparam -> . empty
     (108) exp -> . exp1 expA
-    (161) empty -> .
+    (165) empty -> .
     (112) exp1 -> . exp2 exp1A
     (116) exp2 -> . exp3 exp2A
     (124) exp3 -> . termino exp3A
@@ -2858,32 +3117,37 @@ state 161
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    primerparam                    shift and go to state 179
-    exp                            shift and go to state 180
-    empty                          shift and go to state 181
+    primerparam                    shift and go to state 186
+    exp                            shift and go to state 187
+    empty                          shift and go to state 188
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2891,11 +3155,13 @@ state 161
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 162
+state 169
 
     (99) variableA -> LEFTBRACKET check_if_non_atomic . exp verify RIGHTBRACKET variableB
     (108) exp -> . exp1 expA
@@ -2908,28 +3174,33 @@ state 162
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 182
+    exp                            shift and go to state 189
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2937,11 +3208,13 @@ state 162
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 163
+state 170
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 . escrituraA escrituraB RIGHTPAR escrituraNP3
     (80) escrituraA -> . exp loeNP1
@@ -2956,30 +3229,35 @@ state 163
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
-    CTSTRING        shift and go to state 185
+    CTSTRING        shift and go to state 192
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    escrituraA                     shift and go to state 183
-    exp                            shift and go to state 184
+    escrituraA                     shift and go to state 190
+    exp                            shift and go to state 191
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -2987,11 +3265,13 @@ state 163
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 164
+state 171
 
     (110) expA -> OROP operNP1 . exp1 expNP1 expA
     (112) exp1 -> . exp2 exp1A
@@ -3003,39 +3283,46 @@ state 164
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp1                           shift and go to state 186
+    exp1                           shift and go to state 193
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
     termino                        shift and go to state 93
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 165
+state 172
 
     (114) exp1A -> ANDOP operNP1 . exp2 exp1NP1 exp1A
     (116) exp2 -> . exp3 exp2A
@@ -3046,38 +3333,45 @@ state 165
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp2                           shift and go to state 187
+    exp2                           shift and go to state 194
     exp3                           shift and go to state 92
     termino                        shift and go to state 93
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 166
+state 173
 
     (117) exp2A -> exp2B operNP1 . exp3 exp2ANP1
     (124) exp3 -> . termino exp3A
@@ -3087,37 +3381,44 @@ state 166
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp3                           shift and go to state 188
+    exp3                           shift and go to state 195
     termino                        shift and go to state 93
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 167
+state 174
 
     (126) exp3A -> exp3B operNP1 . termino exp3NP1 exp3A
     (130) termino -> . terminoC terminoA
@@ -3126,36 +3427,43 @@ state 167
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    termino                        shift and go to state 189
+    termino                        shift and go to state 196
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 168
+state 175
 
     (131) terminoA -> terminoB operNP1 . terminoC terminoANP1 terminoA
     (136) terminoC -> . factor
@@ -3163,87 +3471,94 @@ state 168
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    terminoC                       shift and go to state 190
+    terminoC                       shift and go to state 197
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 169
+state 176
 
     (139) factor -> LEFTPAR operNP1 exp . RIGHTPAR factorNP1
 
-    RIGHTPAR        shift and go to state 191
+    RIGHTPAR        shift and go to state 198
 
 
-state 170
+state 177
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR . ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (152) special -> specialFunc addSpecialToStack LEFTPAR . ID variableNP1 check_if_is_matrix RIGHTPAR process_special
 
-    ID              shift and go to state 192
+    ID              shift and go to state 199
 
 
-state 171
+state 178
 
     (88) condicion -> IF LEFTPAR exp condicionNP1 . RIGHTPAR bloque condicionA condicionANP2
 
-    RIGHTPAR        shift and go to state 193
+    RIGHTPAR        shift and go to state 200
 
 
-state 172
+state 179
 
     (94) ciclo -> FROM exp TO exp . DO cicloNP1 bloque cicloNP2
 
-    DO              shift and go to state 194
+    DO              shift and go to state 201
 
 
-state 173
+state 180
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID . variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID . variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph
     (98) variableNP1 -> .
 
     RIGHTPAR        reduce using rule 98 (variableNP1 -> .)
 
-    variableNP1                    shift and go to state 195
+    variableNP1                    shift and go to state 202
 
-state 174
+state 181
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON . funcionC quadStart bloque genMemReqs
     (37) funcionC -> . vars
     (38) funcionC -> . empty
     (8) vars -> . VAR varsA
-    (161) empty -> .
+    (165) empty -> .
 
     VAR             shift and go to state 10
-    LEFTCURLY       reduce using rule 161 (empty -> .)
+    LEFTCURLY       reduce using rule 165 (empty -> .)
 
-    funcionC                       shift and go to state 196
-    vars                           shift and go to state 197
-    empty                          shift and go to state 198
+    funcionC                       shift and go to state 203
+    vars                           shift and go to state 204
+    empty                          shift and go to state 205
 
-state 175
+state 182
 
     (45) params -> tipoSimple paramsNP1 ID . paramsNP2 paramsA
     (49) paramsNP2 -> .
@@ -3251,35 +3566,35 @@ state 175
     COMMA           reduce using rule 49 (paramsNP2 -> .)
     RIGHTPAR        reduce using rule 49 (paramsNP2 -> .)
 
-    paramsNP2                      shift and go to state 199
+    paramsNP2                      shift and go to state 206
 
-state 176
+state 183
 
     (22) varsE -> COMMA ID varsNP3 varsNP6 . varsE
     (22) varsE -> . COMMA ID varsNP3 varsNP6 varsE
     (23) varsE -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
     COMMA           shift and go to state 79
-    SEMICOLON       reduce using rule 161 (empty -> .)
+    SEMICOLON       reduce using rule 165 (empty -> .)
 
-    varsE                          shift and go to state 200
+    varsE                          shift and go to state 207
     empty                          shift and go to state 80
 
-state 177
+state 184
 
     (14) varsC -> LEFTBRACKET varIsArray CTI varsNP4 RIGHTBRACKET . varsD
     (18) varsD -> . LEFTBRACKET varIsMatrix CTI varsNP5 RIGHTBRACKET
     (19) varsD -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    LEFTBRACKET     shift and go to state 201
-    SEMICOLON       reduce using rule 161 (empty -> .)
+    LEFTBRACKET     shift and go to state 208
+    SEMICOLON       reduce using rule 165 (empty -> .)
 
-    varsD                          shift and go to state 202
-    empty                          shift and go to state 203
+    varsD                          shift and go to state 209
+    empty                          shift and go to state 210
 
-state 178
+state 185
 
     (64) asignacion -> variable ASSIGNOP asignacionNP1 exp asignacionNP2 .
 
@@ -3294,20 +3609,20 @@ state 178
     RIGHTCURLY      reduce using rule 64 (asignacion -> variable ASSIGNOP asignacionNP1 exp asignacionNP2 .)
 
 
-state 179
+state 186
 
     (67) llamada -> ID llamadaNP1 LEFTPAR loeNP2 primerparam . llamadaA RIGHTPAR llamadaNP3
     (70) llamadaA -> . COMMA exp loeNP1 llamadaA
     (71) llamadaA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 205
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 212
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    llamadaA                       shift and go to state 204
-    empty                          shift and go to state 206
+    llamadaA                       shift and go to state 211
+    empty                          shift and go to state 213
 
-state 180
+state 187
 
     (68) primerparam -> exp . loeNP1
     (82) loeNP1 -> .
@@ -3315,9 +3630,9 @@ state 180
     COMMA           reduce using rule 82 (loeNP1 -> .)
     RIGHTPAR        reduce using rule 82 (loeNP1 -> .)
 
-    loeNP1                         shift and go to state 207
+    loeNP1                         shift and go to state 214
 
-state 181
+state 188
 
     (69) primerparam -> empty .
 
@@ -3325,29 +3640,29 @@ state 181
     RIGHTPAR        reduce using rule 69 (primerparam -> empty .)
 
 
-state 182
+state 189
 
     (99) variableA -> LEFTBRACKET check_if_non_atomic exp . verify RIGHTBRACKET variableB
     (102) verify -> .
 
     RIGHTBRACKET    reduce using rule 102 (verify -> .)
 
-    verify                         shift and go to state 208
+    verify                         shift and go to state 215
 
-state 183
+state 190
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA . escrituraB RIGHTPAR escrituraNP3
     (84) escrituraB -> . COMMA escrituraA escrituraB
     (85) escrituraB -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 210
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 217
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    escrituraB                     shift and go to state 209
-    empty                          shift and go to state 211
+    escrituraB                     shift and go to state 216
+    empty                          shift and go to state 218
 
-state 184
+state 191
 
     (80) escrituraA -> exp . loeNP1
     (82) loeNP1 -> .
@@ -3355,9 +3670,9 @@ state 184
     COMMA           reduce using rule 82 (loeNP1 -> .)
     RIGHTPAR        reduce using rule 82 (loeNP1 -> .)
 
-    loeNP1                         shift and go to state 212
+    loeNP1                         shift and go to state 219
 
-state 185
+state 192
 
     (81) escrituraA -> CTSTRING . escrituraNP2
     (83) escrituraNP2 -> .
@@ -3365,9 +3680,9 @@ state 185
     COMMA           reduce using rule 83 (escrituraNP2 -> .)
     RIGHTPAR        reduce using rule 83 (escrituraNP2 -> .)
 
-    escrituraNP2                   shift and go to state 213
+    escrituraNP2                   shift and go to state 220
 
-state 186
+state 193
 
     (110) expA -> OROP operNP1 exp1 . expNP1 expA
     (109) expNP1 -> .
@@ -3388,9 +3703,9 @@ state 186
     COMMA           reduce using rule 109 (expNP1 -> .)
     RIGHTBRACKET    reduce using rule 109 (expNP1 -> .)
 
-    expNP1                         shift and go to state 214
+    expNP1                         shift and go to state 221
 
-state 187
+state 194
 
     (114) exp1A -> ANDOP operNP1 exp2 . exp1NP1 exp1A
     (113) exp1NP1 -> .
@@ -3412,9 +3727,9 @@ state 187
     COMMA           reduce using rule 113 (exp1NP1 -> .)
     RIGHTBRACKET    reduce using rule 113 (exp1NP1 -> .)
 
-    exp1NP1                        shift and go to state 215
+    exp1NP1                        shift and go to state 222
 
-state 188
+state 195
 
     (117) exp2A -> exp2B operNP1 exp3 . exp2ANP1
     (119) exp2ANP1 -> .
@@ -3436,9 +3751,9 @@ state 188
     COMMA           reduce using rule 119 (exp2ANP1 -> .)
     RIGHTBRACKET    reduce using rule 119 (exp2ANP1 -> .)
 
-    exp2ANP1                       shift and go to state 216
+    exp2ANP1                       shift and go to state 223
 
-state 189
+state 196
 
     (126) exp3A -> exp3B operNP1 termino . exp3NP1 exp3A
     (125) exp3NP1 -> .
@@ -3466,9 +3781,9 @@ state 189
     COMMA           reduce using rule 125 (exp3NP1 -> .)
     RIGHTBRACKET    reduce using rule 125 (exp3NP1 -> .)
 
-    exp3NP1                        shift and go to state 217
+    exp3NP1                        shift and go to state 224
 
-state 190
+state 197
 
     (131) terminoA -> terminoB operNP1 terminoC . terminoANP1 terminoA
     (133) terminoANP1 -> .
@@ -3498,150 +3813,150 @@ state 190
     COMMA           reduce using rule 133 (terminoANP1 -> .)
     RIGHTBRACKET    reduce using rule 133 (terminoANP1 -> .)
 
-    terminoANP1                    shift and go to state 218
+    terminoANP1                    shift and go to state 225
 
-state 191
+state 198
 
     (139) factor -> LEFTPAR operNP1 exp RIGHTPAR . factorNP1
-    (145) factorNP1 -> .
+    (149) factorNP1 -> .
 
-    MULOP           reduce using rule 145 (factorNP1 -> .)
-    DIVOP           reduce using rule 145 (factorNP1 -> .)
-    SUMOP           reduce using rule 145 (factorNP1 -> .)
-    SUBOP           reduce using rule 145 (factorNP1 -> .)
-    LESSTHANOP      reduce using rule 145 (factorNP1 -> .)
-    GREATERTHANOP   reduce using rule 145 (factorNP1 -> .)
-    DIFFERENTOP     reduce using rule 145 (factorNP1 -> .)
-    EQUALOP         reduce using rule 145 (factorNP1 -> .)
-    ANDOP           reduce using rule 145 (factorNP1 -> .)
-    OROP            reduce using rule 145 (factorNP1 -> .)
-    ID              reduce using rule 145 (factorNP1 -> .)
-    READ            reduce using rule 145 (factorNP1 -> .)
-    WRITE           reduce using rule 145 (factorNP1 -> .)
-    RETURN          reduce using rule 145 (factorNP1 -> .)
-    IF              reduce using rule 145 (factorNP1 -> .)
-    FROM            reduce using rule 145 (factorNP1 -> .)
-    HISTOGRAM       reduce using rule 145 (factorNP1 -> .)
-    BOXPLOT         reduce using rule 145 (factorNP1 -> .)
-    RIGHTCURLY      reduce using rule 145 (factorNP1 -> .)
-    TO              reduce using rule 145 (factorNP1 -> .)
-    RIGHTPAR        reduce using rule 145 (factorNP1 -> .)
-    DO              reduce using rule 145 (factorNP1 -> .)
-    COMMA           reduce using rule 145 (factorNP1 -> .)
-    RIGHTBRACKET    reduce using rule 145 (factorNP1 -> .)
+    MULOP           reduce using rule 149 (factorNP1 -> .)
+    DIVOP           reduce using rule 149 (factorNP1 -> .)
+    SUMOP           reduce using rule 149 (factorNP1 -> .)
+    SUBOP           reduce using rule 149 (factorNP1 -> .)
+    LESSTHANOP      reduce using rule 149 (factorNP1 -> .)
+    GREATERTHANOP   reduce using rule 149 (factorNP1 -> .)
+    DIFFERENTOP     reduce using rule 149 (factorNP1 -> .)
+    EQUALOP         reduce using rule 149 (factorNP1 -> .)
+    ANDOP           reduce using rule 149 (factorNP1 -> .)
+    OROP            reduce using rule 149 (factorNP1 -> .)
+    ID              reduce using rule 149 (factorNP1 -> .)
+    READ            reduce using rule 149 (factorNP1 -> .)
+    WRITE           reduce using rule 149 (factorNP1 -> .)
+    RETURN          reduce using rule 149 (factorNP1 -> .)
+    IF              reduce using rule 149 (factorNP1 -> .)
+    FROM            reduce using rule 149 (factorNP1 -> .)
+    HISTOGRAM       reduce using rule 149 (factorNP1 -> .)
+    BOXPLOT         reduce using rule 149 (factorNP1 -> .)
+    RIGHTCURLY      reduce using rule 149 (factorNP1 -> .)
+    TO              reduce using rule 149 (factorNP1 -> .)
+    RIGHTPAR        reduce using rule 149 (factorNP1 -> .)
+    DO              reduce using rule 149 (factorNP1 -> .)
+    COMMA           reduce using rule 149 (factorNP1 -> .)
+    RIGHTBRACKET    reduce using rule 149 (factorNP1 -> .)
 
-    factorNP1                      shift and go to state 219
+    factorNP1                      shift and go to state 226
 
-state 192
+state 199
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR ID . variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (152) special -> specialFunc addSpecialToStack LEFTPAR ID . variableNP1 check_if_is_matrix RIGHTPAR process_special
     (98) variableNP1 -> .
 
     RIGHTPAR        reduce using rule 98 (variableNP1 -> .)
 
-    variableNP1                    shift and go to state 220
+    variableNP1                    shift and go to state 227
 
-state 193
+state 200
 
     (88) condicion -> IF LEFTPAR exp condicionNP1 RIGHTPAR . bloque condicionA condicionANP2
     (50) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
 
     LEFTCURLY       shift and go to state 42
 
-    bloque                         shift and go to state 221
+    bloque                         shift and go to state 228
 
-state 194
+state 201
 
     (94) ciclo -> FROM exp TO exp DO . cicloNP1 bloque cicloNP2
     (95) cicloNP1 -> .
 
     LEFTCURLY       reduce using rule 95 (cicloNP1 -> .)
 
-    cicloNP1                       shift and go to state 222
+    cicloNP1                       shift and go to state 229
 
-state 195
+state 202
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 . check_if_is_matrix RIGHTPAR process_specialGraph
-    (158) check_if_is_matrix -> .
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 . check_if_is_matrix RIGHTPAR process_specialGraph
+    (162) check_if_is_matrix -> .
 
-    RIGHTPAR        reduce using rule 158 (check_if_is_matrix -> .)
+    RIGHTPAR        reduce using rule 162 (check_if_is_matrix -> .)
 
-    check_if_is_matrix             shift and go to state 223
+    check_if_is_matrix             shift and go to state 230
 
-state 196
+state 203
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC . quadStart bloque genMemReqs
     (28) quadStart -> .
 
     LEFTCURLY       reduce using rule 28 (quadStart -> .)
 
-    quadStart                      shift and go to state 224
+    quadStart                      shift and go to state 231
 
-state 197
+state 204
 
     (37) funcionC -> vars .
 
     LEFTCURLY       reduce using rule 37 (funcionC -> vars .)
 
 
-state 198
+state 205
 
     (38) funcionC -> empty .
 
     LEFTCURLY       reduce using rule 38 (funcionC -> empty .)
 
 
-state 199
+state 206
 
     (45) params -> tipoSimple paramsNP1 ID paramsNP2 . paramsA
     (46) paramsA -> . COMMA tipoSimple paramsNP1 ID paramsNP2 paramsA
     (47) paramsA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 226
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 233
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    paramsA                        shift and go to state 225
-    empty                          shift and go to state 227
+    paramsA                        shift and go to state 232
+    empty                          shift and go to state 234
 
-state 200
+state 207
 
     (22) varsE -> COMMA ID varsNP3 varsNP6 varsE .
 
     SEMICOLON       reduce using rule 22 (varsE -> COMMA ID varsNP3 varsNP6 varsE .)
 
 
-state 201
+state 208
 
     (18) varsD -> LEFTBRACKET . varIsMatrix CTI varsNP5 RIGHTBRACKET
     (20) varIsMatrix -> .
 
     CTI             reduce using rule 20 (varIsMatrix -> .)
 
-    varIsMatrix                    shift and go to state 228
+    varIsMatrix                    shift and go to state 235
 
-state 202
+state 209
 
     (14) varsC -> LEFTBRACKET varIsArray CTI varsNP4 RIGHTBRACKET varsD .
 
     SEMICOLON       reduce using rule 14 (varsC -> LEFTBRACKET varIsArray CTI varsNP4 RIGHTBRACKET varsD .)
 
 
-state 203
+state 210
 
     (19) varsD -> empty .
 
     SEMICOLON       reduce using rule 19 (varsD -> empty .)
 
 
-state 204
+state 211
 
     (67) llamada -> ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA . RIGHTPAR llamadaNP3
 
-    RIGHTPAR        shift and go to state 229
+    RIGHTPAR        shift and go to state 236
 
 
-state 205
+state 212
 
     (70) llamadaA -> COMMA . exp loeNP1 llamadaA
     (108) exp -> . exp1 expA
@@ -3654,28 +3969,33 @@ state 205
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 230
+    exp                            shift and go to state 237
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -3683,18 +4003,20 @@ state 205
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 206
+state 213
 
     (71) llamadaA -> empty .
 
     RIGHTPAR        reduce using rule 71 (llamadaA -> empty .)
 
 
-state 207
+state 214
 
     (68) primerparam -> exp loeNP1 .
 
@@ -3702,21 +4024,21 @@ state 207
     RIGHTPAR        reduce using rule 68 (primerparam -> exp loeNP1 .)
 
 
-state 208
+state 215
 
     (99) variableA -> LEFTBRACKET check_if_non_atomic exp verify . RIGHTBRACKET variableB
 
-    RIGHTBRACKET    shift and go to state 231
+    RIGHTBRACKET    shift and go to state 238
 
 
-state 209
+state 216
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB . RIGHTPAR escrituraNP3
 
-    RIGHTPAR        shift and go to state 232
+    RIGHTPAR        shift and go to state 239
 
 
-state 210
+state 217
 
     (84) escrituraB -> COMMA . escrituraA escrituraB
     (80) escrituraA -> . exp loeNP1
@@ -3731,30 +4053,35 @@ state 210
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
-    CTSTRING        shift and go to state 185
+    CTSTRING        shift and go to state 192
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    escrituraA                     shift and go to state 233
-    exp                            shift and go to state 184
+    escrituraA                     shift and go to state 240
+    exp                            shift and go to state 191
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -3762,18 +4089,20 @@ state 210
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 211
+state 218
 
     (85) escrituraB -> empty .
 
     RIGHTPAR        reduce using rule 85 (escrituraB -> empty .)
 
 
-state 212
+state 219
 
     (80) escrituraA -> exp loeNP1 .
 
@@ -3781,7 +4110,7 @@ state 212
     RIGHTPAR        reduce using rule 80 (escrituraA -> exp loeNP1 .)
 
 
-state 213
+state 220
 
     (81) escrituraA -> CTSTRING escrituraNP2 .
 
@@ -3789,60 +4118,60 @@ state 213
     RIGHTPAR        reduce using rule 81 (escrituraA -> CTSTRING escrituraNP2 .)
 
 
-state 214
+state 221
 
     (110) expA -> OROP operNP1 exp1 expNP1 . expA
     (110) expA -> . OROP operNP1 exp1 expNP1 expA
     (111) expA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    OROP            shift and go to state 126
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    OROP            shift and go to state 129
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    expA                           shift and go to state 234
-    empty                          shift and go to state 127
+    expA                           shift and go to state 241
+    empty                          shift and go to state 130
 
-state 215
+state 222
 
     (114) exp1A -> ANDOP operNP1 exp2 exp1NP1 . exp1A
     (114) exp1A -> . ANDOP operNP1 exp2 exp1NP1 exp1A
     (115) exp1A -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    ANDOP           shift and go to state 129
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    ANDOP           shift and go to state 132
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    exp1A                          shift and go to state 235
-    empty                          shift and go to state 130
+    exp1A                          shift and go to state 242
+    empty                          shift and go to state 133
 
-state 216
+state 223
 
     (117) exp2A -> exp2B operNP1 exp3 exp2ANP1 .
 
@@ -3864,81 +4193,81 @@ state 216
     RIGHTBRACKET    reduce using rule 117 (exp2A -> exp2B operNP1 exp3 exp2ANP1 .)
 
 
-state 217
+state 224
 
     (126) exp3A -> exp3B operNP1 termino exp3NP1 . exp3A
     (126) exp3A -> . exp3B operNP1 termino exp3NP1 exp3A
     (127) exp3A -> . empty
     (128) exp3B -> . SUMOP
     (129) exp3B -> . SUBOP
-    (161) empty -> .
+    (165) empty -> .
 
-    SUMOP           shift and go to state 141
-    SUBOP           shift and go to state 142
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    SUMOP           shift and go to state 144
+    SUBOP           shift and go to state 145
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    exp3B                          shift and go to state 139
-    exp3A                          shift and go to state 236
-    empty                          shift and go to state 140
+    exp3B                          shift and go to state 142
+    exp3A                          shift and go to state 243
+    empty                          shift and go to state 143
 
-state 218
+state 225
 
     (131) terminoA -> terminoB operNP1 terminoC terminoANP1 . terminoA
     (131) terminoA -> . terminoB operNP1 terminoC terminoANP1 terminoA
     (132) terminoA -> . empty
     (134) terminoB -> . MULOP
     (135) terminoB -> . DIVOP
-    (161) empty -> .
+    (165) empty -> .
 
-    MULOP           shift and go to state 146
-    DIVOP           shift and go to state 147
-    SUMOP           reduce using rule 161 (empty -> .)
-    SUBOP           reduce using rule 161 (empty -> .)
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    MULOP           shift and go to state 149
+    DIVOP           shift and go to state 150
+    SUMOP           reduce using rule 165 (empty -> .)
+    SUBOP           reduce using rule 165 (empty -> .)
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    terminoB                       shift and go to state 144
-    terminoA                       shift and go to state 237
-    empty                          shift and go to state 145
+    terminoB                       shift and go to state 147
+    terminoA                       shift and go to state 244
+    empty                          shift and go to state 148
 
-state 219
+state 226
 
     (139) factor -> LEFTPAR operNP1 exp RIGHTPAR factorNP1 .
 
@@ -3968,69 +4297,69 @@ state 219
     RIGHTBRACKET    reduce using rule 139 (factor -> LEFTPAR operNP1 exp RIGHTPAR factorNP1 .)
 
 
-state 220
+state 227
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 . check_if_is_matrix RIGHTPAR process_special
-    (158) check_if_is_matrix -> .
+    (152) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 . check_if_is_matrix RIGHTPAR process_special
+    (162) check_if_is_matrix -> .
 
-    RIGHTPAR        reduce using rule 158 (check_if_is_matrix -> .)
+    RIGHTPAR        reduce using rule 162 (check_if_is_matrix -> .)
 
-    check_if_is_matrix             shift and go to state 238
+    check_if_is_matrix             shift and go to state 245
 
-state 221
+state 228
 
     (88) condicion -> IF LEFTPAR exp condicionNP1 RIGHTPAR bloque . condicionA condicionANP2
     (90) condicionA -> . ELSE condicionANP1 bloque
     (91) condicionA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    ELSE            shift and go to state 240
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
+    ELSE            shift and go to state 247
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
 
-    condicionA                     shift and go to state 239
-    empty                          shift and go to state 241
+    condicionA                     shift and go to state 246
+    empty                          shift and go to state 248
 
-state 222
+state 229
 
     (94) ciclo -> FROM exp TO exp DO cicloNP1 . bloque cicloNP2
     (50) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
 
     LEFTCURLY       shift and go to state 42
 
-    bloque                         shift and go to state 242
+    bloque                         shift and go to state 249
 
-state 223
+state 230
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix . RIGHTPAR process_specialGraph
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix . RIGHTPAR process_specialGraph
 
-    RIGHTPAR        shift and go to state 243
+    RIGHTPAR        shift and go to state 250
 
 
-state 224
+state 231
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart . bloque genMemReqs
     (50) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
 
     LEFTCURLY       shift and go to state 42
 
-    bloque                         shift and go to state 244
+    bloque                         shift and go to state 251
 
-state 225
+state 232
 
     (45) params -> tipoSimple paramsNP1 ID paramsNP2 paramsA .
 
     RIGHTPAR        reduce using rule 45 (params -> tipoSimple paramsNP1 ID paramsNP2 paramsA .)
 
 
-state 226
+state 233
 
     (46) paramsA -> COMMA . tipoSimple paramsNP1 ID paramsNP2 paramsA
     (42) tipoSimple -> . INT tipoSimpleNP1
@@ -4039,23 +4368,23 @@ state 226
     INT             shift and go to state 19
     FLOAT           shift and go to state 20
 
-    tipoSimple                     shift and go to state 245
+    tipoSimple                     shift and go to state 252
 
-state 227
+state 234
 
     (47) paramsA -> empty .
 
     RIGHTPAR        reduce using rule 47 (paramsA -> empty .)
 
 
-state 228
+state 235
 
     (18) varsD -> LEFTBRACKET varIsMatrix . CTI varsNP5 RIGHTBRACKET
 
-    CTI             shift and go to state 246
+    CTI             shift and go to state 253
 
 
-state 229
+state 236
 
     (67) llamada -> ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR . llamadaNP3
     (73) llamadaNP3 -> .
@@ -4085,9 +4414,9 @@ state 229
     COMMA           reduce using rule 73 (llamadaNP3 -> .)
     RIGHTBRACKET    reduce using rule 73 (llamadaNP3 -> .)
 
-    llamadaNP3                     shift and go to state 247
+    llamadaNP3                     shift and go to state 254
 
-state 230
+state 237
 
     (70) llamadaA -> COMMA exp . loeNP1 llamadaA
     (82) loeNP1 -> .
@@ -4095,46 +4424,46 @@ state 230
     COMMA           reduce using rule 82 (loeNP1 -> .)
     RIGHTPAR        reduce using rule 82 (loeNP1 -> .)
 
-    loeNP1                         shift and go to state 248
+    loeNP1                         shift and go to state 255
 
-state 231
+state 238
 
     (99) variableA -> LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET . variableB
     (103) variableB -> . LEFTBRACKET check_if_matrix exp verify_matrix RIGHTBRACKET
     (104) variableB -> . empty on_matrix_check
-    (161) empty -> .
+    (165) empty -> .
 
-    LEFTBRACKET     shift and go to state 249
-    ASSIGNOP        reduce using rule 161 (empty -> .)
-    MULOP           reduce using rule 161 (empty -> .)
-    DIVOP           reduce using rule 161 (empty -> .)
-    SUMOP           reduce using rule 161 (empty -> .)
-    SUBOP           reduce using rule 161 (empty -> .)
-    LESSTHANOP      reduce using rule 161 (empty -> .)
-    GREATERTHANOP   reduce using rule 161 (empty -> .)
-    DIFFERENTOP     reduce using rule 161 (empty -> .)
-    EQUALOP         reduce using rule 161 (empty -> .)
-    ANDOP           reduce using rule 161 (empty -> .)
-    OROP            reduce using rule 161 (empty -> .)
-    ID              reduce using rule 161 (empty -> .)
-    READ            reduce using rule 161 (empty -> .)
-    WRITE           reduce using rule 161 (empty -> .)
-    RETURN          reduce using rule 161 (empty -> .)
-    IF              reduce using rule 161 (empty -> .)
-    FROM            reduce using rule 161 (empty -> .)
-    HISTOGRAM       reduce using rule 161 (empty -> .)
-    BOXPLOT         reduce using rule 161 (empty -> .)
-    RIGHTCURLY      reduce using rule 161 (empty -> .)
-    TO              reduce using rule 161 (empty -> .)
-    RIGHTPAR        reduce using rule 161 (empty -> .)
-    DO              reduce using rule 161 (empty -> .)
-    COMMA           reduce using rule 161 (empty -> .)
-    RIGHTBRACKET    reduce using rule 161 (empty -> .)
+    LEFTBRACKET     shift and go to state 256
+    ASSIGNOP        reduce using rule 165 (empty -> .)
+    MULOP           reduce using rule 165 (empty -> .)
+    DIVOP           reduce using rule 165 (empty -> .)
+    SUMOP           reduce using rule 165 (empty -> .)
+    SUBOP           reduce using rule 165 (empty -> .)
+    LESSTHANOP      reduce using rule 165 (empty -> .)
+    GREATERTHANOP   reduce using rule 165 (empty -> .)
+    DIFFERENTOP     reduce using rule 165 (empty -> .)
+    EQUALOP         reduce using rule 165 (empty -> .)
+    ANDOP           reduce using rule 165 (empty -> .)
+    OROP            reduce using rule 165 (empty -> .)
+    ID              reduce using rule 165 (empty -> .)
+    READ            reduce using rule 165 (empty -> .)
+    WRITE           reduce using rule 165 (empty -> .)
+    RETURN          reduce using rule 165 (empty -> .)
+    IF              reduce using rule 165 (empty -> .)
+    FROM            reduce using rule 165 (empty -> .)
+    HISTOGRAM       reduce using rule 165 (empty -> .)
+    BOXPLOT         reduce using rule 165 (empty -> .)
+    RIGHTCURLY      reduce using rule 165 (empty -> .)
+    TO              reduce using rule 165 (empty -> .)
+    RIGHTPAR        reduce using rule 165 (empty -> .)
+    DO              reduce using rule 165 (empty -> .)
+    COMMA           reduce using rule 165 (empty -> .)
+    RIGHTBRACKET    reduce using rule 165 (empty -> .)
 
-    variableB                      shift and go to state 250
-    empty                          shift and go to state 251
+    variableB                      shift and go to state 257
+    empty                          shift and go to state 258
 
-state 232
+state 239
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR . escrituraNP3
     (78) escrituraNP3 -> .
@@ -4149,22 +4478,22 @@ state 232
     BOXPLOT         reduce using rule 78 (escrituraNP3 -> .)
     RIGHTCURLY      reduce using rule 78 (escrituraNP3 -> .)
 
-    escrituraNP3                   shift and go to state 252
+    escrituraNP3                   shift and go to state 259
 
-state 233
+state 240
 
     (84) escrituraB -> COMMA escrituraA . escrituraB
     (84) escrituraB -> . COMMA escrituraA escrituraB
     (85) escrituraB -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 210
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 217
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    escrituraB                     shift and go to state 253
-    empty                          shift and go to state 211
+    escrituraB                     shift and go to state 260
+    empty                          shift and go to state 218
 
-state 234
+state 241
 
     (110) expA -> OROP operNP1 exp1 expNP1 expA .
 
@@ -4184,7 +4513,7 @@ state 234
     RIGHTBRACKET    reduce using rule 110 (expA -> OROP operNP1 exp1 expNP1 expA .)
 
 
-state 235
+state 242
 
     (114) exp1A -> ANDOP operNP1 exp2 exp1NP1 exp1A .
 
@@ -4205,7 +4534,7 @@ state 235
     RIGHTBRACKET    reduce using rule 114 (exp1A -> ANDOP operNP1 exp2 exp1NP1 exp1A .)
 
 
-state 236
+state 243
 
     (126) exp3A -> exp3B operNP1 termino exp3NP1 exp3A .
 
@@ -4231,7 +4560,7 @@ state 236
     RIGHTBRACKET    reduce using rule 126 (exp3A -> exp3B operNP1 termino exp3NP1 exp3A .)
 
 
-state 237
+state 244
 
     (131) terminoA -> terminoB operNP1 terminoC terminoANP1 terminoA .
 
@@ -4259,14 +4588,14 @@ state 237
     RIGHTBRACKET    reduce using rule 131 (terminoA -> terminoB operNP1 terminoC terminoANP1 terminoA .)
 
 
-state 238
+state 245
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix . RIGHTPAR process_special
+    (152) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix . RIGHTPAR process_special
 
-    RIGHTPAR        shift and go to state 254
+    RIGHTPAR        shift and go to state 261
 
 
-state 239
+state 246
 
     (88) condicion -> IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA . condicionANP2
     (93) condicionANP2 -> .
@@ -4281,18 +4610,18 @@ state 239
     BOXPLOT         reduce using rule 93 (condicionANP2 -> .)
     RIGHTCURLY      reduce using rule 93 (condicionANP2 -> .)
 
-    condicionANP2                  shift and go to state 255
+    condicionANP2                  shift and go to state 262
 
-state 240
+state 247
 
     (90) condicionA -> ELSE . condicionANP1 bloque
     (92) condicionANP1 -> .
 
     LEFTCURLY       reduce using rule 92 (condicionANP1 -> .)
 
-    condicionANP1                  shift and go to state 256
+    condicionANP1                  shift and go to state 263
 
-state 241
+state 248
 
     (91) condicionA -> empty .
 
@@ -4307,7 +4636,7 @@ state 241
     RIGHTCURLY      reduce using rule 91 (condicionA -> empty .)
 
 
-state 242
+state 249
 
     (94) ciclo -> FROM exp TO exp DO cicloNP1 bloque . cicloNP2
     (96) cicloNP2 -> .
@@ -4322,26 +4651,26 @@ state 242
     BOXPLOT         reduce using rule 96 (cicloNP2 -> .)
     RIGHTCURLY      reduce using rule 96 (cicloNP2 -> .)
 
-    cicloNP2                       shift and go to state 257
+    cicloNP2                       shift and go to state 264
 
-state 243
+state 250
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR . process_specialGraph
-    (160) process_specialGraph -> .
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR . process_specialGraph
+    (164) process_specialGraph -> .
 
-    ID              reduce using rule 160 (process_specialGraph -> .)
-    READ            reduce using rule 160 (process_specialGraph -> .)
-    WRITE           reduce using rule 160 (process_specialGraph -> .)
-    RETURN          reduce using rule 160 (process_specialGraph -> .)
-    IF              reduce using rule 160 (process_specialGraph -> .)
-    FROM            reduce using rule 160 (process_specialGraph -> .)
-    HISTOGRAM       reduce using rule 160 (process_specialGraph -> .)
-    BOXPLOT         reduce using rule 160 (process_specialGraph -> .)
-    RIGHTCURLY      reduce using rule 160 (process_specialGraph -> .)
+    ID              reduce using rule 164 (process_specialGraph -> .)
+    READ            reduce using rule 164 (process_specialGraph -> .)
+    WRITE           reduce using rule 164 (process_specialGraph -> .)
+    RETURN          reduce using rule 164 (process_specialGraph -> .)
+    IF              reduce using rule 164 (process_specialGraph -> .)
+    FROM            reduce using rule 164 (process_specialGraph -> .)
+    HISTOGRAM       reduce using rule 164 (process_specialGraph -> .)
+    BOXPLOT         reduce using rule 164 (process_specialGraph -> .)
+    RIGHTCURLY      reduce using rule 164 (process_specialGraph -> .)
 
-    process_specialGraph           shift and go to state 258
+    process_specialGraph           shift and go to state 265
 
-state 244
+state 251
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque . genMemReqs
     (29) genMemReqs -> .
@@ -4349,27 +4678,27 @@ state 244
     FUNC            reduce using rule 29 (genMemReqs -> .)
     MAINSTART       reduce using rule 29 (genMemReqs -> .)
 
-    genMemReqs                     shift and go to state 259
+    genMemReqs                     shift and go to state 266
 
-state 245
+state 252
 
     (46) paramsA -> COMMA tipoSimple . paramsNP1 ID paramsNP2 paramsA
     (48) paramsNP1 -> .
 
     ID              reduce using rule 48 (paramsNP1 -> .)
 
-    paramsNP1                      shift and go to state 260
+    paramsNP1                      shift and go to state 267
 
-state 246
+state 253
 
     (18) varsD -> LEFTBRACKET varIsMatrix CTI . varsNP5 RIGHTBRACKET
     (21) varsNP5 -> .
 
     RIGHTBRACKET    reduce using rule 21 (varsNP5 -> .)
 
-    varsNP5                        shift and go to state 261
+    varsNP5                        shift and go to state 268
 
-state 247
+state 254
 
     (67) llamada -> ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3 .
 
@@ -4399,20 +4728,20 @@ state 247
     RIGHTBRACKET    reduce using rule 67 (llamada -> ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3 .)
 
 
-state 248
+state 255
 
     (70) llamadaA -> COMMA exp loeNP1 . llamadaA
     (70) llamadaA -> . COMMA exp loeNP1 llamadaA
     (71) llamadaA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 205
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 212
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    llamadaA                       shift and go to state 262
-    empty                          shift and go to state 206
+    llamadaA                       shift and go to state 269
+    empty                          shift and go to state 213
 
-state 249
+state 256
 
     (103) variableB -> LEFTBRACKET . check_if_matrix exp verify_matrix RIGHTBRACKET
     (105) check_if_matrix -> .
@@ -4421,15 +4750,16 @@ state 249
     CTI             reduce using rule 105 (check_if_matrix -> .)
     CTF             reduce using rule 105 (check_if_matrix -> .)
     ID              reduce using rule 105 (check_if_matrix -> .)
+    SUBOP           reduce using rule 105 (check_if_matrix -> .)
     MEAN            reduce using rule 105 (check_if_matrix -> .)
     MEDIAN          reduce using rule 105 (check_if_matrix -> .)
     MODE            reduce using rule 105 (check_if_matrix -> .)
     VARIANCE        reduce using rule 105 (check_if_matrix -> .)
     STDDEV          reduce using rule 105 (check_if_matrix -> .)
 
-    check_if_matrix                shift and go to state 263
+    check_if_matrix                shift and go to state 270
 
-state 250
+state 257
 
     (99) variableA -> LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET variableB .
 
@@ -4460,7 +4790,7 @@ state 250
     RIGHTBRACKET    reduce using rule 99 (variableA -> LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET variableB .)
 
 
-state 251
+state 258
 
     (104) variableB -> empty . on_matrix_check
     (107) on_matrix_check -> .
@@ -4491,9 +4821,9 @@ state 251
     COMMA           reduce using rule 107 (on_matrix_check -> .)
     RIGHTBRACKET    reduce using rule 107 (on_matrix_check -> .)
 
-    on_matrix_check                shift and go to state 264
+    on_matrix_check                shift and go to state 271
 
-state 252
+state 259
 
     (76) escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP3 .
 
@@ -4508,46 +4838,46 @@ state 252
     RIGHTCURLY      reduce using rule 76 (escritura -> WRITE escrituraNP1 LEFTPAR loeNP2 escrituraA escrituraB RIGHTPAR escrituraNP3 .)
 
 
-state 253
+state 260
 
     (84) escrituraB -> COMMA escrituraA escrituraB .
 
     RIGHTPAR        reduce using rule 84 (escrituraB -> COMMA escrituraA escrituraB .)
 
 
-state 254
+state 261
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR . process_special
-    (159) process_special -> .
+    (152) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR . process_special
+    (163) process_special -> .
 
-    MULOP           reduce using rule 159 (process_special -> .)
-    DIVOP           reduce using rule 159 (process_special -> .)
-    SUMOP           reduce using rule 159 (process_special -> .)
-    SUBOP           reduce using rule 159 (process_special -> .)
-    LESSTHANOP      reduce using rule 159 (process_special -> .)
-    GREATERTHANOP   reduce using rule 159 (process_special -> .)
-    DIFFERENTOP     reduce using rule 159 (process_special -> .)
-    EQUALOP         reduce using rule 159 (process_special -> .)
-    ANDOP           reduce using rule 159 (process_special -> .)
-    OROP            reduce using rule 159 (process_special -> .)
-    ID              reduce using rule 159 (process_special -> .)
-    READ            reduce using rule 159 (process_special -> .)
-    WRITE           reduce using rule 159 (process_special -> .)
-    RETURN          reduce using rule 159 (process_special -> .)
-    IF              reduce using rule 159 (process_special -> .)
-    FROM            reduce using rule 159 (process_special -> .)
-    HISTOGRAM       reduce using rule 159 (process_special -> .)
-    BOXPLOT         reduce using rule 159 (process_special -> .)
-    RIGHTCURLY      reduce using rule 159 (process_special -> .)
-    TO              reduce using rule 159 (process_special -> .)
-    RIGHTPAR        reduce using rule 159 (process_special -> .)
-    DO              reduce using rule 159 (process_special -> .)
-    COMMA           reduce using rule 159 (process_special -> .)
-    RIGHTBRACKET    reduce using rule 159 (process_special -> .)
+    MULOP           reduce using rule 163 (process_special -> .)
+    DIVOP           reduce using rule 163 (process_special -> .)
+    SUMOP           reduce using rule 163 (process_special -> .)
+    SUBOP           reduce using rule 163 (process_special -> .)
+    LESSTHANOP      reduce using rule 163 (process_special -> .)
+    GREATERTHANOP   reduce using rule 163 (process_special -> .)
+    DIFFERENTOP     reduce using rule 163 (process_special -> .)
+    EQUALOP         reduce using rule 163 (process_special -> .)
+    ANDOP           reduce using rule 163 (process_special -> .)
+    OROP            reduce using rule 163 (process_special -> .)
+    ID              reduce using rule 163 (process_special -> .)
+    READ            reduce using rule 163 (process_special -> .)
+    WRITE           reduce using rule 163 (process_special -> .)
+    RETURN          reduce using rule 163 (process_special -> .)
+    IF              reduce using rule 163 (process_special -> .)
+    FROM            reduce using rule 163 (process_special -> .)
+    HISTOGRAM       reduce using rule 163 (process_special -> .)
+    BOXPLOT         reduce using rule 163 (process_special -> .)
+    RIGHTCURLY      reduce using rule 163 (process_special -> .)
+    TO              reduce using rule 163 (process_special -> .)
+    RIGHTPAR        reduce using rule 163 (process_special -> .)
+    DO              reduce using rule 163 (process_special -> .)
+    COMMA           reduce using rule 163 (process_special -> .)
+    RIGHTBRACKET    reduce using rule 163 (process_special -> .)
 
-    process_special                shift and go to state 265
+    process_special                shift and go to state 272
 
-state 255
+state 262
 
     (88) condicion -> IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2 .
 
@@ -4562,16 +4892,16 @@ state 255
     RIGHTCURLY      reduce using rule 88 (condicion -> IF LEFTPAR exp condicionNP1 RIGHTPAR bloque condicionA condicionANP2 .)
 
 
-state 256
+state 263
 
     (90) condicionA -> ELSE condicionANP1 . bloque
     (50) bloque -> . LEFTCURLY bloqueA RIGHTCURLY
 
     LEFTCURLY       shift and go to state 42
 
-    bloque                         shift and go to state 266
+    bloque                         shift and go to state 273
 
-state 257
+state 264
 
     (94) ciclo -> FROM exp TO exp DO cicloNP1 bloque cicloNP2 .
 
@@ -4586,22 +4916,22 @@ state 257
     RIGHTCURLY      reduce using rule 94 (ciclo -> FROM exp TO exp DO cicloNP1 bloque cicloNP2 .)
 
 
-state 258
+state 265
 
-    (154) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .
+    (158) specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .
 
-    ID              reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    READ            reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    WRITE           reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    RETURN          reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    IF              reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    FROM            reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    HISTOGRAM       reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    BOXPLOT         reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
-    RIGHTCURLY      reduce using rule 154 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    ID              reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    READ            reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    WRITE           reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    RETURN          reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    IF              reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    FROM            reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    HISTOGRAM       reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    BOXPLOT         reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
+    RIGHTCURLY      reduce using rule 158 (specialGraph -> specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph .)
 
 
-state 259
+state 266
 
     (27) funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs .
 
@@ -4609,28 +4939,28 @@ state 259
     MAINSTART       reduce using rule 27 (funcion -> FUNC funcionA funcionNP1 ID funcionNP2 LEFTPAR funcionB RIGHTPAR SEMICOLON funcionC quadStart bloque genMemReqs .)
 
 
-state 260
+state 267
 
     (46) paramsA -> COMMA tipoSimple paramsNP1 . ID paramsNP2 paramsA
 
-    ID              shift and go to state 267
+    ID              shift and go to state 274
 
 
-state 261
+state 268
 
     (18) varsD -> LEFTBRACKET varIsMatrix CTI varsNP5 . RIGHTBRACKET
 
-    RIGHTBRACKET    shift and go to state 268
+    RIGHTBRACKET    shift and go to state 275
 
 
-state 262
+state 269
 
     (70) llamadaA -> COMMA exp loeNP1 llamadaA .
 
     RIGHTPAR        reduce using rule 70 (llamadaA -> COMMA exp loeNP1 llamadaA .)
 
 
-state 263
+state 270
 
     (103) variableB -> LEFTBRACKET check_if_matrix . exp verify_matrix RIGHTBRACKET
     (108) exp -> . exp1 expA
@@ -4643,28 +4973,33 @@ state 263
     (139) factor -> . LEFTPAR operNP1 exp RIGHTPAR factorNP1
     (140) factor -> . CTI factorNP2
     (141) factor -> . CTF factorNP3
-    (142) factor -> . variable
-    (143) factor -> . special
+    (142) factor -> . negative_int factorNP2
+    (143) factor -> . negative_float factorNP3
+    (144) factor -> . variable
+    (145) factor -> . special
     (67) llamada -> . ID llamadaNP1 LEFTPAR loeNP2 primerparam llamadaA RIGHTPAR llamadaNP3
+    (146) negative_int -> . SUBOP CTI
+    (147) negative_float -> . SUBOP CTF
     (97) variable -> . ID variableNP1 variableA
-    (148) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
-    (149) specialFunc -> . MEAN
-    (150) specialFunc -> . MEDIAN
-    (151) specialFunc -> . MODE
-    (152) specialFunc -> . VARIANCE
-    (153) specialFunc -> . STDDEV
+    (152) special -> . specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special
+    (153) specialFunc -> . MEAN
+    (154) specialFunc -> . MEDIAN
+    (155) specialFunc -> . MODE
+    (156) specialFunc -> . VARIANCE
+    (157) specialFunc -> . STDDEV
 
     LEFTPAR         shift and go to state 97
     CTI             shift and go to state 98
     CTF             shift and go to state 99
     ID              shift and go to state 68
-    MEAN            shift and go to state 103
-    MEDIAN          shift and go to state 104
-    MODE            shift and go to state 105
-    VARIANCE        shift and go to state 106
-    STDDEV          shift and go to state 107
+    SUBOP           shift and go to state 104
+    MEAN            shift and go to state 106
+    MEDIAN          shift and go to state 107
+    MODE            shift and go to state 108
+    VARIANCE        shift and go to state 109
+    STDDEV          shift and go to state 110
 
-    exp                            shift and go to state 269
+    exp                            shift and go to state 276
     exp1                           shift and go to state 90
     exp2                           shift and go to state 91
     exp3                           shift and go to state 92
@@ -4672,11 +5007,13 @@ state 263
     terminoC                       shift and go to state 94
     factor                         shift and go to state 95
     llamada                        shift and go to state 96
-    variable                       shift and go to state 100
-    special                        shift and go to state 101
-    specialFunc                    shift and go to state 102
+    negative_int                   shift and go to state 100
+    negative_float                 shift and go to state 101
+    variable                       shift and go to state 102
+    special                        shift and go to state 103
+    specialFunc                    shift and go to state 105
 
-state 264
+state 271
 
     (104) variableB -> empty on_matrix_check .
 
@@ -4707,37 +5044,37 @@ state 264
     RIGHTBRACKET    reduce using rule 104 (variableB -> empty on_matrix_check .)
 
 
-state 265
+state 272
 
-    (148) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .
+    (152) special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .
 
-    MULOP           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    DIVOP           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    SUMOP           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    SUBOP           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    LESSTHANOP      reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    GREATERTHANOP   reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    DIFFERENTOP     reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    EQUALOP         reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    ANDOP           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    OROP            reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    ID              reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    READ            reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    WRITE           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    RETURN          reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    IF              reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    FROM            reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    HISTOGRAM       reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    BOXPLOT         reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    RIGHTCURLY      reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    TO              reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    RIGHTPAR        reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    DO              reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    COMMA           reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
-    RIGHTBRACKET    reduce using rule 148 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    MULOP           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    DIVOP           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    SUMOP           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    SUBOP           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    LESSTHANOP      reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    GREATERTHANOP   reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    DIFFERENTOP     reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    EQUALOP         reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    ANDOP           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    OROP            reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    ID              reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    READ            reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    WRITE           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    RETURN          reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    IF              reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    FROM            reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    HISTOGRAM       reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    BOXPLOT         reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    RIGHTCURLY      reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    TO              reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    RIGHTPAR        reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    DO              reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    COMMA           reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
+    RIGHTBRACKET    reduce using rule 152 (special -> specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special .)
 
 
-state 266
+state 273
 
     (90) condicionA -> ELSE condicionANP1 bloque .
 
@@ -4752,7 +5089,7 @@ state 266
     RIGHTCURLY      reduce using rule 90 (condicionA -> ELSE condicionANP1 bloque .)
 
 
-state 267
+state 274
 
     (46) paramsA -> COMMA tipoSimple paramsNP1 ID . paramsNP2 paramsA
     (49) paramsNP2 -> .
@@ -4760,52 +5097,52 @@ state 267
     COMMA           reduce using rule 49 (paramsNP2 -> .)
     RIGHTPAR        reduce using rule 49 (paramsNP2 -> .)
 
-    paramsNP2                      shift and go to state 270
+    paramsNP2                      shift and go to state 277
 
-state 268
+state 275
 
     (18) varsD -> LEFTBRACKET varIsMatrix CTI varsNP5 RIGHTBRACKET .
 
     SEMICOLON       reduce using rule 18 (varsD -> LEFTBRACKET varIsMatrix CTI varsNP5 RIGHTBRACKET .)
 
 
-state 269
+state 276
 
     (103) variableB -> LEFTBRACKET check_if_matrix exp . verify_matrix RIGHTBRACKET
     (106) verify_matrix -> .
 
     RIGHTBRACKET    reduce using rule 106 (verify_matrix -> .)
 
-    verify_matrix                  shift and go to state 271
+    verify_matrix                  shift and go to state 278
 
-state 270
+state 277
 
     (46) paramsA -> COMMA tipoSimple paramsNP1 ID paramsNP2 . paramsA
     (46) paramsA -> . COMMA tipoSimple paramsNP1 ID paramsNP2 paramsA
     (47) paramsA -> . empty
-    (161) empty -> .
+    (165) empty -> .
 
-    COMMA           shift and go to state 226
-    RIGHTPAR        reduce using rule 161 (empty -> .)
+    COMMA           shift and go to state 233
+    RIGHTPAR        reduce using rule 165 (empty -> .)
 
-    paramsA                        shift and go to state 272
-    empty                          shift and go to state 227
+    paramsA                        shift and go to state 279
+    empty                          shift and go to state 234
 
-state 271
+state 278
 
     (103) variableB -> LEFTBRACKET check_if_matrix exp verify_matrix . RIGHTBRACKET
 
-    RIGHTBRACKET    shift and go to state 273
+    RIGHTBRACKET    shift and go to state 280
 
 
-state 272
+state 279
 
     (46) paramsA -> COMMA tipoSimple paramsNP1 ID paramsNP2 paramsA .
 
     RIGHTPAR        reduce using rule 46 (paramsA -> COMMA tipoSimple paramsNP1 ID paramsNP2 paramsA .)
 
 
-state 273
+state 280
 
     (103) variableB -> LEFTBRACKET check_if_matrix exp verify_matrix RIGHTBRACKET .
 
