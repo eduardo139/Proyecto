@@ -43,7 +43,9 @@ pilaciclos = []
 global opcodes
 opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
            '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
-           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21}
+           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21,
+           'mean': 22, 'median': 23, 'mode': 24, 'variance': 25, 'stddev': 26,
+           'histogram': 27, 'boxplot': 28}
 
 # Our semantic consideration table (semantic cube)
 global sc
@@ -187,7 +189,19 @@ def generate_quad(oper, l_op, r_op, result_type):
         # Getting rid of the result type
         ptypes.pop()
         result = 'null'
-    # Else it's an expression or a verify
+
+    elif oper == 'histogram' or oper == 'boxplot':
+        if not l_op in pd[current_func_name]['vt']:
+            procedure = program_name
+        else:
+            procedure = current_func_name
+        dim1size = pd[procedure]['vt'][l_op]['dim']['lsup']
+        dim2size = pd[procedure]['vt'][l_op]['dim']['next_dim']['lsup']
+        r_op = dim1size * dim2size
+        l_op = find_virtual_address(l_op)
+        result = 'null'
+
+    # Else it's an expression, a verify, or a special non-graphing function
     else:
         result = 'temp' + str(avail_list_current_index)
         avail_list_current_index += 1
@@ -196,8 +210,18 @@ def generate_quad(oper, l_op, r_op, result_type):
         pd[current_func_name]['vt'][result] = {'type': '', 'va': ''}
         pd[current_func_name]['vt'][result]['type'] = result_type
         pd[current_func_name]['vt'][result]['va'] = assign_virtual_address(result_type, 'temp', 1)
+        
+        if oper in ['mean', 'median', 'mode', 'variance', 'stddev']:
+            if not l_op in pd[current_func_name]['vt']:
+                procedure = program_name
+            else:
+                procedure = current_func_name
+            dim1size = pd[procedure]['vt'][l_op]['dim']['lsup']
+            dim2size = pd[procedure]['vt'][l_op]['dim']['next_dim']['lsup']
+            r_op = dim1size * dim2size
+        else:
+            r_op = find_virtual_address(r_op)
         l_op = find_virtual_address(l_op)
-        r_op = find_virtual_address(r_op)
         result = find_virtual_address(result)
     if oper == '=':
         if result_type == 'return':
@@ -271,6 +295,10 @@ def process_statement():
         # getting rid of the 'list' in ptypes
         ptypes.pop()
         generate_quad(operator, arg_list, 'null', 'null')
+    elif operator == 'histogram' or operator == 'boxplot':
+        matrix_to_graph = pilao.pop()
+        ptypes.pop()
+        generate_quad(operator, matrix_to_graph, 'null', 'null')
 
 def process_exp():
     global poper
@@ -278,15 +306,20 @@ def process_exp():
     global ptypes
 
     oper = poper.pop()
-    r_op = pilao.pop()
-    l_op = pilao.pop()
-    r_type = ptypes.pop()
-    l_type = ptypes.pop()
-    result_type = sc[l_type][r_type][oper]
-    if result_type != 'error':
-        generate_quad(oper, l_op, r_op, result_type)
+    if oper in ['mean', 'median', 'mode', 'variance', 'stddev']:
+        matrix = pilao.pop()
+        matrix_type = ptypes.pop()
+        generate_quad(oper, matrix, 'null', matrix_type)
     else:
-        raise Exception('Type mismatch at expression ' + r_op + ' ' + oper + ' ' + l_op)
+        r_op = pilao.pop()
+        l_op = pilao.pop()
+        r_type = ptypes.pop()
+        l_type = ptypes.pop()
+        result_type = sc[l_type][r_type][oper]
+        if result_type != 'error':
+            generate_quad(oper, l_op, r_op, result_type)
+        else:
+            raise Exception('Type mismatch at expression ' + r_op + ' ' + oper + ' ' + l_op)
 
 def p_program(p):
     '''program : PROGRAM programNP1 ID programNP2 SEMICOLON programA programB main'''
@@ -399,8 +432,8 @@ def p_varsNP4(p):
     global const_table
     global arrSize
     arrSize = int(p[-1])
-    if arrSize < 1 or arrSize > 100:
-        raise Exception('Array size must be between 1 and 100')
+    if arrSize < 1 or arrSize > 16:
+        raise Exception('Array size must be between 1 and 16')
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
@@ -425,8 +458,8 @@ def p_varsNP5(p):
     global const_table
     global matSize
     matSize = int(p[-1])
-    if matSize < 1 or matSize > 100:
-        raise Exception('Array size must be between 1 and 100')
+    if matSize < 1 or matSize > 16:
+        raise Exception('Array size must be between 1 and 16')
     if p[-1] not in const_table:
         const_table[p[-1]] = {'type': '', 'va': ''}
         const_table[p[-1]]['type'] = 'int'
@@ -594,7 +627,8 @@ def p_estatutoA(p):
                 | escritura
                 | return
                 | condicion
-                | ciclo'''
+                | ciclo
+                | specialGraph'''
 
 def p_checkIfVoid(p):
     '''checkIfVoid :'''
@@ -1086,7 +1120,8 @@ def p_factor(p):
     '''factor : LEFTPAR operNP1 exp RIGHTPAR factorNP1
                 | CTI factorNP2
                 | CTF factorNP3
-                | variable'''
+                | variable
+                | special'''
 
 # NP in which we add an operator to pOper
 def p_operNP1(p):
@@ -1119,6 +1154,56 @@ def p_factorNP3(p):
         const_table[p[-1]]['type'] = 'float'
         const_table[p[-1]]['va'] = assign_virtual_address('float', 'constant', 1)
 
+def p_special(p):
+    '''special : specialFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_special'''
+
+def p_specialFunc(p):
+    '''specialFunc : MEAN
+                    | MEDIAN
+                    | MODE
+                    | VARIANCE
+                    | STDDEV'''
+    p[0] = p[1]
+
+def p_specialGraph(p):
+    '''specialGraph : specialGraphFunc addSpecialToStack LEFTPAR ID variableNP1 check_if_is_matrix RIGHTPAR process_specialGraph'''
+
+def p_specialGraphFunc(p):
+    '''specialGraphFunc : HISTOGRAM
+                    | BOXPLOT'''
+    p[0] = p[1]
+
+def p_addSpecialToStack(p):
+    '''addSpecialToStack :'''
+    poper.append(p[-1])
+
+def p_check_if_is_matrix(p):
+    '''check_if_is_matrix :'''
+    varid = pilao[-1]
+
+    if not varid in pd[current_func_name]['vt']:
+        procedure = program_name
+    else:
+        procedure = current_func_name
+
+    if not 'dim' in pd[procedure]['vt'][varid]:
+        raise Exception('Special functions can only be used on matrices')
+    else:
+        if not 'next_dim' in pd[procedure]['vt'][varid]['dim']:
+            raise Exception('Special functions can only be used on matrices')
+    # Since the special functions always return floats, it does not matter what type the 
+    # non-atomic variable is
+    ptypes.pop()
+    ptypes.append('float')
+
+def p_process_special(p):
+    '''process_special :'''
+    process_exp()
+
+def p_process_specialGraph(p):
+    '''process_specialGraph :'''
+    process_statement()
+    
 # For empty / epsilon
 def p_empty(p):
     '''empty : '''
@@ -1134,7 +1219,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./fibonacci.txt", "r")
+    file = open("./avance7_s.txt", "r")
     input = file.read()
 except EOFError:
     pass

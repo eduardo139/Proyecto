@@ -1,0 +1,72 @@
+program test1;
+var
+   file myfile, a123f, somefile;
+   int myint;
+   int otherint;
+   int i;
+   int j;
+   int arr[6][5];
+   float someNum;
+
+func int myFunc (int a, float b, float c);
+var
+    int funcInt;
+    int myint;
+    file funcFile, funcFile2;
+{
+    read funcFile2
+    funcInt = a + 5
+    return funcInt
+}
+
+func void anotherFunc();
+var
+    int myint;
+    float t;
+{
+    myint = myFunc(i, someNum, someNum)
+    write("some function")
+    t = mode(arr)
+    write(t)
+    histogram(arr)
+}
+
+main
+{
+   myint = 1
+   read myfile
+   write("letrero", 1+3, 0&1)
+
+   if (myint & 1) {
+        someNum = 4.0
+        myint = myFunc(2, someNum, someNum) + myFunc(3, someNum, someNum)
+	write(myint)
+	anotherFunc()
+   }
+   else
+   {
+        someNum = myint - 2 + 4 * 10 / 5
+   }
+
+   i = 0
+   j = 0
+   otherint = 6
+   from 1 to 5 do
+   {
+        arr[i][j] = otherint 
+        i = i + 1
+        j = j + 1
+	otherint = otherint + 2
+   }
+   someNum = mean(arr)
+   write(someNum)
+   someNum = median(arr)
+   write(someNum)
+   someNum = mode(arr)
+   write(someNum)
+   someNum = variance(arr)
+   write(someNum)
+   someNum = stddev(arr)
+   write(someNum)
+   boxplot(arr)
+}

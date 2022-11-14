@@ -1,4 +1,6 @@
 import json
+import statistics
+import matplotlib.pyplot as plt
 
 program_file = 'quad_list.txt'
 proc_dir_file = 'proc_dir.txt'
@@ -118,9 +120,26 @@ def get_real_memory_address(virtual_address):
     elif virtual_address >= 4666:
         return virtual_address - 4666
 
+def get_entire_matrix(real_initial_matrix_address, matrix_size, matrix_type, global_memory, current_memory):
+    entire_matrix = []
+    if matrix_type == 'global_int':
+        for i in range(0, matrix_size):
+            entire_matrix.append(global_memory.ints[real_initial_matrix_address+i])
+    elif matrix_type == 'global_float':
+        for i in range(0, matrix_size):
+            entire_matrix.append(global_memory.floats[real_initial_matrix_address+i])
+    elif matrix_type == 'local_int':
+        for i in range(0, matrix_size):
+            entire_matrix.append(current_memory.ints[real_initial_matrix_address+i])
+    elif matrix_type == 'local_float':
+        for i in range(0, matrix_size):
+            entire_matrix.append(current_memory.floats[real_initial_matrix_address+i])
+    return entire_matrix
+
 # opcodes = {'=': 1, '<': 2, '>': 3, '<>': 4, '==': 5, '+': 6, '-': 7, '*': 8, '/': 9,
 #           '&': 10, '|': 11, 'read': 12, 'write': 13, 'goto': 14, 'gtf': 15, 'call': 16,
-#           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21}
+#           'gosub': 17, 'era': 18, 'parameter': 19, 'endfunc': 20, 'verify': 21,
+#           'mean': 22, 'median': 23, 'mode': 24, 'variance': 25, 'stddev': 26}
 
 current_memory = global_memory
 
@@ -158,7 +177,7 @@ while instruction_pointer < len(quad_list):
             
             arg_list.append(operand_value)
 
-    if right_operand_virtual_address != 'null' and opcode not in [17, 19]:
+    if right_operand_virtual_address != 'null' and opcode not in [17, 19, 22, 23, 24, 25, 26, 27, 28]:
         right_operand_type = get_operand_type(right_operand_virtual_address)
         right_operand_real_address = get_real_memory_address(right_operand_virtual_address)
         right_operand_value = get_operand_value(right_operand_type, right_operand_real_address, current_memory, constants_memory)
@@ -282,6 +301,29 @@ while instruction_pointer < len(quad_list):
         case 21:
             if left_operand_value < 0 or left_operand_value >= right_operand_value:
                 raise Exception('Tried to access index ' + str(left_operand_value) + ' but index must be between 0 and ' + str(right_operand_value-1))
+        case 22:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            current_memory.temp_floats[result_real_address] = statistics.mean(matrix)
+        case 23:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            current_memory.temp_floats[result_real_address] = statistics.median(matrix)
+        case 24:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            current_memory.temp_floats[result_real_address] = float(statistics.mode(matrix))
+        case 25:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            current_memory.temp_floats[result_real_address] = statistics.variance(matrix)
+        case 26:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            current_memory.temp_floats[result_real_address] = statistics.stdev(matrix)
+        case 27:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            plt.hist(matrix)
+            plt.show()
+        case 28:
+            matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
+            plt.boxplot(matrix)
+            plt.show()
         case _:
             pass
     instruction_pointer += 1

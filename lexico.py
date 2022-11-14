@@ -17,7 +17,14 @@ reserved = {
     'void' : 'VOID',
     'read' : 'READ',
     'write' : 'WRITE',
-    'return': 'RETURN'
+    'return': 'RETURN',
+    'mean': 'MEAN',
+    'median': 'MEDIAN',
+    'mode': 'MODE',
+    'variance': 'VARIANCE',
+    'stddev': 'STDDEV',
+    'histogram': 'HISTOGRAM',
+    'boxplot': 'BOXPLOT'
 }
 
 # List of token names
