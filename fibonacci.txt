@@ -30,7 +30,7 @@ main
 {
    i = 0
    j = 1
-   fibonacci = 6
+   fibonacci = 9
    write("Recursive result is", fib(fibonacci))
    write("Loop result is 0, 1...")
    from 2 to fibonacci+1 do

@@ -1,0 +1,22 @@
+program fibonacci;
+var
+   int i;
+   int j;
+   int n;
+   int fibonacci;
+
+main
+{
+    n = 0
+    if (n == 0) {
+	write("es 0")
+    }
+    else {
+	if (n == 1) {
+	    write("es 1")
+	}
+	else {
+	    write("es",n)
+	}
+    }
+}

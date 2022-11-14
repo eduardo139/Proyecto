@@ -1134,7 +1134,7 @@ parser = yacc.yacc()
 # Test file 
 print("\nTest file:")
 try:
-    file = open("./vector.txt", "r")
+    file = open("./fibonacci.txt", "r")
     input = file.read()
 except EOFError:
     pass
