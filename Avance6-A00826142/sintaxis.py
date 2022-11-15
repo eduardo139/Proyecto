@@ -263,11 +263,8 @@ def generate_quad(oper, l_op, r_op, result_type):
             pd[program_name]['vt'][l_op]['va'] = assign_virtual_address(return_type, 'global', 1)
         l_op = find_virtual_address(l_op)
         r_op = find_virtual_address(r_op)
-    if oper == 'gtf' or oper == 'parameter':
+    if oper == 'read' or oper == 'gtf' or oper == 'parameter':
         l_op = find_virtual_address(l_op)
-    if oper == 'read':
-        l_op = find_virtual_address(l_op)
-        r_op = find_virtual_address(r_op)
     if oper == 'write':
         for index, item in enumerate(l_op):
             l_op[index] = find_virtual_address(l_op[index])
@@ -315,10 +312,9 @@ def process_statement():
         if func_type != 'void':
             generate_quad('=', func_type, func_id, 'return')
     elif operator == 'read':
-        matrix = pilao.pop()
-        matrix_type = ptypes.pop()
         file_to_read_from = pilao.pop()
-        generate_quad(operator, file_to_read_from, matrix, matrix_type)
+        file_type = ptypes.pop()
+        generate_quad(operator, file_to_read_from, 'null', 'null')
     elif operator == 'write':
         # Getting rid of the types list
         pilao.pop()
@@ -744,22 +740,21 @@ def p_llamadaNP3(p):
 
 
 def p_read(p):
-    '''read : READ LEFTPAR CTSTRING readNP1 COMMA ID variableNP1 check_if_is_matrix RIGHTPAR readNP2'''
+    '''read : READ ID readNP1'''
 
 def p_readNP1(p):
     '''readNP1 :'''
     global current_func_name
     global program_name
     poper.append('read')
+    if p[-1] not in pd[current_func_name]['vt']:
+        if p[-1] not in pd[program_name]['vt']:
+            raise Exception('Variable ' + p[-1] + ' does not exist on either the local or global scopes')
+        else:
+            ptypes.append(pd[program_name]['vt'][p[-1]]['type'])
+    else:
+        ptypes.append(pd[current_func_name]['vt'][p[-1]]['type'])
     pilao.append(p[-1])
-    ptypes.append('string')
-    if p[-1] not in const_table:
-        const_table[p[-1]] = {'type': '', 'va': ''}
-        const_table[p[-1]]['type'] = 'string'
-        const_table[p[-1]]['va'] = assign_virtual_address('string', 'constant', 1)
-
-def p_readNP2(p):
-    '''readNP2 :'''
     process_statement()
 
 def p_escritura(p):
@@ -1259,20 +1254,22 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-# Test file
+# Test file 
+print("\nTest file:")
 try:
-    file = open("./test_read.txt", "r")
+    file = open("./vector.txt", "r")
     input = file.read()
 except EOFError:
     pass
 result = parser.parse(input)
-
+print("------------")
 if (result == 1):
     num = 0
     for i in quad_list:
         print(num, i)
         num += 1
     # print (json.dumps(pd, indent=2))
+    print("Pass")
     json.dump(pd, open('proc_dir.txt', 'w'))
     json.dump(const_table, open('const_table.txt', 'w'))
     json.dump(quad_list, open('quad_list.txt', 'w'))

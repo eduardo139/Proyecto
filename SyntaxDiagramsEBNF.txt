@@ -8,7 +8,7 @@ Bloque ::= '{' Estatuto+ '}'
 Estatuto ::= Asignacion | Llamada | Read | Escritura | Condicion | Ciclo | Return
 Asignacion ::= Variable '=' Exp
 Llamada ::= 'id' '(' Exp (',' Exp)* ')'
-Read ::= 'read' 'id'
+Read ::= 'read' '(' 'cte_s' ',' 'id' ')'
 Escritura ::= 'write' '(' (Exp | 'cte_s') (',' (Exp | 'cte_s'))* ')'
 Return ::= 'return' Exp
 Condicion ::= 'if' '(' Exp ')' Bloque ('else' Bloque)?
@@ -19,7 +19,9 @@ Exp1 ::= Exp2 ('&' Exp2)*
 Exp2 ::= Exp3 (('<' | '>' | '<>' | '==') Exp3)?
 Exp3 ::= Termino (('+' | '-') Termino)*
 Termino ::= (Factor | Llamada) (('*' | '/') (Factor | Llamada))*
-Factor ::= '(' Exp ')' | 'cte_i' | 'cte_f' | Variable
+Factor ::= '(' Exp ')' | 'cte_i' | 'cte_f' | Negative_int | Negative_float | Variable | Special
+Negative_int ::= '-' 'cte_i'
+Negative_float ::= '-' 'cte_f'
 Special ::= SpecialFunc '(' 'id' ')'
 SpecialFunc ::= 'mean' | 'median' | 'mode' | 'variance' | 'stddev'
 SpecialGraph ::= SpecialGraphFunc '(' 'id' ')'

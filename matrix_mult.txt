@@ -1,4 +1,4 @@
-program sfm;
+program matrixmult;
 var
    int m1[2][2];
    int m2[2][3];

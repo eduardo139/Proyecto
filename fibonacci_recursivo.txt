@@ -17,7 +17,6 @@ var
 	else {
 	    m = fib(n-1)
 	    p = fib(n-2)
-	    write("We are on fib", n)
 	    return m+p
 	}
     }

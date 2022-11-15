@@ -1,0 +1,39 @@
+program pelos;
+var
+   float num;
+   int i;
+   int j;
+   float arr[28][30];
+   float someNum;
+main
+{
+   i = 0
+   j = 0
+   num = 6.0
+   from 1 to 29 do
+   {
+	j = 0
+        from 1 to 31 do
+	{
+            arr[i][j] = num
+            j = j + 1
+	    num = num + 20
+	}
+	i = i + 1
+	num = num * 1.06
+   }
+   someNum = mean(arr)
+   write("mean", someNum)
+   someNum = median(arr)
+   write("median:", someNum)
+   someNum = mode(arr)
+   write("mode:", someNum)
+   someNum = variance(arr)
+   write("variance:", someNum)
+   someNum = stddev(arr)
+   write("standard deviation:", someNum)
+   write("histogram:")
+   histogram(arr)
+   write("box plot:")
+   boxplot(arr)
+}

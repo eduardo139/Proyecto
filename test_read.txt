@@ -1,4 +1,4 @@
-program sfm;
+program matrixmult;
 var
    int m1[2][2];
    int m2[2][3];
@@ -28,12 +28,8 @@ var
     m1[1][0] = 3
     m1[1][1] = 4
 
-    m2[0][0] = 5
-    m2[0][1] = -6+3
-    m2[0][2] = 7
-    m2[1][0] = -8
-    m2[1][1] = 9
-    m2[1][2] = 10
+    read("testdata.json", m2)
+
 
     from 0 to m1rows do
     {

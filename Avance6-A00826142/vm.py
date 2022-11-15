@@ -281,22 +281,10 @@ while instruction_pointer < len(quad_list):
             else:
                 current_memory.temp_ints[result_real_address] = 0
         case 12:
-            left_operand_value = left_operand_value.strip('\"')
-            file = open(left_operand_value)
-            data_dict = json.load(file)
-            mat_address = right_operand_real_address
-            for key in data_dict:
-                for key2 in data_dict[key]:
-                    if right_operand_type == 'global_int':
-                        global_memory.ints[mat_address] = data_dict[key][key2]
-                    elif right_operand_type == 'global_float':
-                        global_memory.floats[mat_address] = data_dict[key][key2]
-                    elif right_operand_type == 'local_int':
-                        current_memory.ints[mat_address] = data_dict[key][key2]
-                    # else it's a local float
-                    else:
-                        current_memory.floats[mat_address] = data_dict[key][key2]
-                    mat_address += 1
+            pass
+            # file = open(left_operand_value)
+            # data_dict = json.load(file)
+            # print(data_dict)
         case 13:
             for arg in arg_list:
                 print(arg)

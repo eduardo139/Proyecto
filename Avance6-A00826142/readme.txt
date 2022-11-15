@@ -1,0 +1,1 @@
+Se generan correctamente los cuádruplos de arreglos, y la máquina virtual ejecuta expresiones y estatutos condicionales.

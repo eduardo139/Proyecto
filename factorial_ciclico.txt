@@ -1,0 +1,17 @@
+program factorial;
+var
+   int i;
+   int j;
+   int factorial;
+main
+{
+   i = 1
+   j = 1
+   factorial = 5
+   from 0 to factorial do
+   {
+        j = j * i
+        i = i + 1
+   }
+   write("Result is ", j)
+}
