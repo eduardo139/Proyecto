@@ -1,5 +1,5 @@
 Program ::= 'program' 'id' ';' Vars? Funcion* Main
-Vars ::= 'var' ((('file' 'id' (',' 'id')*) | (TipoSimple 'id' ('[' 'cte_i' ']' ('[' 'cte_i' ']')? )? ) ) ';' )+
+Vars ::= 'var' ((TipoSimple 'id' ('[' 'cte_i' ']' ('[' 'cte_i' ']')? )?) ';' )+
 Funcion ::= 'func' (TipoSimple | void) 'id' '(' Params ')' ';' Vars? Bloque
 Main ::= 'main' Bloque
 TipoSimple ::= 'int' | 'float' 

@@ -136,6 +136,9 @@ sc = {
     }
 }
 
+# Takes a function name and computes its function requirements
+# Returns a dict 
+# Used at the end of function declarations and at the end of the program
 def compute_function_memory_requirements(function_name):
     memory_requirements = {'var': {'int': 0, 'float': 0, 'file': 0}, 'temp': {'int': 0, 'float': 0, 'pointer' : 0}}
     for variable in pd[function_name]['vt']:
@@ -174,6 +177,9 @@ def compute_function_memory_requirements(function_name):
                     memory_requirements['var']['file'] += 1
     pd[function_name]['mem'] = memory_requirements
 
+# Takes a variable type, a context (global, local, temp or constant) 
+# and a number of spaces (1 for non-atomic variables, the size of the array or matrix
+# for atomic variables). Returns the virtual address
 def assign_virtual_address(type, context, spaces_needed):
     if context == 'null':
         if current_func_name == program_name:
@@ -185,11 +191,14 @@ def assign_virtual_address(type, context, spaces_needed):
     virtual_addresses[context][type] += spaces_needed
     return virtual_address
 
+# Used at the start of a function or main.
+# Resets the counters so that virtual addresses can be reused
 def reset_virtual_address_counters():
     global virtual_addresses
     virtual_addresses['local'] = {'int': local_int_start, 'float': local_float_start, 'file': local_file_start}
     virtual_addresses['temp'] = {'int': temp_int_start, 'float': temp_float_start, 'pointer': temp_pointer_start}
 
+# Takes a variable name and returns its virtual address.
 def find_virtual_address(operand):
     if operand not in pd[current_func_name]['vt']:
         if operand not in pd[program_name]['vt']:
@@ -202,6 +211,9 @@ def find_virtual_address(operand):
     else:
         return pd[current_func_name]['vt'][operand]['va']
 
+# Generates all quads. Takes the operator, the two operands and the result type.
+# If any parameter is irrelevant for the operation it is replaced by 'null'.
+# Returns the generated quad's quad number.
 def generate_quad(oper, l_op, r_op, result_type):
     global quad_list
     global avail_list
@@ -279,6 +291,10 @@ def generate_quad(oper, l_op, r_op, result_type):
     quad_number += 1
     return quad_number - 1
 
+# Processes the statements: =, read, write, function calls, histogram and boxplot.
+# Doesn't return anything. Called when a statement quad must be generated.
+# It acceses the relevant stacks to get the values.
+# It calls generate_quad with the appropiate parameters.
 def process_statement():
     global poper
     global pilao
@@ -332,6 +348,10 @@ def process_statement():
         ptypes.pop()
         generate_quad(operator, matrix_to_graph, 'null', 'null')
 
+# Processes the expressions and the special non-graphing functions.
+# Doesn't return anything. Called when an expression quad must be generated.
+# It acceses the relevant stacks to get the values.
+# It calls generate_quad with the appropiate parameters.
 def process_exp():
     global poper
     global pilao
@@ -458,7 +478,7 @@ def p_varIsArray(p):
 
 # NP in which we check if the 1D array is between the size of 1 and max_dimension_size.
 # If it is we update the variable's type
-# We also add the constant to the const table
+# We also add the constant to the const table if it's not there
 def p_varsNP4(p):
     '''varsNP4 :'''
     global const_table
@@ -484,7 +504,7 @@ def p_varIsMatrix(p):
 
 # NP in which we check if the 2D array is between the size of 1 and max_dimension_size.
 # If it is we update the variable's type
-# We also add the constant to the const table
+# We also add the constant to the const table if it's not there
 def p_varsNP5(p):
     '''varsNP5 :'''
     global const_table
@@ -527,8 +547,8 @@ def p_genMemReqs(p):
     if not has_a_return and current_func_type != 'void':
         raise Exception('Non-void function ' + current_func_name + ' has no return statement')
 
-# NP in which we save the function's type in a variable
-# We also reset the virtual address counters
+# NP in which we save the function's type in a variable, 
+# reset the virtual address counters, and reset the has_a_return bool for later
 def p_funcionNP1(p):
     '''funcionNP1 :'''
     global current_func_type
@@ -543,6 +563,8 @@ def p_funcionNP1(p):
 # so that we can link it to its variable table (VT) later
 # We also create an empty VT for the function just in case the function doesn't
 # declare any variables; this way we avoid getting KeyErrors
+# We also create a global variable with the same name as the function to store
+# its return value at runtime
 def p_funcionNP2(p):
     '''funcionNP2 :'''
     global current_func_name
@@ -583,13 +605,14 @@ def p_funcionC(p):
 def p_main(p):
     '''main : MAINSTART mainNP1 bloque getGlobalMemReqs'''
 
+# Get the global memory requirements at the end of the program
 def p_getGlobalMemReqs(p):
     '''getGlobalMemReqs :'''
     compute_function_memory_requirements(program_name)
 
-# NP in which we assign the type 'void' and an empty VT to main
-# We also change the current_func_name variable
-# We also reset the virtual address counets
+# NP in which we assign the type 'void' and an empty VT to main, 
+# change the current_func_name variable, reset the virtual address counters
+# and fill quad 1 (goto main) with main's quad number
 def p_mainNP1(p):
     '''mainNP1 :'''
     global current_func_name
@@ -649,9 +672,6 @@ def p_bloqueA(p):
 def p_estatuto(p):
     '''estatuto : estatutoNP1 estatutoA'''
 
-# This rule only exists so I could put the NP before every one of these options
-# without having to repeat it over and over in the ORs.
-# It is not in the design document
 def p_estatutoA(p):
     '''estatutoA : asignacion 
                 | llamada checkIfVoid
@@ -746,6 +766,7 @@ def p_llamadaNP3(p):
 def p_read(p):
     '''read : READ LEFTPAR CTSTRING readNP1 COMMA ID variableNP1 check_if_is_matrix RIGHTPAR readNP2'''
 
+# If the file name is not on the constants table we add it
 def p_readNP1(p):
     '''readNP1 :'''
     global current_func_name
@@ -835,6 +856,9 @@ def p_escrituraB(p):
 def p_return(p):
     '''return : RETURN exp returnNP1'''
 
+# Here we put everything in the correct stacks to generate the quad
+# that will assign the function's return value to the global variable that has 
+# the same name as the function
 def p_returnNP1(p):
     '''returnNP1 :'''
     if current_func_name == program_name:
@@ -882,8 +906,10 @@ def p_condicionANP2(p):
     quad_to_jump_to = quad_number
     global psaltos
     quad_to_fill = psaltos.pop()
+    # if it was an if with an else
     if (quad_list[quad_to_fill][0] == 14):
         quad_list[quad_to_fill][1] = quad_to_jump_to
+    # if it was an if without an else
     else:
         quad_list[quad_to_fill][2] = quad_to_jump_to
 
@@ -896,9 +922,8 @@ def p_cicloNP1(p):
     global psaltos
     global cont_avail_list_index
 
-    # We generate a quad where we substract the start from the end
+    # We generate a quad where we substract the start from the end.
     # We are substracting the end from the start, so cont should be less than 0
-    # And we check if cont is less than 0, if not, the loop ends
     poper.append('-')
     process_exp()
 
@@ -906,40 +931,45 @@ def p_cicloNP1(p):
     cont_avail_list_type = ptypes.pop()
 
     global const_table
+    # Add 0 to the constants table if it's not there
     if '0' not in const_table:
         const_table['0'] = {'type': '', 'va': ''}
         const_table['0']['type'] = 'int'
         const_table['0']['va'] = assign_virtual_address('int', 'constant', 1)
-        
+    
+    # We check if cont is less than 0; if not, the loop ends
     quad_num = generate_quad('<', cont_avail_list_index, '0', 'int')
     quad_num_gtf = generate_quad('gtf', 'null', 'waiting for quad num', 'null')
     psaltos.append(quad_num)
     psaltos.append(quad_num_gtf)
 
-    # 1 Para ciclos anidados
+    # For supporting nested loops
     pilaciclos.append(cont_avail_list_index)
 
+# Here we generate the quads necessary for incrementing the loop's counter variable,
+# generate the goto at the end of the loop, and fill the gtf
 def p_cicloNP2(p):
     '''cicloNP2 :''' 
     global cont_avail_list_index
     global quad_number
     
-    # 2 Para ciclos anidados
+    # For supporting nested loops
     cont_avail_list_index = pilaciclos.pop()
 
-    # Para generar el cuadruplo (+, cont_avail_list_index, 1, int)
     global const_table
+    # Add 1 to constants table if it's not there
     if '1' not in const_table:
         const_table['1'] = {'type': '', 'va': ''}
         const_table['1']['type'] = 'int'
         const_table['1']['va'] = assign_virtual_address('int', 'constant', 1)
     generate_quad('+', cont_avail_list_index, '1', 'int')
 
-    # Para generar el cuadruplo (=, cont_avail_list_index, [resultado de anterior cuadruplo], 'null')
     result_of_cont_plus_1 = pilao.pop()
     result_of_cont_plus_1_type = ptypes.pop()
     generate_quad('=', cont_avail_list_index, result_of_cont_plus_1, 'int')
 
+    # At the end of the loop's block, we generate the goto that will go back
+    # to the loop comparison, and fill the gtf that exits the loop
     quad_to_fill = psaltos.pop()
     quad_to_jump_to = psaltos.pop()
     generate_quad('goto', quad_to_jump_to, 'null', 'null')
@@ -971,6 +1001,8 @@ def p_variableA(p):
     '''variableA : LEFTBRACKET check_if_non_atomic exp verify RIGHTBRACKET variableB
                     | empty'''
 
+# Used to verify that the variable we are trying to index is non-atomic.
+# If it is non-atomic, we add its ID to pilaDim.
 def p_check_if_non_atomic(p):
     '''check_if_non_atomic :'''
     global current_var_id
@@ -993,6 +1025,10 @@ def p_check_if_non_atomic(p):
         else:
             piladim.append(current_var_id)
 
+# Here generate many quads relating to non-atomic variables:
+# - the verify quad that will check if an access is in the accepted range.
+# - the quad that adds the base dir if it's an array.
+# - the quad that does s1*m1 if it's a matrix.
 def p_verify(p):
     '''verify :'''
     arr_id = piladim[-1]
@@ -1009,12 +1045,14 @@ def p_verify(p):
     aux = pilao.pop()
     ptypes.pop()
 
+    # if it's a matrix: s1*m1
     if 'next_dim' in pd[procedure]['vt'][arr_id]['dim']:
         m1 = pd[procedure]['vt'][arr_id]['dim']['m1']
 
         generate_quad('*', aux, str(m1), 'int')
         global on_matrix
         on_matrix = True
+    # if it's an array: s + baseDir
     else:
         piladim.pop()
         generate_quad('+', aux, arr_id, 'pointer')
@@ -1023,6 +1061,7 @@ def p_variableB(p):
     '''variableB : LEFTBRACKET check_if_matrix exp verify_matrix RIGHTBRACKET
                     | empty on_matrix_check'''
 
+# Used to verify that the variable we are trying to access with [][] is a matrix
 def p_check_if_matrix(p):
     '''check_if_matrix :'''
     global piladim
@@ -1036,6 +1075,10 @@ def p_check_if_matrix(p):
     if not 'next_dim' in pd[procedure]['vt'][mat_id]['dim'] or mat_id != current_nonatomic_id:
         raise Exception('Trying to access a 2nd dimension in array' + mat_id)
 
+# Generates the necessary quads for matrices:
+# - verify
+# - s1*m1 + s2
+# - s1*m1 + s2 + baseDir
 def p_verify_matrix(p):
     '''verify_matrix :'''
     mat_id = piladim.pop()
@@ -1044,20 +1087,25 @@ def p_verify_matrix(p):
     else:
         procedure = program_name
 
+    # - verify
     lsup = str(pd[procedure]['vt'][mat_id]['dim']['next_dim']['lsup'])
     generate_quad('verify', pilao[-1], lsup, 'int')
     # Getting rid of the verification's result and its type
     pilao.pop()
     ptypes.pop()
+
+    # - s1*m1 + s2
     aux = pilao.pop()
     ptypes.pop()
     s1m1 = pilao.pop()
     ptypes.pop()
     generate_quad('+', aux, s1m1, 'int')
+    # - s1*m1 + s2 + baseDir
     result = pilao.pop()
     ptypes.pop()
     generate_quad('+', result, mat_id, 'pointer')
 
+# Used to check that we aren't trying to access a matrix with only one []
 def p_on_matrix_check(p):
     '''on_matrix_check :'''
     global on_matrix
@@ -1177,6 +1225,7 @@ def p_factorNP1(p):
     '''factorNP1 :'''
     poper.pop()
 
+# We add the int constant to the constants table if it's not there
 def p_factorNP2(p):
     '''factorNP2 :'''
     global const_table
@@ -1187,6 +1236,7 @@ def p_factorNP2(p):
         const_table[p[-1]]['type'] = 'int'
         const_table[p[-1]]['va'] = assign_virtual_address('int', 'constant', 1)
 
+# We add the float constant to the constants table if it's not there
 def p_factorNP3(p):
     '''factorNP3 :'''
     global const_table
@@ -1220,6 +1270,7 @@ def p_addSpecialToStack(p):
     '''addSpecialToStack :'''
     poper.append(p[-1])
 
+# Used by read and the special functions to verify that the variable is a matrix
 def p_check_if_is_matrix(p):
     '''check_if_is_matrix :'''
     varid = pilao[-1]

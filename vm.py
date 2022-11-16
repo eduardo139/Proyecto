@@ -342,7 +342,7 @@ while instruction_pointer < len(quad_list):
             current_memory.temp_floats[result_real_address] = statistics.mean(matrix)
         case 23:
             matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
-            current_memory.temp_floats[result_real_address] = statistics.median(matrix)
+            current_memory.temp_floats[result_real_address] = float(statistics.median(matrix))
         case 24:
             matrix = get_entire_matrix(left_operand_real_address, right_operand_virtual_address, left_operand_type, global_memory, current_memory)
             current_memory.temp_floats[result_real_address] = float(statistics.mode(matrix))
