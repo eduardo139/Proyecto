@@ -5,7 +5,7 @@ var
    int otherint;
    int i;
    int j;
-   int arr[1][100];
+   int arr[5][100];
    float someNum;
 
 func int myFunc (int a, float b, float c);

@@ -1067,6 +1067,8 @@ def p_variableB(p):
 def p_check_if_matrix(p):
     '''check_if_matrix :'''
     global piladim
+    if not piladim:
+        raise Exception("Trying to access a variable that isn't a matrix as a matrix")
     mat_id = piladim[-1]
 
     if mat_id in pd[current_func_name]['vt']:
@@ -1314,7 +1316,7 @@ parser = yacc.yacc()
 
 # Test file
 try:
-    file = open("./avance4_test1.txt", "r")
+    file = open("./avance6_test3.txt", "r")
     input = file.read()
 except EOFError:
     pass

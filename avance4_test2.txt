@@ -5,7 +5,7 @@ var
    int otherint;
    int i;
    int j;
-   int arr[1][100];
+   int arr[5][100];
    float someNum;
 
 func int myFunc (int a, float b, float c);
@@ -14,8 +14,8 @@ var
     int myint;
     file funcFile, funcFile2;
 {
-    read funcFile2
     funcInt = 3 + 5
+    return 2
 }
 
 func void anotherFunc();
@@ -25,7 +25,7 @@ var
     myint = myFunc(i, someNum, someNum)
     from (myint - 2 + 4 * 10) to myFunc(1, 3.5,someNum) do
     {
-        read myfile
+	myint = 4
     }
     write("some function")
 }
@@ -33,7 +33,6 @@ var
 main
 {
    myint = 1
-   read myfile
    write("letrero", 1+3, 0&1)
    if (myint & 1) {
         someNum = 4.0

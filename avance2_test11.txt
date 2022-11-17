@@ -3,9 +3,9 @@ var
    file myfile, a123f, somefile;
    int myint;
    int otherint;
-   float i;
+   int i;
    int j;
-   int arr[1][100];
+   int arr[5][100];
    float someNum;
 
 func int myFunc (int a, float b, float c);
@@ -16,6 +16,7 @@ var
     int arr[100];
 {
     funcInt = 3 + 5
+    return 3
 }
 
 func void someFunc();
@@ -35,7 +36,7 @@ main
    }
    else
    {
-        someNum = myint - 2 + 4 * 10 / 5
+        someNum = myint - 2 + 4 * 10 / 5.0
    }
 
    i = 0
