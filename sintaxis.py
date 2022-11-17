@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 import json
+import sys
 
 from lexico import tokens
 
@@ -1316,7 +1317,7 @@ parser = yacc.yacc()
 
 # Test file
 try:
-    file = open("./avance6_test3.txt", "r")
+    file = open(sys.argv[1], "r")
     input = file.read()
 except EOFError:
     pass
