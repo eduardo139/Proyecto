@@ -945,6 +945,7 @@ def p_cicloNP1(p):
 
     # For supporting nested loops
     pilaciclos.append(cont_avail_list_index)
+    pilaciclos.append(cont_avail_list_type)
 
 # Here we generate the quads necessary for incrementing the loop's counter variable,
 # generate the goto at the end of the loop, and fill the gtf
@@ -954,6 +955,7 @@ def p_cicloNP2(p):
     global quad_number
     
     # For supporting nested loops
+    cont_avail_list_type = pilaciclos.pop()
     cont_avail_list_index = pilaciclos.pop()
 
     global const_table
@@ -962,11 +964,11 @@ def p_cicloNP2(p):
         const_table['1'] = {'type': '', 'va': ''}
         const_table['1']['type'] = 'int'
         const_table['1']['va'] = assign_virtual_address('int', 'constant', 1)
-    generate_quad('+', cont_avail_list_index, '1', 'int')
+    generate_quad('+', cont_avail_list_index, '1', cont_avail_list_type)
 
     result_of_cont_plus_1 = pilao.pop()
     result_of_cont_plus_1_type = ptypes.pop()
-    generate_quad('=', cont_avail_list_index, result_of_cont_plus_1, 'int')
+    generate_quad('=', cont_avail_list_index, result_of_cont_plus_1, cont_avail_list_type)
 
     # At the end of the loop's block, we generate the goto that will go back
     # to the loop comparison, and fill the gtf that exits the loop
@@ -1312,7 +1314,7 @@ parser = yacc.yacc()
 
 # Test file
 try:
-    file = open("./test_read.txt", "r")
+    file = open("./avance4_test1.txt", "r")
     input = file.read()
 except EOFError:
     pass
@@ -1323,7 +1325,6 @@ if (result == 1):
     for i in quad_list:
         print(num, i)
         num += 1
-    # print (json.dumps(pd, indent=2))
     json.dump(pd, open('proc_dir.txt', 'w'))
     json.dump(const_table, open('const_table.txt', 'w'))
     json.dump(quad_list, open('quad_list.txt', 'w'))

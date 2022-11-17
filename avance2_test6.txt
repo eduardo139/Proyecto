@@ -15,8 +15,8 @@ var
     file funcFile, funcFile2;
     int arr[100];
 {
-    read funcFile2
     funcInt = 3 + 5
+    return funcInt
 }
 
 func void myFunc();
@@ -29,10 +29,9 @@ var
 main
 {
    myint = 1
-   read myfile
    write("letrero", 1+3, 0&1)
    if (myint & 1) {
-        someNum = 4
+        someNum = 4.0
    }
    else
    {

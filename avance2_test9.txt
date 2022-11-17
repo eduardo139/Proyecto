@@ -5,8 +5,7 @@ var
     int funcInt;
     file funcFile, funcFile2;
 {
-    read funcFile2
-    funcInt = 3 + 5
+    return 90 > 2
 }
 
 func void anotherFunc();

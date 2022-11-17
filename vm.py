@@ -221,10 +221,12 @@ while instruction_pointer < len(quad_list):
             elif left_operand_type == 'local_int':
                 current_memory.ints[left_operand_real_address] = right_operand_value
             # This elif only exists for two cases:
-            # when we add 1 to cont (in a loop)
-            # when we assign the result of a function's return to a temp variable
+            # - when we add 1 to cont (in a loop)
+            # - when we assign the result of a function's return to a temp variable
             elif left_operand_type == 'temp_int':
                 current_memory.temp_ints[left_operand_real_address] = right_operand_value
+            elif left_operand_type == 'temp_float':
+                current_memory.temp_floats[left_operand_real_address] = right_operand_value
             # else it's a local float
             else:
                 current_memory.floats[left_operand_real_address] = right_operand_value

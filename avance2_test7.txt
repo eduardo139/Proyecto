@@ -15,8 +15,7 @@ var
     file funcFile, funcFile2;
     int arr[100];
 {
-    read funcFile2
-    funcInt = 3 + 5
+    return 3 + 5
 }
 
 func void someFunc();
